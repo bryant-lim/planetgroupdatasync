@@ -155,7 +155,7 @@ function extractSummaryMetadata(messages, conv) {
 async function main() {
   console.log('==========================================');
   console.log('🔄 NXLINK Local Ingestion & Sync Tool');
-  console.log('   Target Flow: DentalHome_V2');
+  console.log('   Target Flow: [MY]DentalHome_v2');
   console.log('==========================================');
 
   loadEnv();
@@ -192,7 +192,7 @@ async function main() {
 
   console.log(`✓ Token retrieved (${token.slice(0, 20)}...)`);
 
-  console.log('\n📥 Querying NXLINK AI Conversations API (Scanning Pages for DentalHome_V2)...');
+  console.log('\n📥 Querying NXLINK AI Conversations API (Scanning Pages for [MY]DentalHome_v2)...');
   let conversations = [];
 
   for (let pageNum = 1; pageNum <= 10; pageNum++) {
@@ -219,7 +219,7 @@ async function main() {
     }
   }
 
-  console.log(`Fetched ${conversations.length} total conversations from NXLINK. Filtering for DentalHome_V2...`);
+  console.log(`Fetched ${conversations.length} total conversations from NXLINK. Filtering for [MY]DentalHome_v2...`);
 
   let insertedCount = 0;
   let skippedCount = 0;
@@ -255,9 +255,9 @@ async function main() {
       console.warn(`     Warning: transcript fetch failed for ${convId}`);
     }
 
-    // FILTER ONLY DENTALHOME_V2 FLOWS
+    // FILTER ONLY [MY]DENTALHOME_V2 FLOWS
     let isDentalHomeV2 = false;
-    if (conv.flow_name === 'DentalHome_V2' || conv.auto_flow_name === 'DentalHome_V2') {
+    if (conv.flow_name === '[MY]DentalHome_v2' || conv.auto_flow_name === '[MY]DentalHome_v2') {
       isDentalHomeV2 = true;
     } else {
       for (const m of messages) {
@@ -268,7 +268,7 @@ async function main() {
         if (m.msgType === 200 && m.msgInfo) {
           try {
             const p = typeof m.msgInfo === 'string' ? JSON.parse(m.msgInfo) : m.msgInfo;
-            if (p.name === 'DentalHome_V2') {
+            if (p.name === '[MY]DentalHome_v2') {
               isDentalHomeV2 = true;
               break;
             }
@@ -282,7 +282,7 @@ async function main() {
       continue;
     }
 
-    console.log(`   Processing DentalHome_V2 conversation #${i + 1} (ID: ${convId})...`);
+    console.log(`   Processing [MY]DentalHome_v2 conversation #${i + 1} (ID: ${convId})...`);
 
     // Build clean dialogue thread
     const cleanTranscript = buildCleanDialogueThread(messages, convId);
@@ -376,7 +376,7 @@ async function main() {
         email_address: conv.email_address || null,
         customer_sentiment: sentiment || 'Neutral',
         company_name: conv.company_name || null,
-        conversation_summary: cleanSummary || 'DentalHome_V2 AI Bot Consultation',
+        conversation_summary: cleanSummary || '[MY]DentalHome_v2 AI Bot Consultation',
         next_steps: nextSteps || null,
         conversation_date: convDate,
         conversation_time: convTime,
@@ -388,7 +388,7 @@ async function main() {
     if (insertErr) {
       console.error(`     ❌ Supabase Insert Error for ${convId}:`, insertErr.message);
     } else {
-      console.log(`     ✅ Synced DentalHome_V2 ID ${convId} (${customerName || 'Anonymous'}) ${callAudioUrl ? '(With Audio MP3 🎵)' : ''}`);
+      console.log(`     ✅ Synced [MY]DentalHome_v2 ID ${convId} (${customerName || 'Anonymous'}) ${callAudioUrl ? '(With Audio MP3 🎵)' : ''}`);
       insertedCount++;
 
       // Auto-push to 3rd party webhook if record qualifies under tag rules
@@ -436,7 +436,7 @@ async function main() {
 
   console.log('\n==========================================');
   console.log(`🎉 INGESTION COMPLETE!`);
-  console.log(`   DentalHome_V2 records inserted: ${insertedCount}`);
+  console.log(`   [MY]DentalHome_v2 records inserted: ${insertedCount}`);
   console.log(`   Skipped (other flows / existing): ${skippedCount}`);
   console.log('==========================================');
 }

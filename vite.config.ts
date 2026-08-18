@@ -64,7 +64,7 @@ function netlifyFunctionsDevPlugin(): Plugin {
             const convData: any = await convResp.json();
             const list = Array.isArray(convData.list) ? convData.list : (Array.isArray(convData.data?.list) ? convData.data.list : (Array.isArray(convData.data) ? convData.data : []));
 
-            console.log(`[Dev Sync] Fetched ${list.length} conversations from NXLINK. Filtering for DentalHome_V2...`);
+            console.log(`[Dev Sync] Fetched ${list.length} conversations from NXLINK. Filtering for [MY]DentalHome_v2...`);
 
             const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || env.SUPABASE_URL || env.VITE_SUPABASE_URL;
             const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY || env.SUPABASE_SERVICE_ROLE_KEY || env.VITE_SUPABASE_ANON_KEY;
