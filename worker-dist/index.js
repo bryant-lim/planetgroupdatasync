@@ -20200,6 +20200,7 @@ async function runSync(env) {
   let syncedCount = 0;
   let webhookPushedCount = 0;
   let activeFetchesCount = 0;
+  const maxSyncLimit = parseInt(env.MAX_SYNC_LIMIT || "10", 10);
   for (const conv of conversations) {
     const flowName = conv.auto_flow_name || conv.autoFlowName || "";
     if (!flowName.toLowerCase().includes("planetgroup")) continue;
@@ -20222,7 +20223,7 @@ async function runSync(env) {
       needsUpdateOrInsert = true;
     }
     if (!needsUpdateOrInsert) continue;
-    if (activeFetchesCount >= 10) {
+    if (activeFetchesCount >= maxSyncLimit) {
       break;
     }
     activeFetchesCount++;

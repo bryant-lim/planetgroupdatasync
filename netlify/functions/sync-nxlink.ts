@@ -272,6 +272,8 @@ const syncNxlinkHandler: Handler = async () => {
 
     let syncedCount = 0;
     let webhookPushedCount = 0;
+    let activeFetchesCount = 0;
+    const maxSyncLimit = parseInt(process.env.MAX_SYNC_LIMIT || '10', 10);
 
     for (const conv of conversations) {
       const flowName = conv.auto_flow_name || conv.autoFlowName || '';
@@ -280,11 +282,36 @@ const syncNxlinkHandler: Handler = async () => {
       const convId = conv.id || conv.conversationId || conv.uuid;
       if (!convId) continue;
 
+      let tagsList: string[] = [];
+      if (Array.isArray(conv.tags)) {
+        tagsList = conv.tags.map((t: any) => (typeof t === 'string' ? t : t.name)).filter(Boolean);
+      }
+
       const { data: existing } = await supabase
         .from('conversations')
-        .select('id, customer_name, conversation_summary, conversation_tags, webhook_status')
+        .select('id, customer_name, conversation_summary, conversation_tags')
         .ilike('conversation_transcript', `%nxlink_id:${convId}%`)
         .limit(1);
+
+      let needsUpdateOrInsert = false;
+      let existingRow: any = null;
+
+      if (existing && existing.length > 0) {
+        existingRow = existing[0];
+        const tagsChanged = tagsList.length > 0 && JSON.stringify(existingRow.conversation_tags || []) !== JSON.stringify(tagsList);
+        if (!existingRow.customer_name || !existingRow.conversation_summary || tagsChanged) {
+          needsUpdateOrInsert = true;
+        }
+      } else {
+        needsUpdateOrInsert = true;
+      }
+
+      if (!needsUpdateOrInsert) continue;
+
+      if (activeFetchesCount >= maxSyncLimit) {
+        break;
+      }
+      activeFetchesCount++;
 
       const msgResp = await fetch(`https://app.nxlink.ai/admin/nx_flow_manager/conversation/messages?pageSize=9999&pageNumber=1&conversationId=${convId}`, {
         headers: { 'authorization': token }
@@ -301,11 +328,6 @@ const syncNxlinkHandler: Handler = async () => {
         }
       }
       const meta = extractSummaryMetadata(messages, conv);
-
-      let tagsList: string[] = [];
-      if (Array.isArray(conv.tags)) {
-        tagsList = conv.tags.map((t: any) => (typeof t === 'string' ? t : t.name)).filter(Boolean);
-      }
 
       let callAudioUrl: string | null = conv.call_audio_url || conv.callAudioUrl || null;
       if (!callAudioUrl && Array.isArray(messages)) {
@@ -332,36 +354,32 @@ const syncNxlinkHandler: Handler = async () => {
 
       let wasIngestedOrUpdated = false;
 
-      if (existing && existing.length > 0) {
-        const row = existing[0];
-        const tagsChanged = tagsList.length > 0 && JSON.stringify(row.conversation_tags || []) !== JSON.stringify(tagsList);
-        if (!row.customer_name || !row.conversation_summary || tagsChanged) {
-          await supabase.from('conversations').update({
-            customer_name: meta.customer_name,
-            phone_number: meta.phone_number,
-            customer_sentiment: meta.customer_sentiment,
-            conversation_summary: meta.conversation_summary,
-            next_steps: meta.next_steps,
-            conversation_tags: tagsList,
-            conversation_date: cDateStr,
-            conversation_time: cTimeStr,
-            call_audio_url: callAudioUrl,
-            gender: meta.gender,
-            height: meta.height,
-            weight: meta.weight,
-            age: meta.age,
-            qualification: meta.qualification,
-            address: meta.address,
-            transportation: meta.transportation,
-            medical_condition: meta.medical_condition,
-            working_experience: meta.working_experience,
-            expected_salary: meta.expected_salary,
-            start_date: meta.start_date,
-            photo: meta.photo,
-            position_applied: meta.position_applied
-          }).eq('id', row.id);
-          wasIngestedOrUpdated = true;
-        }
+      if (existingRow) {
+        await supabase.from('conversations').update({
+          customer_name: meta.customer_name,
+          phone_number: meta.phone_number,
+          customer_sentiment: meta.customer_sentiment,
+          conversation_summary: meta.conversation_summary,
+          next_steps: meta.next_steps,
+          conversation_tags: tagsList,
+          conversation_date: cDateStr,
+          conversation_time: cTimeStr,
+          call_audio_url: callAudioUrl,
+          gender: meta.gender,
+          height: meta.height,
+          weight: meta.weight,
+          age: meta.age,
+          qualification: meta.qualification,
+          address: meta.address,
+          transportation: meta.transportation,
+          medical_condition: meta.medical_condition,
+          working_experience: meta.working_experience,
+          expected_salary: meta.expected_salary,
+          start_date: meta.start_date,
+          photo: meta.photo,
+          position_applied: meta.position_applied
+        }).eq('id', existingRow.id);
+        wasIngestedOrUpdated = true;
       } else {
         const { error } = await supabase.from('conversations').insert([{
           customer_name: meta.customer_name,
