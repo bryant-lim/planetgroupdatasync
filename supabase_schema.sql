@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS public.conversations (
     expected_salary TEXT,
     start_date TEXT,
     photo TEXT,
+    position_applied TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 

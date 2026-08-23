@@ -20015,6 +20015,7 @@ function extractSummaryMetadata(messages, conv) {
   let expectedSalary = null;
   let startDate = null;
   let photo = null;
+  let positionApplied = null;
   if (Array.isArray(messages)) {
     for (const m of messages) {
       if (m && m.msgType === 25 && m.msgInfo) {
@@ -20037,7 +20038,7 @@ function extractSummaryMetadata(messages, conv) {
     if (sumMatch && !summary) summary = sumMatch[1].trim();
     const nsMatch = text.match(/(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions):\s*(.*?)(?=\s*(?:Customer Name|Phone Number|Full Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Expected Salary|Start Date|Photo)|$)/i);
     if (nsMatch && !nextSteps) nextSteps = nsMatch[1].trim();
-    const lookahead = "(?=\\s*(?:Full Name|Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Work Experience|Expected Salary|Start Date|Photo|Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Sentiment)|$)";
+    const lookahead = "(?=\\s*(?:Full Name|Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Work Experience|Expected Salary|Start Date|Photo|Position Applied|Position|Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Sentiment)|$)";
     const nMatch = text.match(new RegExp(`(?:Full Name|Customer Name|Name):\\s*(.*?)${lookahead}`, "i"));
     if (nMatch && nMatch[1].trim() && nMatch[1].trim().toLowerCase() !== "n/a" && !extractedName) {
       extractedName = nMatch[1].trim();
@@ -20068,6 +20069,8 @@ function extractSummaryMetadata(messages, conv) {
     if (salMatch && salMatch[1].trim() && !expectedSalary) expectedSalary = salMatch[1].trim();
     const startMatch = text.match(new RegExp(`Start Date:\\s*(.*?)${lookahead}`, "i"));
     if (startMatch && startMatch[1].trim() && !startDate) startDate = startMatch[1].trim();
+    const posMatch = text.match(new RegExp(`(?:Position Applied|Position):\\s*(.*?)${lookahead}`, "i"));
+    if (posMatch && posMatch[1].trim() && !positionApplied) positionApplied = posMatch[1].trim();
   };
   if (Array.isArray(messages)) {
     for (const m of messages) {
@@ -20115,7 +20118,8 @@ function extractSummaryMetadata(messages, conv) {
     working_experience: cleanField(workingExperience),
     expected_salary: cleanField(expectedSalary),
     start_date: cleanField(startDate),
-    photo
+    photo,
+    position_applied: cleanField(positionApplied)
   };
 }
 function shouldSyncToWebhook(tags) {
@@ -20268,7 +20272,8 @@ async function runSync(env) {
           working_experience: meta.working_experience,
           expected_salary: meta.expected_salary,
           start_date: meta.start_date,
-          photo: meta.photo
+          photo: meta.photo,
+          position_applied: meta.position_applied
         }).eq("id", row.id);
         wasIngestedOrUpdated = true;
       }
@@ -20297,7 +20302,8 @@ async function runSync(env) {
         working_experience: meta.working_experience,
         expected_salary: meta.expected_salary,
         start_date: meta.start_date,
-        photo: meta.photo
+        photo: meta.photo,
+        position_applied: meta.position_applied
       }]);
       if (!error) {
         syncedCount++;

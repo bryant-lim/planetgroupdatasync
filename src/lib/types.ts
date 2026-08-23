@@ -27,6 +27,7 @@ export interface ConversationData {
   expected_salary?: string | null;
   start_date?: string | null;
   photo?: string | null;
+  position_applied?: string | null;
   created_at: string;
 }
 

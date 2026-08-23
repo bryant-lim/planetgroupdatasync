@@ -29,6 +29,7 @@ function extractSummaryMetadata(messages: any[], conv: any) {
   let expectedSalary: string | null = null;
   let startDate: string | null = null;
   let photo: string | null = null;
+  let positionApplied: string | null = null;
 
   // Extract photo from messages
   if (Array.isArray(messages)) {
@@ -56,7 +57,7 @@ function extractSummaryMetadata(messages: any[], conv: any) {
     const nsMatch = text.match(/(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions):\s*(.*?)(?=\s*(?:Customer Name|Phone Number|Full Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Expected Salary|Start Date|Photo)|$)/i);
     if (nsMatch && !nextSteps) nextSteps = nsMatch[1].trim();
 
-    const lookahead = '(?=\\s*(?:Full Name|Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Work Experience|Expected Salary|Start Date|Photo|Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Sentiment)|$)';
+    const lookahead = '(?=\\s*(?:Full Name|Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Work Experience|Expected Salary|Start Date|Photo|Position Applied|Position|Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Sentiment)|$)';
 
     const nMatch = text.match(new RegExp(`(?:Full Name|Customer Name|Name):\\s*(.*?)${lookahead}`, 'i'));
     if (nMatch && nMatch[1].trim() && nMatch[1].trim().toLowerCase() !== 'n/a' && !extractedName) {
@@ -100,6 +101,9 @@ function extractSummaryMetadata(messages: any[], conv: any) {
 
     const startMatch = text.match(new RegExp(`Start Date:\\s*(.*?)${lookahead}`, 'i'));
     if (startMatch && startMatch[1].trim() && !startDate) startDate = startMatch[1].trim();
+
+    const posMatch = text.match(new RegExp(`(?:Position Applied|Position):\\s*(.*?)${lookahead}`, 'i'));
+    if (posMatch && posMatch[1].trim() && !positionApplied) positionApplied = posMatch[1].trim();
   };
 
   if (Array.isArray(messages)) {
@@ -151,7 +155,8 @@ function extractSummaryMetadata(messages: any[], conv: any) {
     working_experience: cleanField(workingExperience),
     expected_salary: cleanField(expectedSalary),
     start_date: cleanField(startDate),
-    photo
+    photo,
+    position_applied: cleanField(positionApplied)
   };
 }
 
@@ -332,7 +337,8 @@ async function runSync(env: Env) {
           working_experience: meta.working_experience,
           expected_salary: meta.expected_salary,
           start_date: meta.start_date,
-          photo: meta.photo
+          photo: meta.photo,
+          position_applied: meta.position_applied
         }).eq('id', row.id);
         wasIngestedOrUpdated = true;
       }
@@ -361,7 +367,8 @@ async function runSync(env: Env) {
         working_experience: meta.working_experience,
         expected_salary: meta.expected_salary,
         start_date: meta.start_date,
-        photo: meta.photo
+        photo: meta.photo,
+        position_applied: meta.position_applied
       }]);
 
       if (!error) {

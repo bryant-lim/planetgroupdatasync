@@ -108,6 +108,7 @@ function extractSummaryMetadata(messages, conv) {
   let expectedSalary = null;
   let startDate = null;
   let photo = null;
+  let positionApplied = null;
 
   // Extract photo from messages
   if (Array.isArray(messages)) {
@@ -126,12 +127,12 @@ function extractSummaryMetadata(messages, conv) {
 
   const parseText = (sumText) => {
     if (!sumText) return;
-    const sentMatch = sumText.match(/Customer Sentiment:\s*([^\r\n]+?)(?=\s*(?:Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Name|Phone Number|Full Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Expected Salary|Start Date|Photo)|$)/i);
-    const summMatch = sumText.match(/Conversation Summary:\s*([^\r\n]+?)(?=\s*(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Name|Phone Number|Full Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Expected Salary|Start Date|Photo)|$)/i);
-    const stepsMatch = sumText.match(/(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions):\s*([^\r\n]+?)(?=\s*(?:Customer Name|Phone Number|Full Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Expected Salary|Start Date|Photo)|$)/i);
+    const sentMatch = sumText.match(/Customer Sentiment:\s*([^\r\n]+?)(?=\s*(?:Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Name|Phone Number|Full Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Expected Salary|Start Date|Photo|Position Applied|Position)|$)/i);
+    const summMatch = sumText.match(/Conversation Summary:\s*([^\r\n]+?)(?=\s*(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Name|Phone Number|Full Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Expected Salary|Start Date|Photo|Position Applied|Position)|$)/i);
+    const stepsMatch = sumText.match(/(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions):\s*([^\r\n]+?)(?=\s*(?:Customer Name|Phone Number|Full Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Expected Salary|Start Date|Photo|Position Applied|Position)|$)/i);
 
     // PlanetGroup Specific Fields lookahead pattern to avoid capturing into the next field
-    const lookahead = '(?=\\s*(?:Full Name|Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Work Experience|Expected Salary|Start Date|Photo|Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Sentiment)|$)';
+    const lookahead = '(?=\\s*(?:Full Name|Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Work Experience|Expected Salary|Start Date|Photo|Position Applied|Position|Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Sentiment)|$)';
 
     const nameMatch = sumText.match(new RegExp(`(?:Full Name|Customer Name|Name):\\s*(.*?)${lookahead}`, 'i'));
     const phoneMatch = sumText.match(new RegExp(`(?:Phone Number|Phone):\\s*(.*?)${lookahead}`, 'i'));
@@ -146,6 +147,7 @@ function extractSummaryMetadata(messages, conv) {
     const expMatch = sumText.match(new RegExp(`(?:Working Experience|Work Experience):\\s*(.*?)${lookahead}`, 'i'));
     const salMatch = sumText.match(new RegExp(`Expected Salary:\\s*(.*?)${lookahead}`, 'i'));
     const startMatch = sumText.match(new RegExp(`Start Date:\\s*(.*?)${lookahead}`, 'i'));
+    const posMatch = sumText.match(new RegExp(`(?:Position Applied|Position):\\s*(.*?)${lookahead}`, 'i'));
 
     if (sentMatch && sentMatch[1] && !sentiment) sentiment = sentMatch[1].trim();
     if (summMatch && summMatch[1] && !summary) summary = summMatch[1].trim();
@@ -164,6 +166,7 @@ function extractSummaryMetadata(messages, conv) {
     if (expMatch && expMatch[1] && !workingExperience) workingExperience = expMatch[1].trim();
     if (salMatch && salMatch[1] && !expectedSalary) expectedSalary = salMatch[1].trim();
     if (startMatch && startMatch[1] && !startDate) startDate = startMatch[1].trim();
+    if (posMatch && posMatch[1] && !positionApplied) positionApplied = posMatch[1].trim();
   };
 
   if (Array.isArray(messages)) {
@@ -217,7 +220,8 @@ function extractSummaryMetadata(messages, conv) {
     working_experience: cleanField(workingExperience),
     expected_salary: cleanField(expectedSalary),
     start_date: cleanField(startDate),
-    photo: photo
+    photo: photo,
+    position_applied: cleanField(positionApplied)
   };
 }
 
@@ -396,7 +400,8 @@ async function main() {
       working_experience,
       expected_salary,
       start_date,
-      photo
+      photo,
+      position_applied
     } = extractSummaryMetadata(messages, conv);
 
     // Date formatting (NXLINK created_at timestamp)
@@ -481,7 +486,8 @@ async function main() {
         working_experience,
         expected_salary,
         start_date,
-        photo
+        photo,
+        position_applied
       }]);
 
     if (insertErr) {

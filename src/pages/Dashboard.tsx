@@ -53,6 +53,7 @@ interface Conversation {
   expected_salary?: string | null;
   start_date?: string | null;
   photo?: string | null;
+  position_applied?: string | null;
   created_at: string;
 }
 
@@ -857,7 +858,7 @@ export default function Dashboard() {
                 </div>
 
                 {/* Candidate Application Details (PlanetGroup) */}
-                {(selectedConvo.gender || selectedConvo.age || selectedConvo.qualification || selectedConvo.address || selectedConvo.photo) && (
+                {(selectedConvo.gender || selectedConvo.age || selectedConvo.qualification || selectedConvo.address || selectedConvo.photo || selectedConvo.position_applied) && (
                   <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-3">
                     <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider font-heading">
                       Job Application Details
@@ -865,6 +866,12 @@ export default function Dashboard() {
                     <div className="overflow-x-auto">
                       <table className="w-full text-left border-collapse text-xs">
                         <tbody>
+                          {selectedConvo.position_applied && (
+                            <tr className="border-b border-slate-200/50">
+                              <td className="py-2 pr-4 font-semibold text-slate-500 w-1/3">Position Applied</td>
+                              <td className="py-2 text-slate-800 font-bold">{selectedConvo.position_applied}</td>
+                            </tr>
+                          )}
                           {selectedConvo.gender && (
                             <tr className="border-b border-slate-200/50">
                               <td className="py-2 pr-4 font-semibold text-slate-500 w-1/3">Gender</td>
