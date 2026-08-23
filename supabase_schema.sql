@@ -16,6 +16,18 @@ CREATE TABLE IF NOT EXISTS public.conversations (
     webhook_status TEXT DEFAULT 'not_synced',
     webhook_synced_at TIMESTAMP WITH TIME ZONE,
     webhook_error TEXT,
+    gender TEXT,
+    height TEXT,
+    weight TEXT,
+    age TEXT,
+    qualification TEXT,
+    address TEXT,
+    transportation TEXT,
+    medical_condition TEXT,
+    working_experience TEXT,
+    expected_salary TEXT,
+    start_date TEXT,
+    photo TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 

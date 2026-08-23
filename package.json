@@ -11,6 +11,7 @@
     "test:auth": "node scripts/test-auth.js",
     "sync:local": "node scripts/sync-local.js",
     "sync:dentalhome": "node scripts/sync-local.js",
+    "sync:planetgroup": "node scripts/sync-local.js",
     "sync:webhook": "node scripts/sync-webhook.js"
   },
   "dependencies": {

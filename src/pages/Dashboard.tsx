@@ -41,6 +41,18 @@ interface Conversation {
   webhook_status?: 'synced' | 'not_synced' | 'failed' | null;
   webhook_error?: string | null;
   webhook_synced_at?: string | null;
+  gender?: string | null;
+  height?: string | null;
+  weight?: string | null;
+  age?: string | null;
+  qualification?: string | null;
+  address?: string | null;
+  transportation?: string | null;
+  medical_condition?: string | null;
+  working_experience?: string | null;
+  expected_salary?: string | null;
+  start_date?: string | null;
+  photo?: string | null;
   created_at: string;
 }
 
@@ -374,7 +386,8 @@ export default function Dashboard() {
     setNxlinkSyncing(true);
     setWebhookStatus(null);
     try {
-      const resp = await fetch('/.netlify/functions/sync-nxlink');
+      const syncUrl = import.meta.env.VITE_SYNC_URL || '/.netlify/functions/sync-nxlink';
+      const resp = await fetch(syncUrl);
       if (resp.ok) {
         const data = await resp.json();
         const msg = data.syncedCount > 0
@@ -842,6 +855,102 @@ export default function Dashboard() {
                     </div>
                   </div>
                 </div>
+
+                {/* Candidate Application Details (PlanetGroup) */}
+                {(selectedConvo.gender || selectedConvo.age || selectedConvo.qualification || selectedConvo.address || selectedConvo.photo) && (
+                  <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-3">
+                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider font-heading">
+                      Job Application Details
+                    </h4>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left border-collapse text-xs">
+                        <tbody>
+                          {selectedConvo.gender && (
+                            <tr className="border-b border-slate-200/50">
+                              <td className="py-2 pr-4 font-semibold text-slate-500 w-1/3">Gender</td>
+                              <td className="py-2 text-slate-800 font-bold">{selectedConvo.gender}</td>
+                            </tr>
+                          )}
+                          {selectedConvo.age && (
+                            <tr className="border-b border-slate-200/50">
+                              <td className="py-2 pr-4 font-semibold text-slate-500">Age</td>
+                              <td className="py-2 text-slate-800 font-bold">{selectedConvo.age}</td>
+                            </tr>
+                          )}
+                          {selectedConvo.height && (
+                            <tr className="border-b border-slate-200/50">
+                              <td className="py-2 pr-4 font-semibold text-slate-500">Height</td>
+                              <td className="py-2 text-slate-800 font-bold">{selectedConvo.height}</td>
+                            </tr>
+                          )}
+                          {selectedConvo.weight && (
+                            <tr className="border-b border-slate-200/50">
+                              <td className="py-2 pr-4 font-semibold text-slate-500">Weight</td>
+                              <td className="py-2 text-slate-800 font-bold">{selectedConvo.weight}</td>
+                            </tr>
+                          )}
+                          {selectedConvo.qualification && (
+                            <tr className="border-b border-slate-200/50">
+                              <td className="py-2 pr-4 font-semibold text-slate-500">Qualification</td>
+                              <td className="py-2 text-slate-800 font-bold">{selectedConvo.qualification}</td>
+                            </tr>
+                          )}
+                          {selectedConvo.transportation && (
+                            <tr className="border-b border-slate-200/50">
+                              <td className="py-2 pr-4 font-semibold text-slate-500">Transportation</td>
+                              <td className="py-2 text-slate-800 font-bold">{selectedConvo.transportation}</td>
+                            </tr>
+                          )}
+                          {selectedConvo.expected_salary && (
+                            <tr className="border-b border-slate-200/50">
+                              <td className="py-2 pr-4 font-semibold text-slate-500">Expected Salary</td>
+                              <td className="py-2 text-slate-800 font-bold">{selectedConvo.expected_salary}</td>
+                            </tr>
+                          )}
+                          {selectedConvo.start_date && (
+                            <tr className="border-b border-slate-200/50">
+                              <td className="py-2 pr-4 font-semibold text-slate-500">Start Date</td>
+                              <td className="py-2 text-slate-800 font-bold">{selectedConvo.start_date}</td>
+                            </tr>
+                          )}
+                          {selectedConvo.medical_condition && (
+                            <tr className="border-b border-slate-200/50">
+                              <td className="py-2 pr-4 font-semibold text-slate-500">Medical Condition</td>
+                              <td className="py-2 text-slate-800 font-bold">{selectedConvo.medical_condition}</td>
+                            </tr>
+                          )}
+                          {selectedConvo.working_experience && (
+                            <tr className="border-b border-slate-200/50">
+                              <td className="py-2 pr-4 font-semibold text-slate-500">Working Experience</td>
+                              <td className="py-2 text-slate-800 font-bold whitespace-pre-wrap">{selectedConvo.working_experience}</td>
+                            </tr>
+                          )}
+                          {selectedConvo.address && (
+                            <tr className="border-b border-slate-200/50">
+                              <td className="py-2 pr-4 font-semibold text-slate-500">Address</td>
+                              <td className="py-2 text-slate-800 font-bold whitespace-pre-wrap">{selectedConvo.address}</td>
+                            </tr>
+                          )}
+                          {selectedConvo.photo && (
+                            <tr>
+                              <td className="py-2 pr-4 font-semibold text-slate-500">Applicant Photo</td>
+                              <td className="py-2 text-slate-800 font-bold">
+                                <a 
+                                  href={selectedConvo.photo} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer" 
+                                  className="inline-flex items-center text-emerald-600 hover:text-emerald-800 underline"
+                                >
+                                  View Uploaded Photo ↗
+                                </a>
+                              </td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
 
                 {/* Full Conversation Summary */}
                 <div className="bg-white border border-slate-200 p-4 rounded-xl space-y-2 shadow-2xs">

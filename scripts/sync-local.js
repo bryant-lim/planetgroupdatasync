@@ -96,6 +96,76 @@ function extractSummaryMetadata(messages, conv) {
   let extractedName = null;
   let extractedPhone = null;
 
+  let gender = null;
+  let height = null;
+  let weight = null;
+  let age = null;
+  let qualification = null;
+  let address = null;
+  let transportation = null;
+  let medicalCondition = null;
+  let workingExperience = null;
+  let expectedSalary = null;
+  let startDate = null;
+  let photo = null;
+
+  // Extract photo from messages
+  if (Array.isArray(messages)) {
+    for (const m of messages) {
+      if (m && m.msgType === 25 && m.msgInfo) {
+        try {
+          const parsed = typeof m.msgInfo === 'string' ? JSON.parse(m.msgInfo) : m.msgInfo;
+          if (parsed && parsed.message && parsed.message.url) {
+            photo = parsed.message.url;
+            break;
+          }
+        } catch (e) {}
+      }
+    }
+  }
+
+  const parseText = (sumText) => {
+    if (!sumText) return;
+    const sentMatch = sumText.match(/Customer Sentiment:\s*([^\r\n]+?)(?=\s*(?:Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Name|Phone Number|Full Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Expected Salary|Start Date|Photo)|$)/i);
+    const summMatch = sumText.match(/Conversation Summary:\s*([^\r\n]+?)(?=\s*(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Name|Phone Number|Full Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Expected Salary|Start Date|Photo)|$)/i);
+    const stepsMatch = sumText.match(/(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions):\s*([^\r\n]+?)(?=\s*(?:Customer Name|Phone Number|Full Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Expected Salary|Start Date|Photo)|$)/i);
+
+    // PlanetGroup Specific Fields lookahead pattern to avoid capturing into the next field
+    const lookahead = '(?=\\s*(?:Full Name|Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Work Experience|Expected Salary|Start Date|Photo|Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Sentiment)|$)';
+
+    const nameMatch = sumText.match(new RegExp(`(?:Full Name|Customer Name|Name):\\s*(.*?)${lookahead}`, 'i'));
+    const phoneMatch = sumText.match(new RegExp(`(?:Phone Number|Phone):\\s*(.*?)${lookahead}`, 'i'));
+    const genderMatch = sumText.match(new RegExp(`Gender:\\s*(.*?)${lookahead}`, 'i'));
+    const heightMatch = sumText.match(new RegExp(`Height:\\s*(.*?)${lookahead}`, 'i'));
+    const weightMatch = sumText.match(new RegExp(`Weight:\\s*(.*?)${lookahead}`, 'i'));
+    const ageMatch = sumText.match(new RegExp(`Age:\\s*(.*?)${lookahead}`, 'i'));
+    const qualMatch = sumText.match(new RegExp(`(?:Highest Qualification|Qualification):\\s*(.*?)${lookahead}`, 'i'));
+    const addrMatch = sumText.match(new RegExp(`Address:\\s*(.*?)${lookahead}`, 'i'));
+    const transMatch = sumText.match(new RegExp(`Transportation:\\s*(.*?)${lookahead}`, 'i'));
+    const medMatch = sumText.match(new RegExp(`Medical Condition:\\s*(.*?)${lookahead}`, 'i'));
+    const expMatch = sumText.match(new RegExp(`(?:Working Experience|Work Experience):\\s*(.*?)${lookahead}`, 'i'));
+    const salMatch = sumText.match(new RegExp(`Expected Salary:\\s*(.*?)${lookahead}`, 'i'));
+    const startMatch = sumText.match(new RegExp(`Start Date:\\s*(.*?)${lookahead}`, 'i'));
+
+    if (sentMatch && sentMatch[1] && !sentiment) sentiment = sentMatch[1].trim();
+    if (summMatch && summMatch[1] && !summary) summary = summMatch[1].trim();
+    if (stepsMatch && stepsMatch[1] && !nextSteps) nextSteps = stepsMatch[1].trim();
+    if (nameMatch && nameMatch[1] && !extractedName) extractedName = nameMatch[1].trim();
+    if (phoneMatch && phoneMatch[1] && !extractedPhone) extractedPhone = phoneMatch[1].trim();
+
+    if (genderMatch && genderMatch[1] && !gender) gender = genderMatch[1].trim();
+    if (heightMatch && heightMatch[1] && !height) height = heightMatch[1].trim();
+    if (weightMatch && weightMatch[1] && !weight) weight = weightMatch[1].trim();
+    if (ageMatch && ageMatch[1] && !age) age = ageMatch[1].trim();
+    if (qualMatch && qualMatch[1] && !qualification) qualification = qualMatch[1].trim();
+    if (addrMatch && addrMatch[1] && !address) address = addrMatch[1].trim();
+    if (transMatch && transMatch[1] && !transportation) transportation = transMatch[1].trim();
+    if (medMatch && medMatch[1] && !medicalCondition) medicalCondition = medMatch[1].trim();
+    if (expMatch && expMatch[1] && !workingExperience) workingExperience = expMatch[1].trim();
+    if (salMatch && salMatch[1] && !expectedSalary) expectedSalary = salMatch[1].trim();
+    if (startMatch && startMatch[1] && !startDate) startDate = startMatch[1].trim();
+  };
+
   if (Array.isArray(messages)) {
     for (const m of messages) {
       if (m && m.msgType === 64 && m.msgInfo) {
@@ -109,31 +179,15 @@ function extractSummaryMetadata(messages, conv) {
         } catch (e) {}
 
         if (parsed && parsed.summarize) {
-          const sumText = parsed.summarize;
-
-          const sentMatch = sumText.match(/Customer Sentiment:\s*([^\r\n]+?)(?=\s*(?:Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Name|Phone Number)|$)/i);
-          const summMatch = sumText.match(/Conversation Summary:\s*([^\r\n]+?)(?=\s*(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Name|Phone Number)|$)/i);
-          const stepsMatch = sumText.match(/(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions):\s*([^\r\n]+?)(?=\s*(?:Customer Name|Phone Number)|$)/i);
-          const nameMatch = sumText.match(/Customer Name:\s*([^\.\r\n]+)/i);
-          const phoneMatch = sumText.match(/(?:Phone Number|Phone):\s*(0\d{8,10})/i);
-
-          if (sentMatch && sentMatch[1]) sentiment = sentMatch[1].trim();
-          if (summMatch && summMatch[1]) summary = summMatch[1].trim();
-          if (stepsMatch && stepsMatch[1]) nextSteps = stepsMatch[1].trim();
-          if (nameMatch && nameMatch[1]) extractedName = nameMatch[1].trim();
-          if (phoneMatch && phoneMatch[1]) extractedPhone = phoneMatch[1].trim();
-
-          if (!summary && !sumText.includes('Conversation Summary:')) {
-            summary = sumText.replace(/(?:Follow-up Suggestions|Follow Up Suggestions|Next Steps|Customer Name|Phone Number):.*$/is, '').trim();
-          }
+          parseText(parsed.summarize);
         }
       }
     }
   }
 
   // Fallbacks from conv object
-  if (!summary && conv.conv_summary) summary = conv.conv_summary;
-  if (!summary && conv.summary) summary = conv.summary;
+  if (!summary && conv.conv_summary) parseText(conv.conv_summary);
+  if (!summary && conv.summary) parseText(conv.summary);
 
   // Clean trailing artifacts
   const cleanField = (val) => {
@@ -148,14 +202,26 @@ function extractSummaryMetadata(messages, conv) {
     summary: cleanField(summary),
     nextSteps: cleanField(nextSteps),
     extractedName: cleanField(extractedName),
-    extractedPhone: cleanField(extractedPhone)
+    extractedPhone: cleanField(extractedPhone),
+    gender: cleanField(gender),
+    height: cleanField(height),
+    weight: cleanField(weight),
+    age: cleanField(age),
+    qualification: cleanField(qualification),
+    address: cleanField(address),
+    transportation: cleanField(transportation),
+    medical_condition: cleanField(medicalCondition),
+    working_experience: cleanField(workingExperience),
+    expected_salary: cleanField(expectedSalary),
+    start_date: cleanField(startDate),
+    photo: photo
   };
 }
 
 async function main() {
   console.log('==========================================');
   console.log('🔄 NXLINK Local Ingestion & Sync Tool');
-  console.log('   Target Flow: [MY]DentalHome_v2');
+  console.log('   Target Flow: [MY]PLANETGROUP');
   console.log('==========================================');
 
   loadEnv();
@@ -192,7 +258,7 @@ async function main() {
 
   console.log(`✓ Token retrieved (${token.slice(0, 20)}...)`);
 
-  console.log('\n📥 Querying NXLINK AI Conversations API (Scanning Pages for [MY]DentalHome_v2)...');
+  console.log('\n📥 Querying NXLINK AI Conversations API (Scanning Pages for [MY]PLANETGROUP)...');
   let conversations = [];
 
   for (let pageNum = 1; pageNum <= 10; pageNum++) {
@@ -219,7 +285,7 @@ async function main() {
     }
   }
 
-  console.log(`Fetched ${conversations.length} total conversations from NXLINK. Filtering for [MY]DentalHome_v2...`);
+  console.log(`Fetched ${conversations.length} total conversations from NXLINK. Filtering for [MY]PLANETGROUP...`);
 
   let insertedCount = 0;
   let skippedCount = 0;
@@ -255,21 +321,21 @@ async function main() {
       console.warn(`     Warning: transcript fetch failed for ${convId}`);
     }
 
-    // FILTER ONLY [MY]DENTALHOME_V2 FLOWS
-    let isDentalHomeV2 = false;
-    if (conv.flow_name === '[MY]DentalHome_v2' || conv.auto_flow_name === '[MY]DentalHome_v2') {
-      isDentalHomeV2 = true;
+    // FILTER ONLY [MY]PLANETGROUP FLOWS
+    let isPlanetGroup = false;
+    if (conv.flow_name === '[MY]PLANETGROUP' || conv.auto_flow_name === '[MY]PLANETGROUP') {
+      isPlanetGroup = true;
     } else {
       for (const m of messages) {
-        if (m.autoFlowId === 1650) {
-          isDentalHomeV2 = true;
+        if (m.autoFlowId === 1821) {
+          isPlanetGroup = true;
           break;
         }
         if (m.msgType === 200 && m.msgInfo) {
           try {
             const p = typeof m.msgInfo === 'string' ? JSON.parse(m.msgInfo) : m.msgInfo;
-            if (p.name === '[MY]DentalHome_v2') {
-              isDentalHomeV2 = true;
+            if (p.name === '[MY]PLANETGROUP') {
+              isPlanetGroup = true;
               break;
             }
           } catch (e) {}
@@ -277,12 +343,12 @@ async function main() {
       }
     }
 
-    if (!isDentalHomeV2) {
+    if (!isPlanetGroup) {
       skippedCount++;
       continue;
     }
 
-    console.log(`   Processing [MY]DentalHome_v2 conversation #${i + 1} (ID: ${convId})...`);
+    console.log(`   Processing [MY]PLANETGROUP conversation #${i + 1} (ID: ${convId})...`);
 
     // Build clean dialogue thread
     const cleanTranscript = buildCleanDialogueThread(messages, convId);
@@ -310,7 +376,25 @@ async function main() {
     }
 
     // Extract sentiment, summary, next steps structured metadata
-    const { sentiment, summary, nextSteps, extractedName, extractedPhone } = extractSummaryMetadata(messages, conv);
+    const {
+      sentiment,
+      summary,
+      nextSteps,
+      extractedName,
+      extractedPhone,
+      gender,
+      height,
+      weight,
+      age,
+      qualification,
+      address,
+      transportation,
+      medical_condition,
+      working_experience,
+      expected_salary,
+      start_date,
+      photo
+    } = extractSummaryMetadata(messages, conv);
 
     // Date formatting (NXLINK created_at timestamp)
     let convDate = new Date().toISOString().split('T')[0];
@@ -376,19 +460,31 @@ async function main() {
         email_address: conv.email_address || null,
         customer_sentiment: sentiment || 'Neutral',
         company_name: conv.company_name || null,
-        conversation_summary: cleanSummary || '[MY]DentalHome_v2 AI Bot Consultation',
+        conversation_summary: cleanSummary || '[MY]PLANETGROUP AI Bot Consultation',
         next_steps: nextSteps || null,
         conversation_date: convDate,
         conversation_time: convTime,
         conversation_tags: tagsList.length > 0 ? tagsList : null,
         conversation_transcript: cleanTranscript,
-        call_audio_url: callAudioUrl
+        call_audio_url: callAudioUrl,
+        gender,
+        height,
+        weight,
+        age,
+        qualification,
+        address,
+        transportation,
+        medical_condition,
+        working_experience,
+        expected_salary,
+        start_date,
+        photo
       }]);
 
     if (insertErr) {
       console.error(`     ❌ Supabase Insert Error for ${convId}:`, insertErr.message);
     } else {
-      console.log(`     ✅ Synced [MY]DentalHome_v2 ID ${convId} (${customerName || 'Anonymous'}) ${callAudioUrl ? '(With Audio MP3 🎵)' : ''}`);
+      console.log(`     ✅ Synced [MY]PLANETGROUP ID ${convId} (${customerName || 'Anonymous'}) ${callAudioUrl ? '(With Audio MP3 🎵)' : ''}`);
       insertedCount++;
 
       // Auto-push to 3rd party webhook if record qualifies under tag rules
@@ -436,7 +532,7 @@ async function main() {
 
   console.log('\n==========================================');
   console.log(`🎉 INGESTION COMPLETE!`);
-  console.log(`   [MY]DentalHome_v2 records inserted: ${insertedCount}`);
+  console.log(`   [MY]PLANETGROUP records inserted: ${insertedCount}`);
   console.log(`   Skipped (other flows / existing): ${skippedCount}`);
   console.log('==========================================');
 }

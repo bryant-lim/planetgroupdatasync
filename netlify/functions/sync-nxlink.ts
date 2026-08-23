@@ -9,26 +9,89 @@ function extractSummaryMetadata(messages: any[], conv: any) {
   let extractedName: string | null = null;
   let extractedPhone: string | null = null;
 
+  let gender: string | null = null;
+  let height: string | null = null;
+  let weight: string | null = null;
+  let age: string | null = null;
+  let qualification: string | null = null;
+  let address: string | null = null;
+  let transportation: string | null = null;
+  let medicalCondition: string | null = null;
+  let workingExperience: string | null = null;
+  let expectedSalary: string | null = null;
+  let startDate: string | null = null;
+  let photo: string | null = null;
+
+  // Extract photo from messages
+  if (Array.isArray(messages)) {
+    for (const m of messages) {
+      if (m && m.msgType === 25 && m.msgInfo) {
+        try {
+          const parsed = typeof m.msgInfo === 'string' ? JSON.parse(m.msgInfo) : m.msgInfo;
+          if (parsed && parsed.message && parsed.message.url) {
+            photo = parsed.message.url;
+            break;
+          }
+        } catch (e) {}
+      }
+    }
+  }
+
   const parseSummaryText = (text: string) => {
     if (!text) return;
-    const sMatch = text.match(/Customer Sentiment:\s*(.*?)(?=\s*Conversation Summary:|$)/i);
+    const sMatch = text.match(/Customer Sentiment:\s*(.*?)(?=\s*(?:Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Name|Phone Number|Full Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Expected Salary|Start Date|Photo)|$)/i);
     if (sMatch && !sentiment) sentiment = sMatch[1].trim();
 
-    const sumMatch = text.match(/Conversation Summary:\s*(.*?)(?=\s*Next Steps:|$)/i);
+    const sumMatch = text.match(/Conversation Summary:\s*(.*?)(?=\s*(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Name|Phone Number|Full Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Expected Salary|Start Date|Photo)|$)/i);
     if (sumMatch && !summary) summary = sumMatch[1].trim();
 
-    const nsMatch = text.match(/Next Steps:\s*(.*?)(?=\s*Customer Name:|$)/i);
+    const nsMatch = text.match(/(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions):\s*(.*?)(?=\s*(?:Customer Name|Phone Number|Full Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Expected Salary|Start Date|Photo)|$)/i);
     if (nsMatch && !nextSteps) nextSteps = nsMatch[1].trim();
 
-    const nMatch = text.match(/Customer Name:\s*(.*?)(?=\s*Phone Number:|$)/i);
+    const lookahead = '(?=\\s*(?:Full Name|Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Work Experience|Expected Salary|Start Date|Photo|Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Sentiment)|$)';
+
+    const nMatch = text.match(new RegExp(`(?:Full Name|Customer Name|Name):\\s*(.*?)${lookahead}`, 'i'));
     if (nMatch && nMatch[1].trim() && nMatch[1].trim().toLowerCase() !== 'n/a' && !extractedName) {
       extractedName = nMatch[1].trim();
     }
 
-    const pMatch = text.match(/Phone Number:\s*(.*)/i);
+    const pMatch = text.match(new RegExp(`(?:Phone Number|Phone):\\s*(.*?)${lookahead}`, 'i'));
     if (pMatch && pMatch[1].trim() && pMatch[1].trim().toLowerCase() !== 'n/a' && !extractedPhone) {
       extractedPhone = pMatch[1].trim();
     }
+
+    const genderMatch = text.match(new RegExp(`Gender:\\s*(.*?)${lookahead}`, 'i'));
+    if (genderMatch && genderMatch[1].trim() && !gender) gender = genderMatch[1].trim();
+
+    const heightMatch = text.match(new RegExp(`Height:\\s*(.*?)${lookahead}`, 'i'));
+    if (heightMatch && heightMatch[1].trim() && !height) height = heightMatch[1].trim();
+
+    const weightMatch = text.match(new RegExp(`Weight:\\s*(.*?)${lookahead}`, 'i'));
+    if (weightMatch && weightMatch[1].trim() && !weight) weight = weightMatch[1].trim();
+
+    const ageMatch = text.match(new RegExp(`Age:\\s*(.*?)${lookahead}`, 'i'));
+    if (ageMatch && ageMatch[1].trim() && !age) age = ageMatch[1].trim();
+
+    const qualMatch = text.match(new RegExp(`(?:Highest Qualification|Qualification):\\s*(.*?)${lookahead}`, 'i'));
+    if (qualMatch && qualMatch[1].trim() && !qualification) qualification = qualMatch[1].trim();
+
+    const addrMatch = text.match(new RegExp(`Address:\\s*(.*?)${lookahead}`, 'i'));
+    if (addrMatch && addrMatch[1].trim() && !address) address = addrMatch[1].trim();
+
+    const transMatch = text.match(new RegExp(`Transportation:\\s*(.*?)${lookahead}`, 'i'));
+    if (transMatch && transMatch[1].trim() && !transportation) transportation = transMatch[1].trim();
+
+    const medMatch = text.match(new RegExp(`Medical Condition:\\s*(.*?)${lookahead}`, 'i'));
+    if (medMatch && medMatch[1].trim() && !medicalCondition) medicalCondition = medMatch[1].trim();
+
+    const expMatch = text.match(new RegExp(`(?:Working Experience|Work Experience):\\s*(.*?)${lookahead}`, 'i'));
+    if (expMatch && expMatch[1].trim() && !workingExperience) workingExperience = expMatch[1].trim();
+
+    const salMatch = text.match(new RegExp(`Expected Salary:\\s*(.*?)${lookahead}`, 'i'));
+    if (salMatch && salMatch[1].trim() && !expectedSalary) expectedSalary = salMatch[1].trim();
+
+    const startMatch = text.match(new RegExp(`Start Date:\\s*(.*?)${lookahead}`, 'i'));
+    if (startMatch && startMatch[1].trim() && !startDate) startDate = startMatch[1].trim();
   };
 
   if (Array.isArray(messages)) {
@@ -60,15 +123,24 @@ function extractSummaryMetadata(messages: any[], conv: any) {
     return s.length > 0 ? s : null;
   };
 
-  const finalName = extractedName || conv.customer_name || conv.customerName || null;
-  const finalPhone = extractedPhone || conv.customer_phone || conv.phone || null;
-
   return {
     customer_sentiment: cleanField(sentiment),
     conversation_summary: cleanField(summary),
     next_steps: cleanField(nextSteps),
-    customer_name: cleanField(finalName),
-    phone_number: cleanField(finalPhone)
+    customer_name: cleanField(extractedName || conv.customer_name || conv.customerName || null),
+    phone_number: cleanField(extractedPhone || conv.customer_phone || conv.phone || null),
+    gender: cleanField(gender),
+    height: cleanField(height),
+    weight: cleanField(weight),
+    age: cleanField(age),
+    qualification: cleanField(qualification),
+    address: cleanField(address),
+    transportation: cleanField(transportation),
+    medical_condition: cleanField(medicalCondition),
+    working_experience: cleanField(workingExperience),
+    expected_salary: cleanField(expectedSalary),
+    start_date: cleanField(startDate),
+    photo
   };
 }
 
@@ -84,7 +156,7 @@ function shouldSyncToWebhook(tags: any[]) {
   );
   if (hasEmergencyOrCheckBooking) return false;
 
-  return lowerTags.some(t => t.includes('hot lead') || t.includes('warm lead') || t.includes('booking appointment'));
+  return lowerTags.some(t => t.includes('hot lead') || t.includes('warm lead') || t.includes('booking appointment') || t.includes('job application'));
 }
 
 const syncNxlinkHandler: Handler = async () => {
@@ -134,7 +206,7 @@ const syncNxlinkHandler: Handler = async () => {
     }
 
     if (!token) {
-      token = 'eyJhbGciOiJIUzI1NiJ9.eyJ1SWQiOjUzMjc3LCJkZXZpY2VVbmlxdWVJZGVudGlmaWNhdGlvbiI6IjIyMmJkNjQwLTg5NjAtMTFmMS1hMGEzLWUxYTIyNTg1YTY0MSIsInV1SWQiOiI2YTZhOTQxMGU0YjA5OTU4MmFhY2JjOWEifQ.zQ-WHvsnm_5cyIQKCiTacukA7ZVPETinsDgjALM0OBI';
+      token = '';
     }
 
     let conversations: any[] = [];
@@ -164,10 +236,10 @@ const syncNxlinkHandler: Handler = async () => {
 
       conversations.push(...pageList);
 
-      const dhRecords = pageList.filter((c: any) => (c.auto_flow_name || c.autoFlowName || '').toLowerCase().includes('dentalhome'));
-      if (dhRecords.length > 0) {
+      const pgRecords = pageList.filter((c: any) => (c.auto_flow_name || c.autoFlowName || '').toLowerCase().includes('planetgroup'));
+      if (pgRecords.length > 0) {
         let unSyncedCount = 0;
-        for (const c of dhRecords) {
+        for (const c of pgRecords) {
           const cid = c.id || c.conversationId || c.uuid;
           if (!cid) continue;
           const { data: existing } = await supabase
@@ -195,7 +267,7 @@ const syncNxlinkHandler: Handler = async () => {
 
     for (const conv of conversations) {
       const flowName = conv.auto_flow_name || conv.autoFlowName || '';
-      if (!flowName.toLowerCase().includes('dentalhome')) continue;
+      if (!flowName.toLowerCase().includes('planetgroup')) continue;
 
       const convId = conv.id || conv.conversationId || conv.uuid;
       if (!convId) continue;
@@ -265,7 +337,19 @@ const syncNxlinkHandler: Handler = async () => {
             conversation_tags: tagsList,
             conversation_date: cDateStr,
             conversation_time: cTimeStr,
-            call_audio_url: callAudioUrl
+            call_audio_url: callAudioUrl,
+            gender: meta.gender,
+            height: meta.height,
+            weight: meta.weight,
+            age: meta.age,
+            qualification: meta.qualification,
+            address: meta.address,
+            transportation: meta.transportation,
+            medical_condition: meta.medical_condition,
+            working_experience: meta.working_experience,
+            expected_salary: meta.expected_salary,
+            start_date: meta.start_date,
+            photo: meta.photo
           }).eq('id', row.id);
           wasIngestedOrUpdated = true;
         }
@@ -282,7 +366,19 @@ const syncNxlinkHandler: Handler = async () => {
           conversation_date: cDateStr,
           conversation_time: cTimeStr,
           conversation_transcript: rawTranscript,
-          call_audio_url: callAudioUrl
+          call_audio_url: callAudioUrl,
+          gender: meta.gender,
+          height: meta.height,
+          weight: meta.weight,
+          age: meta.age,
+          qualification: meta.qualification,
+          address: meta.address,
+          transportation: meta.transportation,
+          medical_condition: meta.medical_condition,
+          working_experience: meta.working_experience,
+          expected_salary: meta.expected_salary,
+          start_date: meta.start_date,
+          photo: meta.photo
         }]);
 
         if (!error) {

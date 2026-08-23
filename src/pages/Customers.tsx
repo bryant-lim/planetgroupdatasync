@@ -396,6 +396,102 @@ export default function Customers() {
                 </div>
               </div>
 
+              {/* Candidate Application Details (PlanetGroup) */}
+              {(selectedDetailConvo.gender || selectedDetailConvo.age || selectedDetailConvo.qualification || selectedDetailConvo.address || selectedDetailConvo.photo) && (
+                <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-3">
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider font-heading">
+                    Job Application Details
+                  </h4>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left border-collapse text-xs">
+                      <tbody>
+                        {selectedDetailConvo.gender && (
+                          <tr className="border-b border-slate-200/50">
+                            <td className="py-2 pr-4 font-semibold text-slate-500 w-1/3">Gender</td>
+                            <td className="py-2 text-slate-800 font-bold">{selectedDetailConvo.gender}</td>
+                          </tr>
+                        )}
+                        {selectedDetailConvo.age && (
+                          <tr className="border-b border-slate-200/50">
+                            <td className="py-2 pr-4 font-semibold text-slate-500">Age</td>
+                            <td className="py-2 text-slate-800 font-bold">{selectedDetailConvo.age}</td>
+                          </tr>
+                        )}
+                        {selectedDetailConvo.height && (
+                          <tr className="border-b border-slate-200/50">
+                            <td className="py-2 pr-4 font-semibold text-slate-500">Height</td>
+                            <td className="py-2 text-slate-800 font-bold">{selectedDetailConvo.height}</td>
+                          </tr>
+                        )}
+                        {selectedDetailConvo.weight && (
+                          <tr className="border-b border-slate-200/50">
+                            <td className="py-2 pr-4 font-semibold text-slate-500">Weight</td>
+                            <td className="py-2 text-slate-800 font-bold">{selectedDetailConvo.weight}</td>
+                          </tr>
+                        )}
+                        {selectedDetailConvo.qualification && (
+                          <tr className="border-b border-slate-200/50">
+                            <td className="py-2 pr-4 font-semibold text-slate-500">Qualification</td>
+                            <td className="py-2 text-slate-800 font-bold">{selectedDetailConvo.qualification}</td>
+                          </tr>
+                        )}
+                        {selectedDetailConvo.transportation && (
+                          <tr className="border-b border-slate-200/50">
+                            <td className="py-2 pr-4 font-semibold text-slate-500">Transportation</td>
+                            <td className="py-2 text-slate-800 font-bold">{selectedDetailConvo.transportation}</td>
+                          </tr>
+                        )}
+                        {selectedDetailConvo.expected_salary && (
+                          <tr className="border-b border-slate-200/50">
+                            <td className="py-2 pr-4 font-semibold text-slate-500">Expected Salary</td>
+                            <td className="py-2 text-slate-800 font-bold">{selectedDetailConvo.expected_salary}</td>
+                          </tr>
+                        )}
+                        {selectedDetailConvo.start_date && (
+                          <tr className="border-b border-slate-200/50">
+                            <td className="py-2 pr-4 font-semibold text-slate-500">Start Date</td>
+                            <td className="py-2 text-slate-800 font-bold">{selectedDetailConvo.start_date}</td>
+                          </tr>
+                        )}
+                        {selectedDetailConvo.medical_condition && (
+                          <tr className="border-b border-slate-200/50">
+                            <td className="py-2 pr-4 font-semibold text-slate-500">Medical Condition</td>
+                            <td className="py-2 text-slate-800 font-bold">{selectedDetailConvo.medical_condition}</td>
+                          </tr>
+                        )}
+                        {selectedDetailConvo.working_experience && (
+                          <tr className="border-b border-slate-200/50">
+                            <td className="py-2 pr-4 font-semibold text-slate-500">Working Experience</td>
+                            <td className="py-2 text-slate-800 font-bold whitespace-pre-wrap">{selectedDetailConvo.working_experience}</td>
+                          </tr>
+                        )}
+                        {selectedDetailConvo.address && (
+                          <tr className="border-b border-slate-200/50">
+                            <td className="py-2 pr-4 font-semibold text-slate-500">Address</td>
+                            <td className="py-2 text-slate-800 font-bold whitespace-pre-wrap">{selectedDetailConvo.address}</td>
+                          </tr>
+                        )}
+                        {selectedDetailConvo.photo && (
+                          <tr>
+                            <td className="py-2 pr-4 font-semibold text-slate-500">Applicant Photo</td>
+                            <td className="py-2 text-slate-800 font-bold">
+                              <a 
+                                href={selectedDetailConvo.photo} 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="inline-flex items-center text-emerald-600 hover:text-emerald-800 underline"
+                              >
+                                View Uploaded Photo ↗
+                              </a>
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
               {/* Full Conversation Summary */}
               <div className="bg-white border border-slate-200 p-4 rounded-xl space-y-2 shadow-2xs">
                 <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider font-heading flex items-center">

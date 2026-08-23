@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { execSync } from 'child_process';
 import path from 'path';
 import { createClient } from '@supabase/supabase-js';
+// @ts-ignore
 import WebSocket from 'ws';
 
 function netlifyFunctionsDevPlugin(): Plugin {
@@ -41,7 +42,7 @@ function netlifyFunctionsDevPlugin(): Plugin {
             }
 
             if (!token) {
-              token = 'eyJhbGciOiJIUzI1NiJ9.eyJ1SWQiOjUzMjc3LCJkZXZpY2VVbmlxdWVJZGVudGlmaWNhdGlvbiI6IjIyMmJkNjQwLTg5NjAtMTFmMS1hMGEzLWUxYTIyNTg1YTY0MSIsInV1SWQiOiI2YTZhOTQxMGU0YjA5OTU4MmFhY2JjOWEifQ.zQ-WHvsnm_5cyIQKCiTacukA7ZVPETinsDgjALM0OBI';
+              token = '';
             }
 
             console.log('[Dev Sync] Querying NXLINK API...');
@@ -64,7 +65,7 @@ function netlifyFunctionsDevPlugin(): Plugin {
             const convData: any = await convResp.json();
             const list = Array.isArray(convData.list) ? convData.list : (Array.isArray(convData.data?.list) ? convData.data.list : (Array.isArray(convData.data) ? convData.data : []));
 
-            console.log(`[Dev Sync] Fetched ${list.length} conversations from NXLINK. Filtering for [MY]DentalHome_v2...`);
+            console.log(`[Dev Sync] Fetched ${list.length} conversations from NXLINK. Filtering for [MY]PLANETGROUP...`);
 
             const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || env.SUPABASE_URL || env.VITE_SUPABASE_URL;
             const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY || env.SUPABASE_SERVICE_ROLE_KEY || env.VITE_SUPABASE_ANON_KEY;
@@ -81,7 +82,7 @@ function netlifyFunctionsDevPlugin(): Plugin {
 
             for (const conv of list) {
               const flowName = conv.auto_flow_name || conv.autoFlowName || '';
-              if (!flowName.toLowerCase().includes('dentalhome')) continue;
+              if (!flowName.toLowerCase().includes('planetgroup')) continue;
 
               const convId = conv.id || conv.conversationId || conv.uuid;
               if (!convId) continue;
@@ -102,6 +103,91 @@ function netlifyFunctionsDevPlugin(): Plugin {
               let extractedName: string | null = null;
               let extractedPhone: string | null = null;
 
+              let gender: string | null = null;
+              let height: string | null = null;
+              let weight: string | null = null;
+              let age: string | null = null;
+              let qualification: string | null = null;
+              let address: string | null = null;
+              let transportation: string | null = null;
+              let medicalCondition: string | null = null;
+              let workingExperience: string | null = null;
+              let expectedSalary: string | null = null;
+              let startDate: string | null = null;
+              let photo: string | null = null;
+
+              // Extract photo from messages
+              if (Array.isArray(messages)) {
+                for (const m of messages) {
+                  if (m && m.msgType === 25 && m.msgInfo) {
+                    try {
+                      const parsed = typeof m.msgInfo === 'string' ? JSON.parse(m.msgInfo) : m.msgInfo;
+                      if (parsed && parsed.message && parsed.message.url) {
+                        photo = parsed.message.url;
+                        break;
+                      }
+                    } catch (e) {}
+                  }
+                }
+              }
+
+              const parseSummaryText = (text: string) => {
+                if (!text) return;
+                const sMatch = text.match(/Customer Sentiment:\s*(.*?)(?=\s*(?:Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Name|Phone Number|Full Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Expected Salary|Start Date|Photo)|$)/i);
+                if (sMatch) sentiment = sMatch[1].trim();
+
+                const sumMatch = text.match(/Conversation Summary:\s*(.*?)(?=\s*(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Name|Phone Number|Full Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Expected Salary|Start Date|Photo)|$)/i);
+                if (sumMatch) summary = sumMatch[1].trim();
+
+                const nsMatch = text.match(/(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions):\s*(.*?)(?=\s*(?:Customer Name|Phone Number|Full Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Expected Salary|Start Date|Photo)|$)/i);
+                if (nsMatch) nextSteps = nsMatch[1].trim();
+
+                const lookahead = '(?=\\s*(?:Full Name|Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Work Experience|Expected Salary|Start Date|Photo|Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Sentiment)|$)';
+
+                const nMatch = text.match(new RegExp(`(?:Full Name|Customer Name|Name):\\s*(.*?)${lookahead}`, 'i'));
+                if (nMatch && nMatch[1].trim() && nMatch[1].trim().toLowerCase() !== 'n/a') {
+                  extractedName = nMatch[1].trim();
+                }
+
+                const pMatch = text.match(new RegExp(`(?:Phone Number|Phone):\\s*(.*?)${lookahead}`, 'i'));
+                if (pMatch && pMatch[1].trim() && pMatch[1].trim().toLowerCase() !== 'n/a') {
+                  extractedPhone = pMatch[1].trim();
+                }
+
+                const genderMatch = text.match(new RegExp(`Gender:\\s*(.*?)${lookahead}`, 'i'));
+                if (genderMatch && genderMatch[1].trim() && !gender) gender = genderMatch[1].trim();
+
+                const heightMatch = text.match(new RegExp(`Height:\\s*(.*?)${lookahead}`, 'i'));
+                if (heightMatch && heightMatch[1].trim() && !height) height = heightMatch[1].trim();
+
+                const weightMatch = text.match(new RegExp(`Weight:\\s*(.*?)${lookahead}`, 'i'));
+                if (weightMatch && weightMatch[1].trim() && !weight) weight = weightMatch[1].trim();
+
+                const ageMatch = text.match(new RegExp(`Age:\\s*(.*?)${lookahead}`, 'i'));
+                if (ageMatch && ageMatch[1].trim() && !age) age = ageMatch[1].trim();
+
+                const qualMatch = text.match(new RegExp(`(?:Highest Qualification|Qualification):\\s*(.*?)${lookahead}`, 'i'));
+                if (qualMatch && qualMatch[1].trim() && !qualification) qualification = qualMatch[1].trim();
+
+                const addrMatch = text.match(new RegExp(`Address:\\s*(.*?)${lookahead}`, 'i'));
+                if (addrMatch && addrMatch[1].trim() && !address) address = addrMatch[1].trim();
+
+                const transMatch = text.match(new RegExp(`Transportation:\\s*(.*?)${lookahead}`, 'i'));
+                if (transMatch && transMatch[1].trim() && !transportation) transportation = transMatch[1].trim();
+
+                const medMatch = text.match(new RegExp(`Medical Condition:\\s*(.*?)${lookahead}`, 'i'));
+                if (medMatch && medMatch[1].trim() && !medicalCondition) medicalCondition = medMatch[1].trim();
+
+                const expMatch = text.match(new RegExp(`(?:Working Experience|Work Experience):\\s*(.*?)${lookahead}`, 'i'));
+                if (expMatch && expMatch[1].trim() && !workingExperience) workingExperience = expMatch[1].trim();
+
+                const salMatch = text.match(new RegExp(`Expected Salary:\\s*(.*?)${lookahead}`, 'i'));
+                if (salMatch && salMatch[1].trim() && !expectedSalary) expectedSalary = salMatch[1].trim();
+
+                const startMatch = text.match(new RegExp(`Start Date:\\s*(.*?)${lookahead}`, 'i'));
+                if (startMatch && startMatch[1].trim() && !startDate) startDate = startMatch[1].trim();
+              };
+
               for (const m of messages) {
                 if (m && m.msgType === 64 && m.msgInfo) {
                   let parsed: any = null;
@@ -114,31 +200,23 @@ function netlifyFunctionsDevPlugin(): Plugin {
                   } catch (e) {}
 
                   if (parsed && parsed.summarize) {
-                    const text = parsed.summarize;
-                    const sMatch = text.match(/Customer Sentiment:\s*(.*?)(?=\s*Conversation Summary:|$)/i);
-                    if (sMatch) sentiment = sMatch[1].trim();
-
-                    const sumMatch = text.match(/Conversation Summary:\s*(.*?)(?=\s*Next Steps:|$)/i);
-                    if (sumMatch) summary = sumMatch[1].trim();
-
-                    const nsMatch = text.match(/Next Steps:\s*(.*?)(?=\s*Customer Name:|$)/i);
-                    if (nsMatch) nextSteps = nsMatch[1].trim();
-
-                    const nMatch = text.match(/Customer Name:\s*(.*?)(?=\s*Phone Number:|$)/i);
-                    if (nMatch && nMatch[1].trim() && nMatch[1].trim().toLowerCase() !== 'n/a') {
-                      extractedName = nMatch[1].trim();
-                    }
-
-                    const pMatch = text.match(/Phone Number:\s*(.*)/i);
-                    if (pMatch && pMatch[1].trim() && pMatch[1].trim().toLowerCase() !== 'n/a') {
-                      extractedPhone = pMatch[1].trim();
-                    }
+                    parseSummaryText(parsed.summarize);
                   }
                 }
               }
 
-              const finalName = extractedName || conv.customer_name || conv.customerName || null;
-              const finalPhone = extractedPhone || conv.customer_phone || conv.phone || null;
+              if (conv.conv_summary) parseSummaryText(conv.conv_summary);
+              if (conv.summary) parseSummaryText(conv.summary);
+
+              const cleanField = (val: string | null) => {
+                if (!val) return null;
+                let s = val.split(/\[nxlink_id:/i)[0].trim();
+                s = s.replace(/Customer Name:.*$/is, '').replace(/Phone Number:.*$/is, '').replace(/["}'\\\}\],]+$/g, '').trim();
+                return s.length > 0 ? s : null;
+              };
+
+              const finalName = cleanField(extractedName || conv.customer_name || conv.customerName || null);
+              const finalPhone = cleanField(extractedPhone || conv.customer_phone || conv.phone || null);
 
               let tagsList: string[] = [];
               if (Array.isArray(conv.tags)) {
@@ -174,11 +252,23 @@ function netlifyFunctionsDevPlugin(): Plugin {
                   await supabase.from('conversations').update({
                     customer_name: finalName,
                     phone_number: finalPhone,
-                    customer_sentiment: sentiment,
-                    conversation_summary: summary,
-                    next_steps: nextSteps,
+                    customer_sentiment: cleanField(sentiment),
+                    conversation_summary: cleanField(summary),
+                    next_steps: cleanField(nextSteps),
                     conversation_tags: tagsList,
-                    call_audio_url: callAudioUrl
+                    call_audio_url: callAudioUrl,
+                    gender: cleanField(gender),
+                    height: cleanField(height),
+                    weight: cleanField(weight),
+                    age: cleanField(age),
+                    qualification: cleanField(qualification),
+                    address: cleanField(address),
+                    transportation: cleanField(transportation),
+                    medical_condition: cleanField(medicalCondition),
+                    working_experience: cleanField(workingExperience),
+                    expected_salary: cleanField(expectedSalary),
+                    start_date: cleanField(startDate),
+                    photo
                   }).eq('id', row.id);
                   wasIngestedOrUpdated = true;
                 }
@@ -186,16 +276,28 @@ function netlifyFunctionsDevPlugin(): Plugin {
                 const { error: insErr } = await supabase.from('conversations').insert([{
                   customer_name: finalName,
                   phone_number: finalPhone,
-                  customer_sentiment: sentiment,
-                  conversation_summary: summary,
-                  next_steps: nextSteps,
+                  customer_sentiment: cleanField(sentiment),
+                  conversation_summary: cleanField(summary),
+                  next_steps: cleanField(nextSteps),
                   company_name: conv.company_name || null,
                   email_address: conv.email_address || null,
                   conversation_tags: tagsList,
                   conversation_date: new Date().toISOString().split('T')[0],
                   conversation_time: new Date().toISOString().split('T')[1].split('.')[0],
                   conversation_transcript: rawTranscript,
-                  call_audio_url: callAudioUrl
+                  call_audio_url: callAudioUrl,
+                  gender: cleanField(gender),
+                  height: cleanField(height),
+                  weight: cleanField(weight),
+                  age: cleanField(age),
+                  qualification: cleanField(qualification),
+                  address: cleanField(address),
+                  transportation: cleanField(transportation),
+                  medical_condition: cleanField(medicalCondition),
+                  working_experience: cleanField(workingExperience),
+                  expected_salary: cleanField(expectedSalary),
+                  start_date: cleanField(startDate),
+                  photo
                 }]);
 
                 if (!insErr) {
@@ -204,43 +306,43 @@ function netlifyFunctionsDevPlugin(): Plugin {
                 }
               }
 
-                // Check webhook auto-push
-                const lowerTags = tagsList.map(t => t.toLowerCase().trim());
-                const routingOnly = ['to agent', 'branch agent', 'contact agent'];
-                const isOnlyRouting = lowerTags.every(t => routingOnly.includes(t));
-                const hasEmergency = lowerTags.some(t => t.includes('emergency') || t.includes('check booking'));
-                const shouldPush = !isOnlyRouting && !hasEmergency && lowerTags.some(t => t.includes('hot lead') || t.includes('warm lead') || t.includes('booking appointment'));
+              // Check webhook auto-push
+              const lowerTags = tagsList.map(t => t.toLowerCase().trim());
+              const routingOnly = ['to agent', 'branch agent', 'contact agent'];
+              const isOnlyRouting = lowerTags.every(t => routingOnly.includes(t));
+              const hasEmergency = lowerTags.some(t => t.includes('emergency') || t.includes('check booking'));
+              const shouldPush = !isOnlyRouting && !hasEmergency && lowerTags.some(t => t.includes('hot lead') || t.includes('warm lead') || t.includes('booking appointment') || t.includes('job application'));
 
-                if (shouldPush) {
-                  const webhookUrl = process.env.NXLINK_WEBHOOK_URL || 'https://asia-east1-lark-demo-67aa3.cloudfunctions.net/nxlinkWebhook';
-                  const clientId = process.env.NXLINK_WEBHOOK_CLIENT_ID || 'nxw_41ef8e4dee35cd8e4c6c1d3e';
-                  const clientSecret = process.env.NXLINK_WEBHOOK_CLIENT_SECRET || '8ab7881cfcf9cd8428274ff2771875277c06be7404a3d4b20365bd584649ceea';
+              if (wasIngestedOrUpdated && shouldPush) {
+                const webhookUrl = process.env.NXLINK_WEBHOOK_URL || 'https://asia-east1-lark-demo-67aa3.cloudfunctions.net/nxlinkWebhook';
+                const clientId = process.env.NXLINK_WEBHOOK_CLIENT_ID || 'nxw_41ef8e4dee35cd8e4c6c1d3e';
+                const clientSecret = process.env.NXLINK_WEBHOOK_CLIENT_SECRET || '8ab7881cfcf9cd8428274ff2771875277c06be7404a3d4b20365bd584649ceea';
 
-                  try {
-                    await fetch(webhookUrl, {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json', 'client_id': clientId, 'client_secret': clientSecret },
-                      body: JSON.stringify({
-                        fields: {
-                          "Conversation ID": String(convId),
-                          "Customer Name": finalName || 'Unknown',
-                          "Phone Number": finalPhone || 'Not Provided',
-                          "Company Name": conv.company_name || null,
-                          "Email Address": conv.email_address || null,
-                          "Tags": tagsList,
-                          "Full Summary": summary || null,
-                          "Sentiment": sentiment || 'Neutral',
-                          "Next Steps": nextSteps || null,
-                          "Call Audio URL": callAudioUrl,
-                          "Conversation Date": new Date().toISOString().split('T')[0]
-                        }
-                      })
-                    });
-                    webhookCount++;
-                    console.log(`[Dev Sync] 🚀 Auto-pushed #${convId} to Webhook!`);
-                  } catch (e) {}
-                }
+                try {
+                  await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'client_id': clientId, 'client_secret': clientSecret },
+                    body: JSON.stringify({
+                      fields: {
+                        "Conversation ID": String(convId),
+                        "Customer Name": finalName || 'Unknown',
+                        "Phone Number": finalPhone || 'Not Provided',
+                        "Company Name": conv.company_name || null,
+                        "Email Address": conv.email_address || null,
+                        "Tags": tagsList,
+                        "Full Summary": cleanField(summary) || null,
+                        "Sentiment": cleanField(sentiment) || 'Neutral',
+                        "Next Steps": cleanField(nextSteps) || null,
+                        "Call Audio URL": callAudioUrl,
+                        "Conversation Date": new Date().toISOString().split('T')[0]
+                      }
+                    })
+                  });
+                  webhookCount++;
+                  console.log(`[Dev Sync] 🚀 Auto-pushed #${convId} to Webhook!`);
+                } catch (e) {}
               }
+            }
 
             console.log(`[Dev Sync] ✅ Sync Finished: ${syncedCount} inserted, ${webhookCount} pushed to webhook.`);
 

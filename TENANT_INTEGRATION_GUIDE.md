@@ -96,48 +96,54 @@ Keep these environment variables configured in Netlify's site settings under **E
 
 ## 4. Step-by-Step Duplication Guide
 
-Follow these steps to replicate the integration for a new tenant:
+Follow these steps to replicate or set up the candidate integration:
 
 ### Step 1: Initialize Database Tables
-Log in to the new tenant's Supabase dashboard, go to the **SQL Editor**, and run the schema setup from [`supabase_schema.sql`](file:///Users/bryantlim/Documents/chillor-repo/nxlink-crm/supabase_schema.sql).
+Log in to your new Supabase dashboard, go to the **SQL Editor**, and run the schema setup from [`supabase_schema.sql`](file:///Users/bryantlim/Documents/chillor-repo/nxlink-sync-planetgroup/supabase_schema.sql). This will provision the `conversations` table containing the 12 candidate profile fields: `gender, height, weight, age, qualification, address, transportation, medical_condition, working_experience, expected_salary, start_date, photo`.
 
-### Step 2: Configure Lark Base and Webhook
+### Step 2: Configure Lark Base and Webhook (Optional)
+If forwarding leads to Lark:
 1. Create your Lark Multidimensional Table with the column schema outlined in Section 2B.
 2. Set up the Lark webhook connector and record the Webhook URL.
 3. Configure signature validation inside Lark to acquire the Webhook **Client ID** and **Client Secret**.
 
 ### Step 3: Modify Codebase Filters (Tenant Customization)
-1. Open [`sync-nxlink.ts`](file:///Users/bryantlim/Documents/chillor-repo/nxlink-crm/netlify/functions/sync-nxlink.ts) and locate the flow name filter on line 167:
-   ```typescript
-   const dhRecords = pageList.filter((c: any) => (c.auto_flow_name || c.autoFlowName || '').toLowerCase().includes('dentalhome'));
-   ```
-   Replace `'dentalhome'` with your new tenant's flow identifier.
-2. Locate the line 198:
-   ```typescript
-   if (!flowName.toLowerCase().includes('dentalhome')) continue;
-   ```
-   Modify it to match the same tenant flow identifier.
-3. Check [`sync-local.js`](file:///Users/bryantlim/Documents/chillor-repo/nxlink-crm/scripts/sync-local.js) and make the equivalent flow string updates if you plan to test locally.
+1. Open [`sync-local.js`](file:///Users/bryantlim/Documents/chillor-repo/nxlink-sync-planetgroup/scripts/sync-local.js) and locate the flow name filter on line 258. It filters for `[MY]PLANETGROUP` (ID `1821`) by default.
+2. Check [`cloudflare-worker-sync.ts`](file:///Users/bryantlim/Documents/chillor-repo/nxlink-sync-planetgroup/cloudflare-worker-sync.ts) and [`netlify/functions/sync-nxlink.ts`](file:///Users/bryantlim/Documents/chillor-repo/nxlink-sync-planetgroup/netlify/functions/sync-nxlink.ts) to verify they use the same filter.
 
-### Step 4: Configure Netlify Environment Variables
-1. Deploy the repository to a new Netlify project.
-2. Go to **Site Configuration** > **Environment variables**.
-3. Add all variables listed in the **Credentials Checklist** (Section 3).
-
-### Step 5: Test the Setup Locally
-1. Install requirements for the token scraper:
+### Step 4: Configure Cloudflare Worker (Scheduled Cron Sync)
+To run the 5-minute background sync cron job on Cloudflare Workers:
+1. Install Wrangler globally or run it via npx:
    ```bash
-   pip install playwright --break-system-packages
-   playwright install chrome
+   npm install -g wrangler
    ```
-2. Create `.nxlink_creds` at the root with your NxLink login details.
-3. Set up a local `.env` file containing your Supabase and Lark variables.
-4. Execute the dry-run/local sync tool:
+2. Deploy the Worker script [`cloudflare-worker-sync.ts`](file:///Users/bryantlim/Documents/chillor-repo/nxlink-sync-planetgroup/cloudflare-worker-sync.ts):
    ```bash
-   node scripts/sync-local.js
+   npx wrangler deploy
    ```
-5. Ensure conversations are written to Supabase and webhook payloads are successfully delivered to Lark.
+3. Set your secret environment variables in Cloudflare dashboard under the Worker Settings > Variables, or using Wrangler CLI:
+   ```bash
+   npx wrangler secret put SUPABASE_URL
+   ```
+   *Secrets to add*: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `NXLINK_PLAT_TOKEN` (optional), `NXAI_TOKEN_URL` (optional), `NXLINK_WEBHOOK_URL` (optional), `NXLINK_WEBHOOK_CLIENT_ID` (optional), `NXLINK_WEBHOOK_CLIENT_SECRET` (optional).
 
-### Step 6: Deploy and Monitor
-1. Deploy the functions to Netlify. The Cron Scheduler will automatically activate the 5-minute sync schedule (`sync-nxlink-cron`).
-2. Monitor output and debug errors by checking logs in the Netlify dashboard under **Serverless Functions** > `sync-nxlink-cron`.
+### Step 5: Deploy Frontend to Cloudflare Pages
+1. Build the Vite React SPA application:
+   ```bash
+   npm run build
+   ```
+2. Deploy the `dist/` directory to Cloudflare Pages.
+3. In the Cloudflare Pages project settings, configure the environment variables:
+   - `VITE_SUPABASE_URL` = your Supabase URL
+   - `VITE_SUPABASE_ANON_KEY` = your Supabase Anonymous Key
+   - `VITE_SYNC_URL` = the HTTP route of your deployed Cloudflare Worker (e.g. `https://nxlink-sync-planetgroup-worker.yourdomain.workers.dev/`) so the "Sync" button on the UI Dashboard triggers the sync process via your worker.
+
+### Step 6: Test the Setup Locally
+1. Create `.nxlink_creds` at the root with your NxLink login credentials.
+2. Set up a local `.env` file containing your Supabase and Lark variables.
+3. Execute the dry-run/local sync tool:
+   ```bash
+   npm run sync:planetgroup
+   ```
+4. Ensure conversations are written to Supabase (check that the candidate attributes such as gender, age, expected salary, and photo are filled).
+
