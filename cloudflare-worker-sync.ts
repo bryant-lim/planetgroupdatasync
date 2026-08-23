@@ -128,7 +128,10 @@ function extractSummaryMetadata(messages: any[], conv: any) {
     if (!val) return null;
     let s = val.split(/\[nxlink_id:/i)[0].trim();
     s = s.replace(/Customer Name:.*$/is, '').replace(/Phone Number:.*$/is, '').replace(/["}'\\\}\],]+$/g, '').trim();
-    return s.length > 0 ? s : null;
+    if (!s || s.toLowerCase() === 'n/a' || s.toLowerCase() === 'none' || s.toLowerCase() === 'null') {
+      return null;
+    }
+    return s;
   };
 
   return {
