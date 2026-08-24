@@ -515,7 +515,20 @@ async function main() {
               "Sentiment": sentiment || 'Neutral',
               "Next Steps": nextSteps || null,
               "Call Audio URL": callAudioUrl || null,
-              "Conversation Date": convDate
+              "Conversation Date": convDate,
+              "Position Applied": position_applied || null,
+              "Gender": gender || null,
+              "Height": height || null,
+              "Weight": weight || null,
+              "Age": age || null,
+              "Highest Qualification": qualification || null,
+              "Address": address || null,
+              "Transportation": transportation || null,
+              "Medical Condition": medical_condition || null,
+              "Working Experience": working_experience || null,
+              "Expected Salary": expected_salary || null,
+              "Start Date": start_date || null,
+              "Photo URL": photo || null
             }
           };
 

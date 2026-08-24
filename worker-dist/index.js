@@ -20346,7 +20346,20 @@ async function runSync(env) {
                 "Sentiment": meta.customer_sentiment || "Neutral",
                 "Next Steps": meta.next_steps || null,
                 "Call Audio URL": callAudioUrl,
-                "Conversation Date": cDateStr
+                "Conversation Date": cDateStr,
+                "Position Applied": meta.position_applied || null,
+                "Gender": meta.gender || null,
+                "Height": meta.height || null,
+                "Weight": meta.weight || null,
+                "Age": meta.age || null,
+                "Highest Qualification": meta.qualification || null,
+                "Address": meta.address || null,
+                "Transportation": meta.transportation || null,
+                "Medical Condition": meta.medical_condition || null,
+                "Working Experience": meta.working_experience || null,
+                "Expected Salary": meta.expected_salary || null,
+                "Start Date": meta.start_date || null,
+                "Photo URL": meta.photo || null
               }
             })
           });
