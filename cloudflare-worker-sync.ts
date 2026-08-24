@@ -201,8 +201,7 @@ async function runSync(env: Env) {
   }
 
   let conversations: any[] = [];
-  let consecutiveAlreadySyncedPages = 0;
-  const maxPagesToScan = 15;
+  const maxPagesToScan = 5; // Scan up to 5 pages (500 conversations)
 
   for (let pageNum = 1; pageNum <= maxPagesToScan; pageNum++) {
     const convResp = await fetch('https://app.nxlink.ai/admin/nx_flow_manager/conversation', {
@@ -225,31 +224,35 @@ async function runSync(env: Env) {
     if (!Array.isArray(pageList) || pageList.length === 0) break;
 
     conversations.push(...pageList);
+    if (pageList.length < 100) break;
+  }
 
-    const pgRecords = pageList.filter((c: any) => (c.auto_flow_name || c.autoFlowName || '').toLowerCase().includes('planetgroup'));
-    if (pgRecords.length > 0) {
-      let unSyncedCount = 0;
-      for (const c of pgRecords) {
-        const cid = c.id || c.conversationId || c.uuid;
-        if (!cid) continue;
-        const { data: existing } = await supabase
-          .from('conversations')
-          .select('id')
-          .ilike('conversation_transcript', `%nxlink_id:${cid}%`)
-          .limit(1);
-        if (!existing || existing.length === 0) {
-          unSyncedCount++;
+  // Filter out [MY]PLANETGROUP records and fetch existing map in ONE query
+  const pgConvs = conversations.filter(c => (c.auto_flow_name || c.autoFlowName || '').toLowerCase().includes('planetgroup'));
+  const convIds = pgConvs.map(c => c.id || c.conversationId || c.uuid).filter(Boolean);
+
+  const existingMap = new Map<string, any>();
+  if (convIds.length > 0) {
+    try {
+      const orQuery = convIds.map(id => `conversation_transcript.ilike.%[nxlink_id:${id}]%`).join(',');
+      const { data: existingRows } = await supabase
+        .from('conversations')
+        .select('id, customer_name, conversation_summary, conversation_tags, conversation_transcript')
+        .or(orQuery);
+
+      if (existingRows) {
+        for (const row of existingRows) {
+          const transcript = row.conversation_transcript || '';
+          for (const cid of convIds) {
+            if (transcript.includes(`[nxlink_id:${cid}]`)) {
+              existingMap.set(String(cid), row);
+            }
+          }
         }
       }
-      if (unSyncedCount === 0) {
-        consecutiveAlreadySyncedPages++;
-        if (consecutiveAlreadySyncedPages >= 2) break;
-      } else {
-        consecutiveAlreadySyncedPages = 0;
-      }
+    } catch (err) {
+      console.error('Error querying Supabase for existing conversations:', err);
     }
-
-    if (pageList.length < 100) break;
   }
 
   let syncedCount = 0;
@@ -269,17 +272,11 @@ async function runSync(env: Env) {
       tagsList = conv.tags.map((t: any) => (typeof t === 'string' ? t : t.name)).filter(Boolean);
     }
 
-    const { data: existing } = await supabase
-      .from('conversations')
-      .select('id, customer_name, conversation_summary, conversation_tags')
-      .ilike('conversation_transcript', `%nxlink_id:${convId}%`)
-      .limit(1);
-
     let needsUpdateOrInsert = false;
     let existingRow: any = null;
 
-    if (existing && existing.length > 0) {
-      existingRow = existing[0];
+    if (existingMap.has(String(convId))) {
+      existingRow = existingMap.get(String(convId));
       const tagsChanged = tagsList.length > 0 && JSON.stringify(existingRow.conversation_tags || []) !== JSON.stringify(tagsList);
       if (!existingRow.customer_name || !existingRow.conversation_summary || tagsChanged) {
         needsUpdateOrInsert = true;
