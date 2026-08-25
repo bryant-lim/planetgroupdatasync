@@ -4,11 +4,11 @@ This document outlines the JSON payload sent by the sync scheduler to the Lark w
 
 ## Webhook Endpoint Configuration
 * **Environment Variable**: `NXLINK_WEBHOOK_URL`
-* **Default Target**: `https://asia-east1-lark-demo-67aa3.cloudfunctions.net/nxlinkWebhook`
+* **Default Target**: `https://asia-southeast1-planet-group-d2436.cloudfunctions.net/jobApplication`
 * **Headers Sent**:
   * `Content-Type: application/json`
-  * `client_id`: (From `NXLINK_WEBHOOK_CLIENT_ID`)
-  * `client_secret`: (From `NXLINK_WEBHOOK_CLIENT_SECRET`)
+  * `X-Client-Id`: (From `NXLINK_WEBHOOK_CLIENT_ID`)
+  * `X-Client-Secret`: (From `NXLINK_WEBHOOK_CLIENT_SECRET`)
 
 ---
 

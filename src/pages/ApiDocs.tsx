@@ -6,7 +6,7 @@ export default function ApiDocs() {
   const [copiedWebhook, setCopiedWebhook] = React.useState(false);
 
   const ingestUrl = window.location.origin + '/.netlify/functions/ingest-crm';
-  const webhookUrl = 'https://asia-east1-lark-demo-67aa3.cloudfunctions.net/nxlinkWebhook';
+  const webhookUrl = 'https://asia-southeast1-planet-group-d2436.cloudfunctions.net/jobApplication';
 
   const ingestSample = `{
   "payload": "Customer Sentiment: Positive Conversation Summary: Customer requested appointment... Next Steps: Contact via WhatsApp Company Name: Dental Home Email Address: crystal@example.com Conversation Tag: Hot Lead, Booking Appointment"
@@ -123,11 +123,11 @@ export default function ApiDocs() {
               </div>
               <div className="bg-white p-2 rounded border border-slate-200">
                 <span className="text-slate-400 block text-[9px] uppercase font-sans">Client ID Header</span>
-                client_id: nxw_41ef...
+                X-Client-Id: nxlink_70a2...
               </div>
               <div className="bg-white p-2 rounded border border-slate-200">
                 <span className="text-slate-400 block text-[9px] uppercase font-sans">Client Secret Header</span>
-                client_secret: 8ab78...
+                X-Client-Secret: f2c3fb...
               </div>
             </div>
           </div>

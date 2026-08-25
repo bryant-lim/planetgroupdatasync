@@ -213,9 +213,9 @@ export default function Dashboard() {
     let success = 0;
     let fail = 0;
 
-    const webhookUrl = 'https://asia-east1-lark-demo-67aa3.cloudfunctions.net/nxlinkWebhook';
-    const clientId = 'nxw_41ef8e4dee35cd8e4c6c1d3e';
-    const clientSecret = '8ab7881cfcf9cd8428274ff2771875277c06be7404a3d4b20365bd584649ceea';
+    const webhookUrl = 'https://asia-southeast1-planet-group-d2436.cloudfunctions.net/jobApplication';
+    const clientId = 'nxlink_70a248a4b37bae828e53035a';
+    const clientSecret = 'f2c3fb34bdbbdc38a7ae08a5bee0748083bc587e916cefd976b189936702d50b';
 
     const statusMap = getWebhookStatusMap();
 
@@ -250,8 +250,8 @@ export default function Dashboard() {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'client_id': clientId,
-              'client_secret': clientSecret
+              'X-Client-Id': clientId,
+              'X-Client-Secret': clientSecret
             },
             body: JSON.stringify(payload)
           });

@@ -78,9 +78,9 @@ Keep these environment variables configured in Netlify's site settings under **E
 |--------------|-------------|-----------------|
 | `SUPABASE_URL` | Supabase API connection URL | `https://xxxx.supabase.co` |
 | `SUPABASE_SERVICE_ROLE_KEY` | Service role key for bypass RLS limits | `eyJhbGciOi...` |
-| `NXLINK_WEBHOOK_URL` | Lark webhook endpoint | `https://asia-east1-lark-demo-67aa3.cloudfunctions.net/...` |
-| `NXLINK_WEBHOOK_CLIENT_ID` | Lark webhook credential Client ID | `nxw_41ef8e4dee35cd8e4c6c1d3e` |
-| `NXLINK_WEBHOOK_CLIENT_SECRET`| Lark webhook credential Client Secret | `8ab7881cfcf9cd842827...` |
+| `NXLINK_WEBHOOK_URL` | Lark webhook endpoint | `https://asia-southeast1-planet-group-d2436.cloudfunctions.net/...` |
+| `NXLINK_WEBHOOK_CLIENT_ID` | Lark webhook credential Client ID | `nxlink_70a248a4b37bae828e53035a` |
+| `NXLINK_WEBHOOK_CLIENT_SECRET`| Lark webhook credential Client Secret | `f2c3fb34bdbbdc38a7ae...` |
 | `NXAI_TOKEN_URL` | (Optional) Shared token service endpoint | `https://asia-east1...` |
 | `NXLINK_PLAT_TOKEN` | (Fallback/Testing) Hardcoded plat token | `eyJhbGciOiJIUzI1...` |
 

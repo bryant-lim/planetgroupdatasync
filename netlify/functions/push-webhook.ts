@@ -3,7 +3,7 @@ import { Handler } from '@netlify/functions';
 export const handler: Handler = async (event) => {
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization, client_id, client_secret',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Client-Id, X-Client-Secret',
     'Access-Control-Allow-Methods': 'POST, OPTIONS'
   };
 
@@ -34,9 +34,9 @@ export const handler: Handler = async (event) => {
       };
     }
 
-    const webhookUrl = process.env.NXLINK_WEBHOOK_URL || 'https://asia-east1-lark-demo-67aa3.cloudfunctions.net/nxlinkWebhook';
-    const clientId = process.env.NXLINK_WEBHOOK_CLIENT_ID || 'nxw_41ef8e4dee35cd8e4c6c1d3e';
-    const clientSecret = process.env.NXLINK_WEBHOOK_CLIENT_SECRET || '8ab7881cfcf9cd8428274ff2771875277c06be7404a3d4b20365bd584649ceea';
+    const webhookUrl = process.env.NXLINK_WEBHOOK_URL || 'https://asia-southeast1-planet-group-d2436.cloudfunctions.net/jobApplication';
+    const clientId = process.env.NXLINK_WEBHOOK_CLIENT_ID || 'nxlink_70a248a4b37bae828e53035a';
+    const clientSecret = process.env.NXLINK_WEBHOOK_CLIENT_SECRET || 'f2c3fb34bdbbdc38a7ae08a5bee0748083bc587e916cefd976b189936702d50b';
 
     console.log(`Backend proxy forwarding payload to ${webhookUrl}...`);
 
@@ -44,8 +44,8 @@ export const handler: Handler = async (event) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'client_id': clientId,
-        'client_secret': clientSecret
+        'X-Client-Id': clientId,
+        'X-Client-Secret': clientSecret
       },
       body: JSON.stringify(body)
     });
