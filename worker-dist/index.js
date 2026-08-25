@@ -1,14 +1,3 @@
-------formdata-undici-060383839796
-Content-Disposition: form-data; name="metadata"
-
-{"main_module":"cloudflare-worker-sync.js","bindings":[],"compatibility_date":"2026-08-23","compatibility_flags":[]}
-------formdata-undici-060383839796
-Content-Disposition: form-data; name="cloudflare-worker-sync.js"; filename="cloudflare-worker-sync.js"
-Content-Type: application/javascript+module
-
-var __defProp = Object.defineProperty;
-var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
-
 // node_modules/tslib/tslib.es6.mjs
 function __rest(s, e) {
   var t = {};
@@ -21,14 +10,12 @@ function __rest(s, e) {
     }
   return t;
 }
-__name(__rest, "__rest");
 function __awaiter(thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function(resolve) {
       resolve(value);
     });
   }
-  __name(adopt, "adopt");
   return new (P || (P = Promise))(function(resolve, reject) {
     function fulfilled(value) {
       try {
@@ -37,7 +24,6 @@ function __awaiter(thisArg, _arguments, P, generator) {
         reject(e);
       }
     }
-    __name(fulfilled, "fulfilled");
     function rejected(value) {
       try {
         step(generator["throw"](value));
@@ -45,29 +31,23 @@ function __awaiter(thisArg, _arguments, P, generator) {
         reject(e);
       }
     }
-    __name(rejected, "rejected");
     function step(result) {
       result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
     }
-    __name(step, "step");
     step((generator = generator.apply(thisArg, _arguments || [])).next());
   });
 }
-__name(__awaiter, "__awaiter");
 
 // node_modules/@supabase/functions-js/dist/module/helper.js
-var resolveFetch = /* @__PURE__ */ __name((customFetch) => {
+var resolveFetch = (customFetch) => {
   if (customFetch) {
     return (...args) => customFetch(...args);
   }
   return (...args) => fetch(...args);
-}, "resolveFetch");
+};
 
 // node_modules/@supabase/functions-js/dist/module/types.js
 var FunctionsError = class extends Error {
-  static {
-    __name(this, "FunctionsError");
-  }
   constructor(message, name = "FunctionsError", context) {
     super(message);
     this.name = name;
@@ -82,25 +62,16 @@ var FunctionsError = class extends Error {
   }
 };
 var FunctionsFetchError = class extends FunctionsError {
-  static {
-    __name(this, "FunctionsFetchError");
-  }
   constructor(context) {
     super("Failed to send a request to the Edge Function", "FunctionsFetchError", context);
   }
 };
 var FunctionsRelayError = class extends FunctionsError {
-  static {
-    __name(this, "FunctionsRelayError");
-  }
   constructor(context) {
     super("Relay Error invoking the Edge Function", "FunctionsRelayError", context);
   }
 };
 var FunctionsHttpError = class extends FunctionsError {
-  static {
-    __name(this, "FunctionsHttpError");
-  }
   constructor(context) {
     super("Edge Function returned a non-2xx status code", "FunctionsHttpError", context);
   }
@@ -126,9 +97,6 @@ var FunctionRegion;
 
 // node_modules/@supabase/functions-js/dist/module/FunctionsClient.js
 var FunctionsClient = class {
-  static {
-    __name(this, "FunctionsClient");
-  }
   /**
    * Creates a new Functions client bound to an Edge Functions URL.
    *
@@ -397,7 +365,7 @@ var FunctionsClient = class {
 
 // node_modules/@supabase/postgrest-js/dist/index.mjs
 var DEFAULT_MAX_RETRIES = 3;
-var getRetryDelay = /* @__PURE__ */ __name((attemptIndex) => Math.min(1e3 * 2 ** attemptIndex, 3e4), "getRetryDelay");
+var getRetryDelay = (attemptIndex) => Math.min(1e3 * 2 ** attemptIndex, 3e4);
 var RETRYABLE_STATUS_CODES = [520, 503];
 var RETRYABLE_METHODS = [
   "GET",
@@ -405,9 +373,6 @@ var RETRYABLE_METHODS = [
   "OPTIONS"
 ];
 var PostgrestError = class extends Error {
-  static {
-    __name(this, "PostgrestError");
-  }
   /**
   * @example
   * ```ts
@@ -452,22 +417,16 @@ function sleep(ms, signal) {
       clearTimeout(id);
       resolve();
     }
-    __name(onAbort, "onAbort");
     signal === null || signal === void 0 || signal.addEventListener("abort", onAbort);
   });
 }
-__name(sleep, "sleep");
 function shouldRetry(method, status, attemptCount, retryEnabled) {
   if (!retryEnabled || attemptCount >= DEFAULT_MAX_RETRIES) return false;
   if (!RETRYABLE_METHODS.includes(method)) return false;
   if (!RETRYABLE_STATUS_CODES.includes(status)) return false;
   return true;
 }
-__name(shouldRetry, "shouldRetry");
 var PostgrestBuilder = class {
-  static {
-    __name(this, "PostgrestBuilder");
-  }
   /**
   * Creates a builder configured for a specific PostgREST request.
   *
@@ -635,7 +594,7 @@ var PostgrestBuilder = class {
       else if (!currentAccept || currentAccept === "application/json") this.headers.set("Accept", "application/vnd.pgrst.array+json;nulls=stripped");
     }
     const _fetch = this.fetch;
-    const executeWithRetry = /* @__PURE__ */ __name(async () => {
+    const executeWithRetry = async () => {
       let attemptCount = 0;
       while (true) {
         const headers = {};
@@ -673,7 +632,7 @@ var PostgrestBuilder = class {
         }
         return await _this.processResponse(res$1);
       }
-    }, "executeWithRetry");
+    };
     let res = executeWithRetry();
     if (!this.shouldThrowOnError) res = res.catch((fetchError) => {
       var _fetchError$name2;
@@ -907,9 +866,6 @@ ${cause.stack}`;
   }
 };
 var PostgrestTransformBuilder = class extends PostgrestBuilder {
-  static {
-    __name(this, "PostgrestTransformBuilder");
-  }
   throwOnError() {
     return super.throwOnError();
   }
@@ -1745,9 +1701,6 @@ var PostgrestTransformBuilder = class extends PostgrestBuilder {
 };
 var PostgrestReservedCharsRegexp = /* @__PURE__ */ new RegExp("[,()]");
 var PostgrestFilterBuilder = class extends PostgrestTransformBuilder {
-  static {
-    __name(this, "PostgrestFilterBuilder");
-  }
   throwOnError() {
     return super.throwOnError();
   }
@@ -2269,9 +2222,6 @@ var PostgrestFilterBuilder = class extends PostgrestTransformBuilder {
   }
 };
 var PostgrestQueryBuilder = class {
-  static {
-    __name(this, "PostgrestQueryBuilder");
-  }
   /**
   * Creates a query builder scoped to a Postgres table or view.
   *
@@ -3850,7 +3800,6 @@ function _typeof(o) {
     return o$1 && "function" == typeof Symbol && o$1.constructor === Symbol && o$1 !== Symbol.prototype ? "symbol" : typeof o$1;
   }, _typeof(o);
 }
-__name(_typeof, "_typeof");
 function toPrimitive(t, r) {
   if ("object" != _typeof(t) || !t) return t;
   var e = t[Symbol.toPrimitive];
@@ -3861,12 +3810,10 @@ function toPrimitive(t, r) {
   }
   return ("string" === r ? String : Number)(t);
 }
-__name(toPrimitive, "toPrimitive");
 function toPropertyKey(t) {
   var i = toPrimitive(t, "string");
   return "symbol" == _typeof(i) ? i : i + "";
 }
-__name(toPropertyKey, "toPropertyKey");
 function _defineProperty(e, r, t) {
   return (r = toPropertyKey(r)) in e ? Object.defineProperty(e, r, {
     value: t,
@@ -3875,7 +3822,6 @@ function _defineProperty(e, r, t) {
     writable: true
   }) : e[r] = t, e;
 }
-__name(_defineProperty, "_defineProperty");
 function ownKeys(e, r) {
   var t = Object.keys(e);
   if (Object.getOwnPropertySymbols) {
@@ -3886,7 +3832,6 @@ function ownKeys(e, r) {
   }
   return t;
 }
-__name(ownKeys, "ownKeys");
 function _objectSpread2(e) {
   for (var r = 1; r < arguments.length; r++) {
     var t = null != arguments[r] ? arguments[r] : {};
@@ -3898,11 +3843,7 @@ function _objectSpread2(e) {
   }
   return e;
 }
-__name(_objectSpread2, "_objectSpread2");
 var PostgrestClient = class PostgrestClient2 {
-  static {
-    __name(this, "PostgrestClient");
-  }
   /**
   * Creates a PostgREST client.
   *
@@ -3957,10 +3898,10 @@ var PostgrestClient = class PostgrestClient2 {
           clearTimeout(timeoutId);
           return originalFetch(input, init);
         }
-        const abortHandler = /* @__PURE__ */ __name(() => {
+        const abortHandler = () => {
           clearTimeout(timeoutId);
           controller.abort();
-        }, "abortHandler");
+        };
         existingSignal.addEventListener("abort", abortHandler, { once: true });
         return originalFetch(input, _objectSpread2(_objectSpread2({}, init), {}, { signal: controller.signal })).finally(() => {
           clearTimeout(timeoutId);
@@ -4170,7 +4111,7 @@ var PostgrestClient = class PostgrestClient2 {
     let method;
     const url = new URL(`${this.url}/rpc/${fn}`);
     let body;
-    const _isObject = /* @__PURE__ */ __name((v) => v !== null && typeof v === "object" && (!Array.isArray(v) || v.some(_isObject)), "_isObject");
+    const _isObject = (v) => v !== null && typeof v === "object" && (!Array.isArray(v) || v.some(_isObject));
     const _hasObjectArg = head2 && Object.values(args).some(_isObject);
     if (_hasObjectArg) {
       method = "POST";
@@ -4202,9 +4143,6 @@ var PostgrestClient = class PostgrestClient2 {
 
 // node_modules/@supabase/realtime-js/dist/module/lib/websocket-factory.js
 var WebSocketFactory = class {
-  static {
-    __name(this, "WebSocketFactory");
-  }
   /**
    * Static-only utility – prevent instantiation.
    */
@@ -4230,7 +4168,7 @@ var WebSocketFactory = class {
         workaround: "Use Cloudflare Workers WebSocket API for server-side WebSocket handling, or deploy to a different runtime."
       };
     }
-    if (typeof globalThis !== "undefined" && gt.EdgeRuntime || typeof navigator !== "undefined" && ((_a = "Cloudflare-Workers") === null || _a === void 0 ? void 0 : _a.includes("Vercel-Edge"))) {
+    if (typeof globalThis !== "undefined" && gt.EdgeRuntime || typeof navigator !== "undefined" && ((_a = navigator.userAgent) === null || _a === void 0 ? void 0 : _a.includes("Vercel-Edge"))) {
       return {
         type: "unsupported",
         error: "Edge runtime detected (Vercel Edge/Netlify Edge). WebSockets are not supported in edge functions.",
@@ -4352,9 +4290,6 @@ var CONNECTION_STATE = {
 
 // node_modules/@supabase/realtime-js/dist/module/lib/serializer.js
 var Serializer = class {
-  static {
-    __name(this, "Serializer");
-  }
   constructor(allowedMetadataKeys) {
     this.HEADER_LENGTH = 1;
     this.USER_BROADCAST_PUSH_META_LENGTH = 6;
@@ -4521,7 +4456,7 @@ var PostgresTypes;
   PostgresTypes2["tsrange"] = "tsrange";
   PostgresTypes2["tstzrange"] = "tstzrange";
 })(PostgresTypes || (PostgresTypes = {}));
-var convertChangeData = /* @__PURE__ */ __name((columns, record, options = {}) => {
+var convertChangeData = (columns, record, options = {}) => {
   var _a;
   const skipTypes = (_a = options.skipTypes) !== null && _a !== void 0 ? _a : [];
   if (!record) {
@@ -4531,8 +4466,8 @@ var convertChangeData = /* @__PURE__ */ __name((columns, record, options = {}) =
     acc[rec_key] = convertColumn(rec_key, columns, record, skipTypes);
     return acc;
   }, {});
-}, "convertChangeData");
-var convertColumn = /* @__PURE__ */ __name((columnName, columns, record, skipTypes) => {
+};
+var convertColumn = (columnName, columns, record, skipTypes) => {
   const column = columns.find((x) => x.name === columnName);
   const colType = column === null || column === void 0 ? void 0 : column.type;
   const value = record[columnName];
@@ -4540,8 +4475,8 @@ var convertColumn = /* @__PURE__ */ __name((columnName, columns, record, skipTyp
     return convertCell(colType, value);
   }
   return noop(value);
-}, "convertColumn");
-var convertCell = /* @__PURE__ */ __name((type, value) => {
+};
+var convertCell = (type, value) => {
   if (type.charAt(0) === "_") {
     const dataType = type.slice(1, type.length);
     return toArray(value, dataType);
@@ -4586,11 +4521,11 @@ var convertCell = /* @__PURE__ */ __name((type, value) => {
     default:
       return noop(value);
   }
-}, "convertCell");
-var noop = /* @__PURE__ */ __name((value) => {
+};
+var noop = (value) => {
   return value;
-}, "noop");
-var toBoolean = /* @__PURE__ */ __name((value) => {
+};
+var toBoolean = (value) => {
   switch (value) {
     case "t":
       return true;
@@ -4599,8 +4534,8 @@ var toBoolean = /* @__PURE__ */ __name((value) => {
     default:
       return value;
   }
-}, "toBoolean");
-var toNumber = /* @__PURE__ */ __name((value) => {
+};
+var toNumber = (value) => {
   if (typeof value === "string") {
     const parsedValue = parseFloat(value);
     if (!Number.isNaN(parsedValue)) {
@@ -4608,8 +4543,8 @@ var toNumber = /* @__PURE__ */ __name((value) => {
     }
   }
   return value;
-}, "toNumber");
-var toJson = /* @__PURE__ */ __name((value) => {
+};
+var toJson = (value) => {
   if (typeof value === "string") {
     try {
       return JSON.parse(value);
@@ -4618,8 +4553,8 @@ var toJson = /* @__PURE__ */ __name((value) => {
     }
   }
   return value;
-}, "toJson");
-var toArray = /* @__PURE__ */ __name((value, type) => {
+};
+var toArray = (value, type) => {
   if (typeof value !== "string") {
     return value;
   }
@@ -4637,14 +4572,14 @@ var toArray = /* @__PURE__ */ __name((value, type) => {
     return arr.map((val) => convertCell(type, val));
   }
   return value;
-}, "toArray");
-var toTimestampString = /* @__PURE__ */ __name((value) => {
+};
+var toTimestampString = (value) => {
   if (typeof value === "string") {
     return value.replace(" ", "T");
   }
   return value;
-}, "toTimestampString");
-var httpEndpointURL = /* @__PURE__ */ __name((socketUrl) => {
+};
+var httpEndpointURL = (socketUrl) => {
   const wsUrl = new URL(socketUrl);
   wsUrl.protocol = wsUrl.protocol.replace(/^ws/i, "http");
   wsUrl.pathname = wsUrl.pathname.replace(/\/+$/, "").replace(/\/socket\/websocket$/i, "").replace(/\/socket$/i, "").replace(/\/websocket$/i, "");
@@ -4654,22 +4589,22 @@ var httpEndpointURL = /* @__PURE__ */ __name((socketUrl) => {
     wsUrl.pathname = wsUrl.pathname + "/api/broadcast";
   }
   return wsUrl.href;
-}, "httpEndpointURL");
+};
 
 // node_modules/@supabase/phoenix/priv/static/phoenix.mjs
-var closure = /* @__PURE__ */ __name((value) => {
+var closure = (value) => {
   if (typeof value === "function") {
     return (
       /** @type {() => T} */
       value
     );
   } else {
-    let closure2 = /* @__PURE__ */ __name(function() {
+    let closure2 = function() {
       return value;
-    }, "closure2");
+    };
     return closure2;
   }
-}, "closure");
+};
 var globalSelf = typeof self !== "undefined" ? self : null;
 var phxWindow = typeof window !== "undefined" ? window : null;
 var global2 = globalSelf || phxWindow || globalThis;
@@ -4715,9 +4650,6 @@ var XHR_STATES = (
 );
 var AUTH_TOKEN_PREFIX = "base64url.bearer.phx.";
 var Push = class {
-  static {
-    __name(this, "Push");
-  }
   /**
    * Initializes the Push
    * @param {Channel} channel - The Channel
@@ -4833,9 +4765,6 @@ var Push = class {
   }
 };
 var Timer = class {
-  static {
-    __name(this, "Timer");
-  }
   /**
   * @param {() => void} callback
   * @param {(tries: number) => number} timerCalc
@@ -4862,9 +4791,6 @@ var Timer = class {
   }
 };
 var Channel = class {
-  static {
-    __name(this, "Channel");
-  }
   /**
    * @param {string} topic
    * @param {Params | (() => Params)} params
@@ -5085,10 +5011,10 @@ var Channel = class {
     this.rejoinTimer.reset();
     this.joinPush.cancelTimeout();
     this.state = CHANNEL_STATES2.leaving;
-    let onClose = /* @__PURE__ */ __name(() => {
+    let onClose = () => {
       if (this.socket.hasLogger()) this.socket.log("channel", `leave ${this.topic}`);
       this.trigger(CHANNEL_EVENTS2.close, "leave");
-    }, "onClose");
+    };
     let leavePush = new Push(this, CHANNEL_EVENTS2.leave, closure({}), timeout);
     leavePush.receive("ok", () => onClose()).receive("timeout", () => onClose());
     leavePush.send();
@@ -5184,9 +5110,6 @@ var Channel = class {
   }
 };
 var Ajax = class {
-  static {
-    __name(this, "Ajax");
-  }
   static request(method, endPoint, headers, body, timeout, ontimeout, callback) {
     if (global2.XDomainRequest) {
       let req = new global2.XDomainRequest();
@@ -5290,7 +5213,7 @@ var Ajax = class {
     return `${url}${prefix}${this.serialize(params)}`;
   }
 };
-var arrayBufferToBase64 = /* @__PURE__ */ __name((buffer) => {
+var arrayBufferToBase64 = (buffer) => {
   let binary = "";
   let bytes = new Uint8Array(buffer);
   let len = bytes.byteLength;
@@ -5298,11 +5221,8 @@ var arrayBufferToBase64 = /* @__PURE__ */ __name((buffer) => {
     binary += String.fromCharCode(bytes[i]);
   }
   return btoa(binary);
-}, "arrayBufferToBase64");
+};
 var LongPoll = class {
-  static {
-    __name(this, "LongPoll");
-  }
   constructor(endPoint, protocols) {
     if (protocols && protocols.length === 2 && protocols[1].startsWith(AUTH_TOKEN_PREFIX)) {
       this.authToken = atob(protocols[1].slice(AUTH_TOKEN_PREFIX.length));
@@ -5439,10 +5359,10 @@ var LongPoll = class {
   }
   ajax(method, headers, body, onCallerTimeout, callback) {
     let req;
-    let ontimeout = /* @__PURE__ */ __name(() => {
+    let ontimeout = () => {
       this.reqs.delete(req);
       onCallerTimeout();
-    }, "ontimeout");
+    };
     req = Ajax.request(method, this.endpointURL(), headers, body, this.timeout, ontimeout, (resp) => {
       this.reqs.delete(req);
       if (this.isActive()) {
@@ -5453,9 +5373,6 @@ var LongPoll = class {
   }
 };
 var Presence = class _Presence {
-  static {
-    __name(this, "_Presence");
-  }
   /**
    * Initializes the Presence
    * @param {Channel} channel - The Channel
@@ -5469,12 +5386,12 @@ var Presence = class _Presence {
     this.channel = channel;
     this.joinRef = null;
     this.caller = {
-      onJoin: /* @__PURE__ */ __name(function() {
-      }, "onJoin"),
-      onLeave: /* @__PURE__ */ __name(function() {
-      }, "onLeave"),
-      onSync: /* @__PURE__ */ __name(function() {
-      }, "onSync")
+      onJoin: function() {
+      },
+      onLeave: function() {
+      },
+      onSync: function() {
+      }
     };
     this.channel.on(events.state, (newState) => {
       let { onJoin, onLeave, onSync } = this.caller;
@@ -5589,12 +5506,12 @@ var Presence = class _Presence {
   static syncDiff(state, diff, onJoin, onLeave) {
     let { joins, leaves } = this.clone(diff);
     if (!onJoin) {
-      onJoin = /* @__PURE__ */ __name(function() {
-      }, "onJoin");
+      onJoin = function() {
+      };
     }
     if (!onLeave) {
-      onLeave = /* @__PURE__ */ __name(function() {
-      }, "onLeave");
+      onLeave = function() {
+      };
     }
     this.map(joins, (key, newPresence) => {
       let currentPresence = state[key];
@@ -5633,9 +5550,9 @@ var Presence = class _Presence {
    */
   static list(presences, chooser) {
     if (!chooser) {
-      chooser = /* @__PURE__ */ __name(function(key, pres) {
+      chooser = function(key, pres) {
         return pres;
-      }, "chooser");
+      };
     }
     return this.map(presences, (key, presence) => {
       return chooser(key, presence);
@@ -5776,9 +5693,6 @@ var serializer_default = {
   }
 };
 var Socket = class {
-  static {
-    __name(this, "Socket");
-  }
   /** Initializes the Socket *
    *
    * For IE8 support use an ES5-shim (https://github.com/es-shims/es5-shim)
@@ -6115,13 +6029,13 @@ var Socket = class {
     let primaryTransport = true;
     let openRef, errorRef;
     let fallbackTransportName = this.transportName(fallbackTransport);
-    let fallback = /* @__PURE__ */ __name((reason) => {
+    let fallback = (reason) => {
       this.log("transport", `falling back to ${fallbackTransportName}...`, reason);
       this.off([openRef, errorRef]);
       primaryTransport = false;
       this.replaceTransport(fallbackTransport);
       this.transportConnect();
-    }, "fallback");
+    };
     if (this.getSession(`phx:fallback:${fallbackTransportName}`)) {
       return fallback("memorized");
     }
@@ -6454,9 +6368,6 @@ var Socket = class {
 
 // node_modules/@supabase/realtime-js/dist/module/phoenix/presenceAdapter.js
 var PresenceAdapter = class _PresenceAdapter {
-  static {
-    __name(this, "PresenceAdapter");
-  }
   constructor(channel, opts) {
     const phoenixOptions = phoenixPresenceOptions(opts);
     this.presence = new Presence(channel.getChannel(), phoenixOptions);
@@ -6535,19 +6446,15 @@ function transformState(presences) {
     return presence;
   });
 }
-__name(transformState, "transformState");
 function cloneState(state) {
   return JSON.parse(JSON.stringify(state));
 }
-__name(cloneState, "cloneState");
 function phoenixPresenceOptions(opts) {
   return (opts === null || opts === void 0 ? void 0 : opts.events) && { events: opts.events };
 }
-__name(phoenixPresenceOptions, "phoenixPresenceOptions");
 function parseCurrentPresences(currentPresences) {
   return (currentPresences === null || currentPresences === void 0 ? void 0 : currentPresences.metas) ? transformState(currentPresences) : [];
 }
-__name(parseCurrentPresences, "parseCurrentPresences");
 
 // node_modules/@supabase/realtime-js/dist/module/RealtimePresence.js
 var REALTIME_PRESENCE_LISTEN_EVENTS;
@@ -6557,9 +6464,6 @@ var REALTIME_PRESENCE_LISTEN_EVENTS;
   REALTIME_PRESENCE_LISTEN_EVENTS2["LEAVE"] = "leave";
 })(REALTIME_PRESENCE_LISTEN_EVENTS || (REALTIME_PRESENCE_LISTEN_EVENTS = {}));
 var RealtimePresence = class {
-  static {
-    __name(this, "RealtimePresence");
-  }
   get state() {
     return this.presenceAdapter.state;
   }
@@ -6604,13 +6508,9 @@ function normalizeChannelError(reason) {
   }
   return new Error("channel error: connection lost");
 }
-__name(normalizeChannelError, "normalizeChannelError");
 
 // node_modules/@supabase/realtime-js/dist/module/phoenix/channelAdapter.js
 var ChannelAdapter = class {
-  static {
-    __name(this, "ChannelAdapter");
-  }
   constructor(socket, topic, params) {
     const phoenixParams = phoenixChannelParams(params);
     this.channel = socket.getSocket().channel(topic, phoenixParams);
@@ -6707,18 +6607,17 @@ function phoenixChannelParams(options) {
     }, options.config)
   };
 }
-__name(phoenixChannelParams, "phoenixChannelParams");
 
 // node_modules/@supabase/realtime-js/dist/module/RealtimePostgresFilterBuilder.js
 var PostgrestReservedCharsRegexp2 = /[,()"\\]/;
-var needsQuoting = /* @__PURE__ */ __name((value) => PostgrestReservedCharsRegexp2.test(value) || value !== value.trim(), "needsQuoting");
-var quote = /* @__PURE__ */ __name((value) => `"${value.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`, "quote");
-var serializeScalar = /* @__PURE__ */ __name((value) => {
+var needsQuoting = (value) => PostgrestReservedCharsRegexp2.test(value) || value !== value.trim();
+var quote = (value) => `"${value.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`;
+var serializeScalar = (value) => {
   const serialized = value === null ? "null" : String(value);
   return needsQuoting(serialized) ? quote(serialized) : serialized;
-}, "serializeScalar");
-var serializeIsValue = /* @__PURE__ */ __name((value) => value === null ? "null" : String(value), "serializeIsValue");
-var serialize = /* @__PURE__ */ __name((operator, value) => {
+};
+var serializeIsValue = (value) => value === null ? "null" : String(value);
+var serialize = (operator, value) => {
   if (operator === "in") {
     const values = Array.isArray(value) ? value : [value];
     if (values.length === 0) {
@@ -6731,11 +6630,8 @@ var serialize = /* @__PURE__ */ __name((operator, value) => {
     return `is.${serializeIsValue(value)}`;
   }
   return `${operator}.${serializeScalar(value)}`;
-}, "serialize");
+};
 var RealtimePostgresFilterBuilder = class {
-  static {
-    __name(this, "RealtimePostgresFilterBuilder");
-  }
   constructor() {
     this.filters = [];
   }
@@ -6849,9 +6745,6 @@ var REALTIME_SUBSCRIBE_STATES;
   REALTIME_SUBSCRIBE_STATES2["CHANNEL_ERROR"] = "CHANNEL_ERROR";
 })(REALTIME_SUBSCRIBE_STATES || (REALTIME_SUBSCRIBE_STATES = {}));
 var RealtimeChannel = class _RealtimeChannel {
-  static {
-    __name(this, "RealtimeChannel");
-  }
   get state() {
     return this.channelAdapter.state;
   }
@@ -7533,9 +7426,6 @@ var RealtimeChannel = class _RealtimeChannel {
 
 // node_modules/@supabase/realtime-js/dist/module/phoenix/socketAdapter.js
 var SocketAdapter = class {
-  static {
-    __name(this, "SocketAdapter");
-  }
   constructor(endPoint, options) {
     this.socket = new Socket(endPoint, options);
   }
@@ -7675,7 +7565,6 @@ function createMemorySessionStorage() {
     }
   };
 }
-__name(createMemorySessionStorage, "createMemorySessionStorage");
 function resolveSessionStorage() {
   try {
     if (typeof globalThis !== "undefined" && globalThis.sessionStorage) {
@@ -7685,7 +7574,6 @@ function resolveSessionStorage() {
   }
   return createMemorySessionStorage();
 }
-__name(resolveSessionStorage, "resolveSessionStorage");
 var WORKER_SCRIPT = `
   addEventListener("message", (e) => {
     if (e.data.event === "start") {
@@ -7693,9 +7581,6 @@ var WORKER_SCRIPT = `
     }
   });`;
 var RealtimeClient = class {
-  static {
-    __name(this, "RealtimeClient");
-  }
   get endPoint() {
     return this.socketAdapter.endPoint;
   }
@@ -8263,12 +8148,12 @@ Option 2: Install and provide the "ws" package:
     const vsn = (_k = options === null || options === void 0 ? void 0 : options.vsn) !== null && _k !== void 0 ? _k : DEFAULT_VSN;
     switch (vsn) {
       case VSN_1_0_0:
-        defaultEncode = /* @__PURE__ */ __name((payload, callback) => {
+        defaultEncode = (payload, callback) => {
           return callback(JSON.stringify(payload));
-        }, "defaultEncode");
-        defaultDecode = /* @__PURE__ */ __name((payload, callback) => {
+        };
+        defaultDecode = (payload, callback) => {
           return callback(JSON.parse(payload));
-        }, "defaultDecode");
+        };
         break;
       case VSN_2_0_0:
         defaultEncode = this.serializer.encode.bind(this.serializer);
@@ -8305,9 +8190,6 @@ Option 2: Install and provide the "ws" package:
 
 // node_modules/iceberg-js/dist/index.mjs
 var IcebergError = class extends Error {
-  static {
-    __name(this, "IcebergError");
-  }
   constructor(message, opts) {
     super(message);
     this.name = "IcebergError";
@@ -8347,7 +8229,6 @@ function buildUrl(baseUrl, path, query) {
   }
   return url.toString();
 }
-__name(buildUrl, "buildUrl");
 async function buildAuthHeaders(auth) {
   if (!auth || auth.type === "none") {
     return {};
@@ -8363,7 +8244,6 @@ async function buildAuthHeaders(auth) {
   }
   return {};
 }
-__name(buildAuthHeaders, "buildAuthHeaders");
 function createFetchClient(options) {
   const fetchFn = options.fetchImpl ?? globalThis.fetch;
   return {
@@ -8405,15 +8285,10 @@ function createFetchClient(options) {
     }
   };
 }
-__name(createFetchClient, "createFetchClient");
 function namespaceToPath(namespace) {
   return namespace.join("");
 }
-__name(namespaceToPath, "namespaceToPath");
 var NamespaceOperations = class {
-  static {
-    __name(this, "NamespaceOperations");
-  }
   constructor(client, prefix = "") {
     this.client = client;
     this.prefix = prefix;
@@ -8482,11 +8357,7 @@ var NamespaceOperations = class {
 function namespaceToPath2(namespace) {
   return namespace.join("");
 }
-__name(namespaceToPath2, "namespaceToPath2");
 var TableOperations = class {
-  static {
-    __name(this, "TableOperations");
-  }
   constructor(client, prefix = "", accessDelegation) {
     this.client = client;
     this.prefix = prefix;
@@ -8573,9 +8444,6 @@ var TableOperations = class {
   }
 };
 var IcebergRestCatalog = class {
-  static {
-    __name(this, "IcebergRestCatalog");
-  }
   /**
    * Creates a new Iceberg REST Catalog client.
    *
@@ -8862,7 +8730,6 @@ function _typeof2(o) {
     return o$1 && "function" == typeof Symbol && o$1.constructor === Symbol && o$1 !== Symbol.prototype ? "symbol" : typeof o$1;
   }, _typeof2(o);
 }
-__name(_typeof2, "_typeof");
 function toPrimitive2(t, r) {
   if ("object" != _typeof2(t) || !t) return t;
   var e = t[Symbol.toPrimitive];
@@ -8873,12 +8740,10 @@ function toPrimitive2(t, r) {
   }
   return ("string" === r ? String : Number)(t);
 }
-__name(toPrimitive2, "toPrimitive");
 function toPropertyKey2(t) {
   var i = toPrimitive2(t, "string");
   return "symbol" == _typeof2(i) ? i : i + "";
 }
-__name(toPropertyKey2, "toPropertyKey");
 function _defineProperty2(e, r, t) {
   return (r = toPropertyKey2(r)) in e ? Object.defineProperty(e, r, {
     value: t,
@@ -8887,7 +8752,6 @@ function _defineProperty2(e, r, t) {
     writable: true
   }) : e[r] = t, e;
 }
-__name(_defineProperty2, "_defineProperty");
 function ownKeys2(e, r) {
   var t = Object.keys(e);
   if (Object.getOwnPropertySymbols) {
@@ -8898,7 +8762,6 @@ function ownKeys2(e, r) {
   }
   return t;
 }
-__name(ownKeys2, "ownKeys");
 function _objectSpread22(e) {
   for (var r = 1; r < arguments.length; r++) {
     var t = null != arguments[r] ? arguments[r] : {};
@@ -8910,11 +8773,7 @@ function _objectSpread22(e) {
   }
   return e;
 }
-__name(_objectSpread22, "_objectSpread2");
 var StorageError = class extends Error {
-  static {
-    __name(this, "StorageError");
-  }
   constructor(message, namespace = "storage", status, statusCode) {
     super(message);
     this.__isStorageError = true;
@@ -8935,11 +8794,7 @@ var StorageError = class extends Error {
 function isStorageError(error) {
   return typeof error === "object" && error !== null && "__isStorageError" in error;
 }
-__name(isStorageError, "isStorageError");
 var StorageApiError = class extends StorageError {
-  static {
-    __name(this, "StorageApiError");
-  }
   constructor(message, status, statusCode, namespace = "storage") {
     super(message, namespace, status, statusCode);
     this.name = namespace === "vectors" ? "StorageVectorsApiError" : "StorageApiError";
@@ -8951,9 +8806,6 @@ var StorageApiError = class extends StorageError {
   }
 };
 var StorageUnknownError = class extends StorageError {
-  static {
-    __name(this, "StorageUnknownError");
-  }
   constructor(message, originalError, namespace = "storage") {
     super(message, namespace);
     this.name = namespace === "vectors" ? "StorageVectorsUnknownError" : "StorageUnknownError";
@@ -8967,23 +8819,21 @@ function setHeader(headers, name, value) {
   result[nameLower] = value;
   return result;
 }
-__name(setHeader, "setHeader");
 function normalizeHeaders(headers) {
   const result = {};
   for (const [key, value] of Object.entries(headers)) result[key.toLowerCase()] = value;
   return result;
 }
-__name(normalizeHeaders, "normalizeHeaders");
-var resolveFetch2 = /* @__PURE__ */ __name((customFetch) => {
+var resolveFetch2 = (customFetch) => {
   if (customFetch) return (...args) => customFetch(...args);
   return (...args) => fetch(...args);
-}, "resolveFetch");
-var isPlainObject = /* @__PURE__ */ __name((value) => {
+};
+var isPlainObject = (value) => {
   if (typeof value !== "object" || value === null) return false;
   const prototype = Object.getPrototypeOf(value);
   return (prototype === null || prototype === Object.prototype || Object.getPrototypeOf(prototype) === null) && !(Symbol.toStringTag in value) && !(Symbol.iterator in value);
-}, "isPlainObject");
-var recursiveToCamel = /* @__PURE__ */ __name((item) => {
+};
+var recursiveToCamel = (item) => {
   if (Array.isArray(item)) return item.map((el) => recursiveToCamel(el));
   else if (typeof item === "function" || item !== Object(item)) return item;
   const result = {};
@@ -8992,15 +8842,15 @@ var recursiveToCamel = /* @__PURE__ */ __name((item) => {
     result[newKey] = recursiveToCamel(value);
   });
   return result;
-}, "recursiveToCamel");
-var isValidBucketName = /* @__PURE__ */ __name((bucketName) => {
+};
+var isValidBucketName = (bucketName) => {
   if (!bucketName || typeof bucketName !== "string") return false;
   if (bucketName.length === 0 || bucketName.length > 100) return false;
   if (bucketName.trim() !== bucketName) return false;
   if (bucketName.includes("/") || bucketName.includes("\\")) return false;
   return /^[\w!.\*'() &$@=;:+,?-]+$/.test(bucketName);
-}, "isValidBucketName");
-var _getErrorMessage = /* @__PURE__ */ __name((err) => {
+};
+var _getErrorMessage = (err) => {
   if (typeof err === "object" && err !== null) {
     const e = err;
     if (typeof e.msg === "string") return e.msg;
@@ -9013,8 +8863,8 @@ var _getErrorMessage = /* @__PURE__ */ __name((err) => {
     }
   }
   return JSON.stringify(err);
-}, "_getErrorMessage");
-var handleError = /* @__PURE__ */ __name(async (error, reject, options, namespace) => {
+};
+var handleError = async (error, reject, options, namespace) => {
   if (error !== null && typeof error === "object" && "json" in error && typeof error.json === "function") {
     const responseError = error;
     let status = parseInt(String(responseError.status), 10);
@@ -9027,8 +8877,8 @@ var handleError = /* @__PURE__ */ __name(async (error, reject, options, namespac
       reject(new StorageApiError(responseError.statusText || `HTTP ${status} error`, status, statusCode, namespace));
     });
   } else reject(new StorageUnknownError(_getErrorMessage(error), error, namespace));
-}, "handleError");
-var _getRequestParams = /* @__PURE__ */ __name((method, options, parameters, body) => {
+};
+var _getRequestParams = (method, options, parameters, body) => {
   const params = {
     method,
     headers: (options === null || options === void 0 ? void 0 : options.headers) || {}
@@ -9044,7 +8894,7 @@ var _getRequestParams = /* @__PURE__ */ __name((method, options, parameters, bod
   } else params.body = body;
   if (options === null || options === void 0 ? void 0 : options.duplex) params.duplex = options.duplex;
   return _objectSpread22(_objectSpread22({}, params), parameters);
-}, "_getRequestParams");
+};
 async function _handleRequest(fetcher, method, url, options, parameters, body, namespace) {
   return new Promise((resolve, reject) => {
     fetcher(url, _getRequestParams(method, options, parameters, body)).then((result) => {
@@ -9059,34 +8909,29 @@ async function _handleRequest(fetcher, method, url, options, parameters, body, n
     }).then((data) => resolve(data)).catch((error) => handleError(error, reject, options, namespace));
   });
 }
-__name(_handleRequest, "_handleRequest");
 function createFetchApi(namespace = "storage") {
   return {
-    get: /* @__PURE__ */ __name(async (fetcher, url, options, parameters) => {
+    get: async (fetcher, url, options, parameters) => {
       return _handleRequest(fetcher, "GET", url, options, parameters, void 0, namespace);
-    }, "get"),
-    post: /* @__PURE__ */ __name(async (fetcher, url, body, options, parameters) => {
+    },
+    post: async (fetcher, url, body, options, parameters) => {
       return _handleRequest(fetcher, "POST", url, options, parameters, body, namespace);
-    }, "post"),
-    put: /* @__PURE__ */ __name(async (fetcher, url, body, options, parameters) => {
+    },
+    put: async (fetcher, url, body, options, parameters) => {
       return _handleRequest(fetcher, "PUT", url, options, parameters, body, namespace);
-    }, "put"),
-    head: /* @__PURE__ */ __name(async (fetcher, url, options, parameters) => {
+    },
+    head: async (fetcher, url, options, parameters) => {
       return _handleRequest(fetcher, "HEAD", url, _objectSpread22(_objectSpread22({}, options), {}, { noResolveJson: true }), parameters, void 0, namespace);
-    }, "head"),
-    remove: /* @__PURE__ */ __name(async (fetcher, url, body, options, parameters) => {
+    },
+    remove: async (fetcher, url, body, options, parameters) => {
       return _handleRequest(fetcher, "DELETE", url, options, parameters, body, namespace);
-    }, "remove")
+    }
   };
 }
-__name(createFetchApi, "createFetchApi");
 var defaultApi = createFetchApi("storage");
 var { get, post, put, head, remove } = defaultApi;
 var vectorsApi = createFetchApi("vectors");
 var BaseApiClient = class {
-  static {
-    __name(this, "BaseApiClient");
-  }
   /**
   * Creates a new BaseApiClient instance
   * @param url - Base URL for API requests
@@ -9168,9 +9013,6 @@ var BaseApiClient = class {
 var _Symbol$toStringTag$1;
 _Symbol$toStringTag$1 = Symbol.toStringTag;
 var StreamDownloadBuilder = class {
-  static {
-    __name(this, "StreamDownloadBuilder");
-  }
   constructor(downloadFn, shouldThrowOnError) {
     this.downloadFn = downloadFn;
     this.shouldThrowOnError = shouldThrowOnError;
@@ -9210,9 +9052,6 @@ var StreamDownloadBuilder = class {
 var _Symbol$toStringTag;
 _Symbol$toStringTag = Symbol.toStringTag;
 var BlobDownloadBuilder = class {
-  static {
-    __name(this, "BlobDownloadBuilder");
-  }
   constructor(downloadFn, shouldThrowOnError) {
     this.downloadFn = downloadFn;
     this.shouldThrowOnError = shouldThrowOnError;
@@ -9266,9 +9105,6 @@ var DEFAULT_FILE_OPTIONS = {
   upsert: false
 };
 var StorageFileApi = class extends BaseApiClient {
-  static {
-    __name(this, "StorageFileApi");
-  }
   constructor(url, headers = {}, bucketId, fetch$1) {
     super(url, headers, fetch$1, "storage");
     this.bucketId = bucketId;
@@ -9863,10 +9699,10 @@ var StorageFileApi = class extends BaseApiClient {
     if ((options === null || options === void 0 ? void 0 : options.cacheNonce) != null) query.set("cacheNonce", String(options.cacheNonce));
     const queryString = query.toString();
     const _path = this._getFinalPath(path);
-    const downloadFn = /* @__PURE__ */ __name(() => get(this.fetch, `${this.url}/${renderPath}/${_path}${queryString ? `?${queryString}` : ""}`, {
+    const downloadFn = () => get(this.fetch, `${this.url}/${renderPath}/${_path}${queryString ? `?${queryString}` : ""}`, {
       headers: this.headers,
       noResolveJson: true
-    }, parameters), "downloadFn");
+    }, parameters);
     return new BlobDownloadBuilder(downloadFn, this.shouldThrowOnError);
   }
   /**
@@ -10279,9 +10115,6 @@ var StorageFileApi = class extends BaseApiClient {
 var version2 = "2.109.0";
 var DEFAULT_HEADERS = { "X-Client-Info": `storage-js/${version2}` };
 var StorageBucketApi = class extends BaseApiClient {
-  static {
-    __name(this, "StorageBucketApi");
-  }
   constructor(url, headers = {}, fetch$1, opts) {
     const baseUrl = new URL(url);
     if (opts === null || opts === void 0 ? void 0 : opts.useNewHostname) {
@@ -10627,9 +10460,6 @@ var StorageBucketApi = class extends BaseApiClient {
   }
 };
 var StorageAnalyticsClient = class extends BaseApiClient {
-  static {
-    __name(this, "StorageAnalyticsClient");
-  }
   /**
   * @alpha
   *
@@ -10946,7 +10776,7 @@ var StorageAnalyticsClient = class extends BaseApiClient {
       catalogName: bucketName,
       auth: {
         type: "custom",
-        getHeaders: /* @__PURE__ */ __name(async () => _this4.headers, "getHeaders")
+        getHeaders: async () => _this4.headers
       },
       fetch: this.fetch
     });
@@ -10972,9 +10802,6 @@ var StorageAnalyticsClient = class extends BaseApiClient {
   }
 };
 var VectorIndexApi = class extends BaseApiClient {
-  static {
-    __name(this, "VectorIndexApi");
-  }
   /** Creates a new VectorIndexApi instance */
   constructor(url, headers = {}, fetch$1) {
     const finalUrl = url.replace(/\/$/, "");
@@ -11017,9 +10844,6 @@ var VectorIndexApi = class extends BaseApiClient {
   }
 };
 var VectorDataApi = class extends BaseApiClient {
-  static {
-    __name(this, "VectorDataApi");
-  }
   /** Creates a new VectorDataApi instance */
   constructor(url, headers = {}, fetch$1) {
     const finalUrl = url.replace(/\/$/, "");
@@ -11071,9 +10895,6 @@ var VectorDataApi = class extends BaseApiClient {
   }
 };
 var VectorBucketApi = class extends BaseApiClient {
-  static {
-    __name(this, "VectorBucketApi");
-  }
   /** Creates a new VectorBucketApi instance */
   constructor(url, headers = {}, fetch$1) {
     const finalUrl = url.replace(/\/$/, "");
@@ -11110,9 +10931,6 @@ var VectorBucketApi = class extends BaseApiClient {
   }
 };
 var StorageVectorsClient = class extends VectorBucketApi {
-  static {
-    __name(this, "StorageVectorsClient");
-  }
   /**
   * @alpha
   *
@@ -11189,7 +11007,7 @@ var StorageVectorsClient = class extends VectorBucketApi {
   * ```
   */
   async createBucket(vectorBucketName) {
-    var _superprop_getCreateBucket = /* @__PURE__ */ __name(() => super.createBucket, "_superprop_getCreateBucket"), _this = this;
+    var _superprop_getCreateBucket = () => super.createBucket, _this = this;
     return _superprop_getCreateBucket().call(_this, vectorBucketName);
   }
   /**
@@ -11216,7 +11034,7 @@ var StorageVectorsClient = class extends VectorBucketApi {
   * ```
   */
   async getBucket(vectorBucketName) {
-    var _superprop_getGetBucket = /* @__PURE__ */ __name(() => super.getBucket, "_superprop_getGetBucket"), _this2 = this;
+    var _superprop_getGetBucket = () => super.getBucket, _this2 = this;
     return _superprop_getGetBucket().call(_this2, vectorBucketName);
   }
   /**
@@ -11245,7 +11063,7 @@ var StorageVectorsClient = class extends VectorBucketApi {
   * ```
   */
   async listBuckets(options = {}) {
-    var _superprop_getListBuckets = /* @__PURE__ */ __name(() => super.listBuckets, "_superprop_getListBuckets"), _this3 = this;
+    var _superprop_getListBuckets = () => super.listBuckets, _this3 = this;
     return _superprop_getListBuckets().call(_this3, options);
   }
   /**
@@ -11271,14 +11089,11 @@ var StorageVectorsClient = class extends VectorBucketApi {
   * ```
   */
   async deleteBucket(vectorBucketName) {
-    var _superprop_getDeleteBucket = /* @__PURE__ */ __name(() => super.deleteBucket, "_superprop_getDeleteBucket"), _this4 = this;
+    var _superprop_getDeleteBucket = () => super.deleteBucket, _this4 = this;
     return _superprop_getDeleteBucket().call(_this4, vectorBucketName);
   }
 };
 var VectorBucketScope = class extends VectorIndexApi {
-  static {
-    __name(this, "VectorBucketScope");
-  }
   /**
   * @alpha
   *
@@ -11326,7 +11141,7 @@ var VectorBucketScope = class extends VectorIndexApi {
   * ```
   */
   async createIndex(options) {
-    var _superprop_getCreateIndex = /* @__PURE__ */ __name(() => super.createIndex, "_superprop_getCreateIndex"), _this5 = this;
+    var _superprop_getCreateIndex = () => super.createIndex, _this5 = this;
     return _superprop_getCreateIndex().call(_this5, _objectSpread22(_objectSpread22({}, options), {}, { vectorBucketName: _this5.vectorBucketName }));
   }
   /**
@@ -11350,7 +11165,7 @@ var VectorBucketScope = class extends VectorIndexApi {
   * ```
   */
   async listIndexes(options = {}) {
-    var _superprop_getListIndexes = /* @__PURE__ */ __name(() => super.listIndexes, "_superprop_getListIndexes"), _this6 = this;
+    var _superprop_getListIndexes = () => super.listIndexes, _this6 = this;
     return _superprop_getListIndexes().call(_this6, _objectSpread22(_objectSpread22({}, options), {}, { vectorBucketName: _this6.vectorBucketName }));
   }
   /**
@@ -11375,7 +11190,7 @@ var VectorBucketScope = class extends VectorIndexApi {
   * ```
   */
   async getIndex(indexName) {
-    var _superprop_getGetIndex = /* @__PURE__ */ __name(() => super.getIndex, "_superprop_getGetIndex"), _this7 = this;
+    var _superprop_getGetIndex = () => super.getIndex, _this7 = this;
     return _superprop_getGetIndex().call(_this7, _this7.vectorBucketName, indexName);
   }
   /**
@@ -11399,7 +11214,7 @@ var VectorBucketScope = class extends VectorIndexApi {
   * ```
   */
   async deleteIndex(indexName) {
-    var _superprop_getDeleteIndex = /* @__PURE__ */ __name(() => super.deleteIndex, "_superprop_getDeleteIndex"), _this8 = this;
+    var _superprop_getDeleteIndex = () => super.deleteIndex, _this8 = this;
     return _superprop_getDeleteIndex().call(_this8, _this8.vectorBucketName, indexName);
   }
   /**
@@ -11439,9 +11254,6 @@ var VectorBucketScope = class extends VectorIndexApi {
   }
 };
 var VectorIndexScope = class extends VectorDataApi {
-  static {
-    __name(this, "VectorIndexScope");
-  }
   /**
   *
   * @alpha
@@ -11491,7 +11303,7 @@ var VectorIndexScope = class extends VectorDataApi {
   * ```
   */
   async putVectors(options) {
-    var _superprop_getPutVectors = /* @__PURE__ */ __name(() => super.putVectors, "_superprop_getPutVectors"), _this9 = this;
+    var _superprop_getPutVectors = () => super.putVectors, _this9 = this;
     return _superprop_getPutVectors().call(_this9, _objectSpread22(_objectSpread22({}, options), {}, {
       vectorBucketName: _this9.vectorBucketName,
       indexName: _this9.indexName
@@ -11521,7 +11333,7 @@ var VectorIndexScope = class extends VectorDataApi {
   * ```
   */
   async getVectors(options) {
-    var _superprop_getGetVectors = /* @__PURE__ */ __name(() => super.getVectors, "_superprop_getGetVectors"), _this10 = this;
+    var _superprop_getGetVectors = () => super.getVectors, _this10 = this;
     return _superprop_getGetVectors().call(_this10, _objectSpread22(_objectSpread22({}, options), {}, {
       vectorBucketName: _this10.vectorBucketName,
       indexName: _this10.indexName
@@ -11551,7 +11363,7 @@ var VectorIndexScope = class extends VectorDataApi {
   * ```
   */
   async listVectors(options = {}) {
-    var _superprop_getListVectors = /* @__PURE__ */ __name(() => super.listVectors, "_superprop_getListVectors"), _this11 = this;
+    var _superprop_getListVectors = () => super.listVectors, _this11 = this;
     return _superprop_getListVectors().call(_this11, _objectSpread22(_objectSpread22({}, options), {}, {
       vectorBucketName: _this11.vectorBucketName,
       indexName: _this11.indexName
@@ -11584,7 +11396,7 @@ var VectorIndexScope = class extends VectorDataApi {
   * ```
   */
   async queryVectors(options) {
-    var _superprop_getQueryVectors = /* @__PURE__ */ __name(() => super.queryVectors, "_superprop_getQueryVectors"), _this12 = this;
+    var _superprop_getQueryVectors = () => super.queryVectors, _this12 = this;
     return _superprop_getQueryVectors().call(_this12, _objectSpread22(_objectSpread22({}, options), {}, {
       vectorBucketName: _this12.vectorBucketName,
       indexName: _this12.indexName
@@ -11613,7 +11425,7 @@ var VectorIndexScope = class extends VectorDataApi {
   * ```
   */
   async deleteVectors(options) {
-    var _superprop_getDeleteVectors = /* @__PURE__ */ __name(() => super.deleteVectors, "_superprop_getDeleteVectors"), _this13 = this;
+    var _superprop_getDeleteVectors = () => super.deleteVectors, _this13 = this;
     return _superprop_getDeleteVectors().call(_this13, _objectSpread22(_objectSpread22({}, options), {}, {
       vectorBucketName: _this13.vectorBucketName,
       indexName: _this13.indexName
@@ -11621,9 +11433,6 @@ var VectorIndexScope = class extends VectorDataApi {
   }
 };
 var StorageClient = class extends StorageBucketApi {
-  static {
-    __name(this, "StorageClient");
-  }
   /**
   * Creates a client for Storage buckets, files, analytics, and vectors.
   *
@@ -11727,9 +11536,6 @@ var JWKS_TTL = 10 * 60 * 1e3;
 
 // node_modules/@supabase/auth-js/dist/module/lib/errors.js
 var AuthError = class extends Error {
-  static {
-    __name(this, "AuthError");
-  }
   constructor(message, status, code) {
     super(message);
     this.__isAuthError = true;
@@ -11749,11 +11555,7 @@ var AuthError = class extends Error {
 function isAuthError(error) {
   return typeof error === "object" && error !== null && "__isAuthError" in error;
 }
-__name(isAuthError, "isAuthError");
 var AuthApiError = class extends AuthError {
-  static {
-    __name(this, "AuthApiError");
-  }
   constructor(message, status, code) {
     super(message, status, code);
     this.name = "AuthApiError";
@@ -11764,11 +11566,7 @@ var AuthApiError = class extends AuthError {
 function isAuthApiError(error) {
   return isAuthError(error) && error.name === "AuthApiError";
 }
-__name(isAuthApiError, "isAuthApiError");
 var AuthUnknownError = class extends AuthError {
-  static {
-    __name(this, "AuthUnknownError");
-  }
   constructor(message, originalError) {
     super(message);
     this.name = "AuthUnknownError";
@@ -11776,9 +11574,6 @@ var AuthUnknownError = class extends AuthError {
   }
 };
 var CustomAuthError = class extends AuthError {
-  static {
-    __name(this, "CustomAuthError");
-  }
   constructor(message, name, status, code) {
     super(message, status, code);
     this.name = name;
@@ -11786,9 +11581,6 @@ var CustomAuthError = class extends AuthError {
   }
 };
 var AuthSessionMissingError = class extends CustomAuthError {
-  static {
-    __name(this, "AuthSessionMissingError");
-  }
   constructor() {
     super("Auth session missing!", "AuthSessionMissingError", 400, void 0);
   }
@@ -11796,27 +11588,17 @@ var AuthSessionMissingError = class extends CustomAuthError {
 function isAuthSessionMissingError(error) {
   return isAuthError(error) && error.name === "AuthSessionMissingError";
 }
-__name(isAuthSessionMissingError, "isAuthSessionMissingError");
 var AuthInvalidTokenResponseError = class extends CustomAuthError {
-  static {
-    __name(this, "AuthInvalidTokenResponseError");
-  }
   constructor() {
     super("Auth session or user missing", "AuthInvalidTokenResponseError", 500, void 0);
   }
 };
 var AuthInvalidCredentialsError = class extends CustomAuthError {
-  static {
-    __name(this, "AuthInvalidCredentialsError");
-  }
   constructor(message) {
     super(message, "AuthInvalidCredentialsError", 400, void 0);
   }
 };
 var AuthImplicitGrantRedirectError = class extends CustomAuthError {
-  static {
-    __name(this, "AuthImplicitGrantRedirectError");
-  }
   constructor(message, details = null) {
     super(message, "AuthImplicitGrantRedirectError", 500, void 0);
     this.details = null;
@@ -11829,11 +11611,7 @@ var AuthImplicitGrantRedirectError = class extends CustomAuthError {
 function isAuthImplicitGrantRedirectError(error) {
   return isAuthError(error) && error.name === "AuthImplicitGrantRedirectError";
 }
-__name(isAuthImplicitGrantRedirectError, "isAuthImplicitGrantRedirectError");
 var AuthPKCEGrantCodeExchangeError = class extends CustomAuthError {
-  static {
-    __name(this, "AuthPKCEGrantCodeExchangeError");
-  }
   constructor(message, details = null) {
     super(message, "AuthPKCEGrantCodeExchangeError", 500, void 0);
     this.details = null;
@@ -11844,17 +11622,11 @@ var AuthPKCEGrantCodeExchangeError = class extends CustomAuthError {
   }
 };
 var AuthPKCECodeVerifierMissingError = class extends CustomAuthError {
-  static {
-    __name(this, "AuthPKCECodeVerifierMissingError");
-  }
   constructor() {
     super("PKCE code verifier not found in storage. This can happen if the auth flow was initiated in a different browser or device, or if the storage was cleared. For SSR frameworks (Next.js, SvelteKit, etc.), use @supabase/ssr on both the server and client to store the code verifier in cookies.", "AuthPKCECodeVerifierMissingError", 400, "pkce_code_verifier_not_found");
   }
 };
 var AuthRetryableFetchError = class extends CustomAuthError {
-  static {
-    __name(this, "AuthRetryableFetchError");
-  }
   constructor(message, status) {
     super(message, "AuthRetryableFetchError", status, void 0);
   }
@@ -11862,11 +11634,7 @@ var AuthRetryableFetchError = class extends CustomAuthError {
 function isAuthRetryableFetchError(error) {
   return isAuthError(error) && error.name === "AuthRetryableFetchError";
 }
-__name(isAuthRetryableFetchError, "isAuthRetryableFetchError");
 var AuthRefreshDiscardedError = class extends CustomAuthError {
-  static {
-    __name(this, "AuthRefreshDiscardedError");
-  }
   constructor(message = "Refresh result discarded: session state changed mid-flight (e.g., concurrent signOut)") {
     super(message, "AuthRefreshDiscardedError", 409, void 0);
   }
@@ -11874,11 +11642,7 @@ var AuthRefreshDiscardedError = class extends CustomAuthError {
 function isAuthRefreshDiscardedError(error) {
   return isAuthError(error) && error.name === "AuthRefreshDiscardedError";
 }
-__name(isAuthRefreshDiscardedError, "isAuthRefreshDiscardedError");
 var AuthWeakPasswordError = class extends CustomAuthError {
-  static {
-    __name(this, "AuthWeakPasswordError");
-  }
   constructor(message, status, reasons) {
     super(message, "AuthWeakPasswordError", status, "weak_password");
     this.reasons = reasons;
@@ -11888,9 +11652,6 @@ var AuthWeakPasswordError = class extends CustomAuthError {
   }
 };
 var AuthInvalidJwtError = class extends CustomAuthError {
-  static {
-    __name(this, "AuthInvalidJwtError");
-  }
   constructor(message) {
     super(message, "AuthInvalidJwtError", 400, "invalid_jwt");
   }
@@ -11931,7 +11692,6 @@ function byteToBase64URL(byte, state, emit) {
     }
   }
 }
-__name(byteToBase64URL, "byteToBase64URL");
 function byteFromBase64URL(charCode, state, emit) {
   const bits = FROM_BASE64URL[charCode];
   if (bits > -1) {
@@ -11947,26 +11707,24 @@ function byteFromBase64URL(charCode, state, emit) {
     throw new Error(`Invalid Base64-URL character "${String.fromCharCode(charCode)}"`);
   }
 }
-__name(byteFromBase64URL, "byteFromBase64URL");
 function stringFromBase64URL(str) {
   const conv = [];
-  const utf8Emit = /* @__PURE__ */ __name((codepoint) => {
+  const utf8Emit = (codepoint) => {
     conv.push(String.fromCodePoint(codepoint));
-  }, "utf8Emit");
+  };
   const utf8State = {
     utf8seq: 0,
     codepoint: 0
   };
   const b64State = { queue: 0, queuedBits: 0 };
-  const byteEmit = /* @__PURE__ */ __name((byte) => {
+  const byteEmit = (byte) => {
     stringFromUTF8(byte, utf8State, utf8Emit);
-  }, "byteEmit");
+  };
   for (let i = 0; i < str.length; i += 1) {
     byteFromBase64URL(str.charCodeAt(i), b64State, byteEmit);
   }
   return conv.join("");
 }
-__name(stringFromBase64URL, "stringFromBase64URL");
 function codepointToUTF8(codepoint, emit) {
   if (codepoint <= 127) {
     emit(codepoint);
@@ -11989,7 +11747,6 @@ function codepointToUTF8(codepoint, emit) {
   }
   throw new Error(`Unrecognized Unicode codepoint: ${codepoint.toString(16)}`);
 }
-__name(codepointToUTF8, "codepointToUTF8");
 function stringToUTF8(str, emit) {
   for (let i = 0; i < str.length; i += 1) {
     let codepoint = str.charCodeAt(i);
@@ -12002,7 +11759,6 @@ function stringToUTF8(str, emit) {
     codepointToUTF8(codepoint, emit);
   }
 }
-__name(stringToUTF8, "stringToUTF8");
 function stringFromUTF8(byte, state, emit) {
   if (state.utf8seq === 0) {
     if (byte <= 127) {
@@ -12036,53 +11792,47 @@ function stringFromUTF8(byte, state, emit) {
     }
   }
 }
-__name(stringFromUTF8, "stringFromUTF8");
 function base64UrlToUint8Array(str) {
   const result = [];
   const state = { queue: 0, queuedBits: 0 };
-  const onByte = /* @__PURE__ */ __name((byte) => {
+  const onByte = (byte) => {
     result.push(byte);
-  }, "onByte");
+  };
   for (let i = 0; i < str.length; i += 1) {
     byteFromBase64URL(str.charCodeAt(i), state, onByte);
   }
   return new Uint8Array(result);
 }
-__name(base64UrlToUint8Array, "base64UrlToUint8Array");
 function stringToUint8Array(str) {
   const result = [];
   stringToUTF8(str, (byte) => result.push(byte));
   return new Uint8Array(result);
 }
-__name(stringToUint8Array, "stringToUint8Array");
 function bytesToBase64URL(bytes) {
   const result = [];
   const state = { queue: 0, queuedBits: 0 };
-  const onChar = /* @__PURE__ */ __name((char) => {
+  const onChar = (char) => {
     result.push(char);
-  }, "onChar");
+  };
   bytes.forEach((byte) => byteToBase64URL(byte, state, onChar));
   byteToBase64URL(null, state, onChar);
   return result.join("");
 }
-__name(bytesToBase64URL, "bytesToBase64URL");
 
 // node_modules/@supabase/auth-js/dist/module/lib/helpers.js
 function expiresAt(expiresIn) {
   const timeNow = Math.round(Date.now() / 1e3);
   return timeNow + expiresIn;
 }
-__name(expiresAt, "expiresAt");
 function generateCallbackId() {
   return /* @__PURE__ */ Symbol("auth-callback");
 }
-__name(generateCallbackId, "generateCallbackId");
-var isBrowser = /* @__PURE__ */ __name(() => typeof window !== "undefined" && typeof document !== "undefined", "isBrowser");
+var isBrowser = () => typeof window !== "undefined" && typeof document !== "undefined";
 var localStorageWriteTests = {
   tested: false,
   writable: false
 };
-var supportsLocalStorage = /* @__PURE__ */ __name(() => {
+var supportsLocalStorage = () => {
   if (!isBrowser()) {
     return false;
   }
@@ -12107,7 +11857,7 @@ var supportsLocalStorage = /* @__PURE__ */ __name(() => {
     localStorageWriteTests.writable = false;
   }
   return localStorageWriteTests.writable;
-}, "supportsLocalStorage");
+};
 function parseParametersFromURL(href) {
   const result = {};
   const url = new URL(href);
@@ -12125,20 +11875,19 @@ function parseParametersFromURL(href) {
   });
   return result;
 }
-__name(parseParametersFromURL, "parseParametersFromURL");
-var resolveFetch3 = /* @__PURE__ */ __name((customFetch) => {
+var resolveFetch3 = (customFetch) => {
   if (customFetch) {
     return (...args) => customFetch(...args);
   }
   return (...args) => fetch(...args);
-}, "resolveFetch");
-var looksLikeFetchResponse = /* @__PURE__ */ __name((maybeResponse) => {
+};
+var looksLikeFetchResponse = (maybeResponse) => {
   return typeof maybeResponse === "object" && maybeResponse !== null && "status" in maybeResponse && "ok" in maybeResponse && "json" in maybeResponse && typeof maybeResponse.json === "function";
-}, "looksLikeFetchResponse");
-var setItemAsync = /* @__PURE__ */ __name(async (storage, key, data) => {
+};
+var setItemAsync = async (storage, key, data) => {
   await storage.setItem(key, JSON.stringify(data));
-}, "setItemAsync");
-var getItemAsync = /* @__PURE__ */ __name(async (storage, key) => {
+};
+var getItemAsync = async (storage, key) => {
   const value = await storage.getItem(key);
   if (!value) {
     return null;
@@ -12148,14 +11897,11 @@ var getItemAsync = /* @__PURE__ */ __name(async (storage, key) => {
   } catch (_a) {
     return null;
   }
-}, "getItemAsync");
-var removeItemAsync = /* @__PURE__ */ __name(async (storage, key) => {
+};
+var removeItemAsync = async (storage, key) => {
   await storage.removeItem(key);
-}, "removeItemAsync");
+};
 var Deferred = class _Deferred {
-  static {
-    __name(this, "Deferred");
-  }
   constructor() {
     ;
     this.promise = new _Deferred.promiseConstructor((res, rej) => {
@@ -12188,13 +11934,11 @@ function decodeJWT(token) {
   };
   return data;
 }
-__name(decodeJWT, "decodeJWT");
 async function sleep2(time) {
   return await new Promise((accept) => {
     setTimeout(() => accept(null), time);
   });
 }
-__name(sleep2, "sleep");
 function retryable(fn, isRetryable) {
   const promise = new Promise((accept, reject) => {
     ;
@@ -12217,11 +11961,9 @@ function retryable(fn, isRetryable) {
   });
   return promise;
 }
-__name(retryable, "retryable");
 function dec2hex(dec) {
   return ("0" + dec.toString(16)).substr(-2);
 }
-__name(dec2hex, "dec2hex");
 function generatePKCEVerifier() {
   const verifierLength = 56;
   const array = new Uint32Array(verifierLength);
@@ -12237,7 +11979,6 @@ function generatePKCEVerifier() {
   crypto.getRandomValues(array);
   return Array.from(array, dec2hex).join("");
 }
-__name(generatePKCEVerifier, "generatePKCEVerifier");
 async function sha256(randomString) {
   const encoder = new TextEncoder();
   const encodedData = encoder.encode(randomString);
@@ -12245,7 +11986,6 @@ async function sha256(randomString) {
   const bytes = new Uint8Array(hash);
   return Array.from(bytes).map((c) => String.fromCharCode(c)).join("");
 }
-__name(sha256, "sha256");
 async function generatePKCEChallenge(verifier) {
   const hasCryptoSupport = typeof crypto !== "undefined" && typeof crypto.subtle !== "undefined" && typeof TextEncoder !== "undefined";
   if (!hasCryptoSupport) {
@@ -12255,7 +11995,6 @@ async function generatePKCEChallenge(verifier) {
   const hashed = await sha256(verifier);
   return btoa(hashed).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
-__name(generatePKCEChallenge, "generatePKCEChallenge");
 async function getCodeChallengeAndMethod(storage, storageKey, isPasswordRecovery = false) {
   const codeVerifier = generatePKCEVerifier();
   let storedCodeVerifier = codeVerifier;
@@ -12267,7 +12006,6 @@ async function getCodeChallengeAndMethod(storage, storageKey, isPasswordRecovery
   const codeChallengeMethod = codeVerifier === codeChallenge ? "plain" : "s256";
   return [codeChallenge, codeChallengeMethod];
 }
-__name(getCodeChallengeAndMethod, "getCodeChallengeAndMethod");
 var API_VERSION_REGEX = /^2[0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[0-1])$/i;
 function parseResponseAPIVersion(response) {
   const apiVersion = response.headers.get(API_VERSION_HEADER_NAME);
@@ -12284,7 +12022,6 @@ function parseResponseAPIVersion(response) {
     return null;
   }
 }
-__name(parseResponseAPIVersion, "parseResponseAPIVersion");
 function validateExp(exp) {
   if (!exp) {
     throw new Error("Missing exp claim");
@@ -12294,7 +12031,6 @@ function validateExp(exp) {
     throw new Error("JWT has expired");
   }
 }
-__name(validateExp, "validateExp");
 function getAlgorithm(alg) {
   switch (alg) {
     case "RS256":
@@ -12312,24 +12048,21 @@ function getAlgorithm(alg) {
       throw new Error("Invalid alg claim");
   }
 }
-__name(getAlgorithm, "getAlgorithm");
 var UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 function validateUUID(str) {
   if (!UUID_REGEX.test(str)) {
     throw new Error("@supabase/auth-js: Expected parameter to be UUID but is not");
   }
 }
-__name(validateUUID, "validateUUID");
 function assertPasskeyExperimentalEnabled(experimental) {
   if (!experimental.passkey) {
     throw new Error("@supabase/auth-js: the passkey API is experimental and disabled by default. Enable it by passing `auth: { experimental: { passkey: true } }` to createClient (or to the GoTrueClient constructor).");
   }
 }
-__name(assertPasskeyExperimentalEnabled, "assertPasskeyExperimentalEnabled");
 function userNotAvailableProxy() {
   const proxyTarget = {};
   return new Proxy(proxyTarget, {
-    get: /* @__PURE__ */ __name((target, prop) => {
+    get: (target, prop) => {
       if (prop === "__isUserNotAvailableProxy") {
         return true;
       }
@@ -12340,19 +12073,18 @@ function userNotAvailableProxy() {
         }
       }
       throw new Error(`@supabase/auth-js: client was created with userStorage option and there was no user stored in the user storage. Accessing the "${prop}" property of the session object is not supported. Please use getUser() instead.`);
-    }, "get"),
-    set: /* @__PURE__ */ __name((_target, prop) => {
+    },
+    set: (_target, prop) => {
       throw new Error(`@supabase/auth-js: client was created with userStorage option and there was no user stored in the user storage. Setting the "${prop}" property of the session object is not supported. Please use getUser() to fetch a user object you can manipulate.`);
-    }, "set"),
-    deleteProperty: /* @__PURE__ */ __name((_target, prop) => {
+    },
+    deleteProperty: (_target, prop) => {
       throw new Error(`@supabase/auth-js: client was created with userStorage option and there was no user stored in the user storage. Deleting the "${prop}" property of the session object is not supported. Please use getUser() to fetch a user object you can manipulate.`);
-    }, "deleteProperty")
+    }
   });
 }
-__name(userNotAvailableProxy, "userNotAvailableProxy");
 function insecureUserWarningProxy(user, suppressWarningRef) {
   return new Proxy(user, {
-    get: /* @__PURE__ */ __name((target, prop, receiver) => {
+    get: (target, prop, receiver) => {
       if (prop === "__isInsecureUserWarningProxy") {
         return true;
       }
@@ -12367,17 +12099,15 @@ function insecureUserWarningProxy(user, suppressWarningRef) {
         suppressWarningRef.value = true;
       }
       return Reflect.get(target, prop, receiver);
-    }, "get")
+    }
   });
 }
-__name(insecureUserWarningProxy, "insecureUserWarningProxy");
 function deepClone(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
-__name(deepClone, "deepClone");
 
 // node_modules/@supabase/auth-js/dist/module/lib/fetch.js
-var _getErrorMessage2 = /* @__PURE__ */ __name((err) => {
+var _getErrorMessage2 = (err) => {
   if (typeof err === "object" && err !== null) {
     const e = err;
     if (typeof e.msg === "string")
@@ -12390,7 +12120,7 @@ var _getErrorMessage2 = /* @__PURE__ */ __name((err) => {
       return e.error;
   }
   return JSON.stringify(err);
-}, "_getErrorMessage");
+};
 var NETWORK_ERROR_CODES = [
   500,
   501,
@@ -12441,8 +12171,7 @@ async function handleError2(error) {
   }
   throw new AuthApiError(_getErrorMessage2(data), error.status || 500, errorCode);
 }
-__name(handleError2, "handleError");
-var _getRequestParams2 = /* @__PURE__ */ __name((method, options, parameters, body) => {
+var _getRequestParams2 = (method, options, parameters, body) => {
   const params = { method, headers: (options === null || options === void 0 ? void 0 : options.headers) || {} };
   if (method === "GET") {
     return params;
@@ -12450,7 +12179,7 @@ var _getRequestParams2 = /* @__PURE__ */ __name((method, options, parameters, bo
   params.headers = Object.assign({ "Content-Type": "application/json;charset=UTF-8" }, options === null || options === void 0 ? void 0 : options.headers);
   params.body = JSON.stringify(body);
   return Object.assign(Object.assign({}, params), parameters);
-}, "_getRequestParams");
+};
 async function _request(fetcher, method, url, options) {
   var _a;
   const headers = Object.assign({}, options === null || options === void 0 ? void 0 : options.headers);
@@ -12471,7 +12200,6 @@ async function _request(fetcher, method, url, options) {
   }, {}, options === null || options === void 0 ? void 0 : options.body);
   return (options === null || options === void 0 ? void 0 : options.xform) ? options === null || options === void 0 ? void 0 : options.xform(data) : { data: Object.assign({}, data), error: null };
 }
-__name(_request, "_request");
 async function _handleRequest2(fetcher, method, url, options, parameters, body) {
   const requestParams = _getRequestParams2(method, options, parameters, body);
   let result;
@@ -12493,7 +12221,6 @@ async function _handleRequest2(fetcher, method, url, options, parameters, body) 
     await handleError2(e);
   }
 }
-__name(_handleRequest2, "_handleRequest");
 function _sessionResponse(data) {
   var _a;
   let session = null;
@@ -12506,7 +12233,6 @@ function _sessionResponse(data) {
   const user = (_a = data.user) !== null && _a !== void 0 ? _a : typeof (data === null || data === void 0 ? void 0 : data.id) === "string" ? data : null;
   return { data: { session, user }, error: null };
 }
-__name(_sessionResponse, "_sessionResponse");
 function _sessionResponsePassword(data) {
   const response = _sessionResponse(data);
   if (!response.error && data.weak_password && typeof data.weak_password === "object" && Array.isArray(data.weak_password.reasons) && data.weak_password.reasons.length && data.weak_password.message && typeof data.weak_password.message === "string" && data.weak_password.reasons.reduce((a, i) => a && typeof i === "string", true)) {
@@ -12514,17 +12240,14 @@ function _sessionResponsePassword(data) {
   }
   return response;
 }
-__name(_sessionResponsePassword, "_sessionResponsePassword");
 function _userResponse(data) {
   var _a;
   const user = (_a = data.user) !== null && _a !== void 0 ? _a : data;
   return { data: { user }, error: null };
 }
-__name(_userResponse, "_userResponse");
 function _ssoResponse(data) {
   return { data, error: null };
 }
-__name(_ssoResponse, "_ssoResponse");
 function _generateLinkResponse(data) {
   const { action_link, email_otp, hashed_token, redirect_to, verification_type } = data, rest = __rest(data, ["action_link", "email_otp", "hashed_token", "redirect_to", "verification_type"]);
   const properties = {
@@ -12543,24 +12266,18 @@ function _generateLinkResponse(data) {
     error: null
   };
 }
-__name(_generateLinkResponse, "_generateLinkResponse");
 function _noResolveJsonResponse(data) {
   return data;
 }
-__name(_noResolveJsonResponse, "_noResolveJsonResponse");
 function hasSession(data) {
   return !!data.access_token && !!data.refresh_token && !!data.expires_in;
 }
-__name(hasSession, "hasSession");
 
 // node_modules/@supabase/auth-js/dist/module/lib/types.js
 var SIGN_OUT_SCOPES = ["global", "local", "others"];
 
 // node_modules/@supabase/auth-js/dist/module/GoTrueAdminApi.js
 var GoTrueAdminApi = class {
-  static {
-    __name(this, "GoTrueAdminApi");
-  }
   /**
    * Creates an admin API client that can be used to manage users and OAuth clients.
    *
@@ -13303,9 +13020,9 @@ var GoTrueAdminApi = class {
     try {
       const { data, error } = await _request(this.fetch, "GET", `${this.url}/admin/users/${params.userId}/factors`, {
         headers: this.headers,
-        xform: /* @__PURE__ */ __name((factors) => {
+        xform: (factors) => {
           return { data: { factors }, error: null };
-        }, "xform")
+        }
       });
       return { data, error };
     } catch (error) {
@@ -13381,9 +13098,9 @@ var GoTrueAdminApi = class {
       return await _request(this.fetch, "POST", `${this.url}/admin/oauth/clients`, {
         body: params,
         headers: this.headers,
-        xform: /* @__PURE__ */ __name((client) => {
+        xform: (client) => {
           return { data: client, error: null };
-        }, "xform")
+        }
       });
     } catch (error) {
       if (isAuthError(error)) {
@@ -13402,9 +13119,9 @@ var GoTrueAdminApi = class {
     try {
       return await _request(this.fetch, "GET", `${this.url}/admin/oauth/clients/${clientId}`, {
         headers: this.headers,
-        xform: /* @__PURE__ */ __name((client) => {
+        xform: (client) => {
           return { data: client, error: null };
-        }, "xform")
+        }
       });
     } catch (error) {
       if (isAuthError(error)) {
@@ -13424,9 +13141,9 @@ var GoTrueAdminApi = class {
       return await _request(this.fetch, "PUT", `${this.url}/admin/oauth/clients/${clientId}`, {
         body: params,
         headers: this.headers,
-        xform: /* @__PURE__ */ __name((client) => {
+        xform: (client) => {
           return { data: client, error: null };
-        }, "xform")
+        }
       });
     } catch (error) {
       if (isAuthError(error)) {
@@ -13465,9 +13182,9 @@ var GoTrueAdminApi = class {
     try {
       return await _request(this.fetch, "POST", `${this.url}/admin/oauth/clients/${clientId}/regenerate_secret`, {
         headers: this.headers,
-        xform: /* @__PURE__ */ __name((client) => {
+        xform: (client) => {
           return { data: client, error: null };
-        }, "xform")
+        }
       });
     } catch (error) {
       if (isAuthError(error)) {
@@ -13490,10 +13207,10 @@ var GoTrueAdminApi = class {
       return await _request(this.fetch, "GET", `${this.url}/admin/custom-providers`, {
         headers: this.headers,
         query,
-        xform: /* @__PURE__ */ __name((data) => {
+        xform: (data) => {
           var _a;
           return { data: { providers: (_a = data === null || data === void 0 ? void 0 : data.providers) !== null && _a !== void 0 ? _a : [] }, error: null };
-        }, "xform")
+        }
       });
     } catch (error) {
       if (isAuthError(error)) {
@@ -13518,9 +13235,9 @@ var GoTrueAdminApi = class {
       return await _request(this.fetch, "POST", `${this.url}/admin/custom-providers`, {
         body: params,
         headers: this.headers,
-        xform: /* @__PURE__ */ __name((provider) => {
+        xform: (provider) => {
           return { data: provider, error: null };
-        }, "xform")
+        }
       });
     } catch (error) {
       if (isAuthError(error)) {
@@ -13538,9 +13255,9 @@ var GoTrueAdminApi = class {
     try {
       return await _request(this.fetch, "GET", `${this.url}/admin/custom-providers/${identifier}`, {
         headers: this.headers,
-        xform: /* @__PURE__ */ __name((provider) => {
+        xform: (provider) => {
           return { data: provider, error: null };
-        }, "xform")
+        }
       });
     } catch (error) {
       if (isAuthError(error)) {
@@ -13564,9 +13281,9 @@ var GoTrueAdminApi = class {
       return await _request(this.fetch, "PUT", `${this.url}/admin/custom-providers/${identifier}`, {
         body: params,
         headers: this.headers,
-        xform: /* @__PURE__ */ __name((provider) => {
+        xform: (provider) => {
           return { data: provider, error: null };
-        }, "xform")
+        }
       });
     } catch (error) {
       if (isAuthError(error)) {
@@ -13605,7 +13322,7 @@ var GoTrueAdminApi = class {
     assertPasskeyExperimentalEnabled(this.experimental);
     validateUUID(params.userId);
     try {
-      return await _request(this.fetch, "GET", `${this.url}/admin/users/${params.userId}/passkeys`, { headers: this.headers, xform: /* @__PURE__ */ __name((data) => ({ data, error: null }), "xform") });
+      return await _request(this.fetch, "GET", `${this.url}/admin/users/${params.userId}/passkeys`, { headers: this.headers, xform: (data) => ({ data, error: null }) });
     } catch (error) {
       if (isAuthError(error)) {
         return { data: null, error };
@@ -13639,18 +13356,17 @@ var GoTrueAdminApi = class {
 // node_modules/@supabase/auth-js/dist/module/lib/local-storage.js
 function memoryLocalStorageAdapter(store = {}) {
   return {
-    getItem: /* @__PURE__ */ __name((key) => {
+    getItem: (key) => {
       return store[key] || null;
-    }, "getItem"),
-    setItem: /* @__PURE__ */ __name((key, value) => {
+    },
+    setItem: (key, value) => {
       store[key] = value;
-    }, "setItem"),
-    removeItem: /* @__PURE__ */ __name((key) => {
+    },
+    removeItem: (key) => {
       delete store[key];
-    }, "removeItem")
+    }
   };
 }
-__name(memoryLocalStorageAdapter, "memoryLocalStorageAdapter");
 
 // node_modules/@supabase/auth-js/dist/module/lib/locks.js
 var internals = {
@@ -13660,9 +13376,6 @@ var internals = {
   debug: !!(globalThis && supportsLocalStorage() && globalThis.localStorage && globalThis.localStorage.getItem("supabase.gotrue-js.locks.debug") === "true")
 };
 var LockAcquireTimeoutError = class extends Error {
-  static {
-    __name(this, "LockAcquireTimeoutError");
-  }
   constructor(message) {
     super(message);
     this.isAcquireTimeout = true;
@@ -13675,9 +13388,9 @@ function polyfillGlobalThis() {
     return;
   try {
     Object.defineProperty(Object.prototype, "__magic__", {
-      get: /* @__PURE__ */ __name(function() {
+      get: function() {
         return this;
-      }, "get"),
+      },
       configurable: true
     });
     __magic__.globalThis = __magic__;
@@ -13688,7 +13401,6 @@ function polyfillGlobalThis() {
     }
   }
 }
-__name(polyfillGlobalThis, "polyfillGlobalThis");
 
 // node_modules/@supabase/auth-js/dist/module/lib/web3/ethereum.js
 function getAddress(address) {
@@ -13697,17 +13409,14 @@ function getAddress(address) {
   }
   return address.toLowerCase();
 }
-__name(getAddress, "getAddress");
 function fromHex(hex) {
   return parseInt(hex, 16);
 }
-__name(fromHex, "fromHex");
 function toHex(value) {
   const bytes = new TextEncoder().encode(value);
   const hex = Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
   return "0x" + hex;
 }
-__name(toHex, "toHex");
 function createSiweMessage(parameters) {
   var _a;
   const { chainId, domain, expirationTime, issuedAt = /* @__PURE__ */ new Date(), nonce, notBefore, requestId, resources, scheme, uri, version: version5 } = parameters;
@@ -13760,13 +13469,9 @@ Request ID: ${requestId}`;
   return `${prefix}
 ${suffix}`;
 }
-__name(createSiweMessage, "createSiweMessage");
 
 // node_modules/@supabase/auth-js/dist/module/lib/webauthn.errors.js
 var WebAuthnError = class extends Error {
-  static {
-    __name(this, "WebAuthnError");
-  }
   constructor({ message, code, cause, name }) {
     var _a;
     super(message, { cause });
@@ -13783,9 +13488,6 @@ var WebAuthnError = class extends Error {
   }
 };
 var WebAuthnUnknownError = class extends WebAuthnError {
-  static {
-    __name(this, "WebAuthnUnknownError");
-  }
   constructor(message, originalError) {
     super({
       code: "ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY",
@@ -13895,7 +13597,6 @@ function identifyRegistrationError({ error, options }) {
     cause: error
   });
 }
-__name(identifyRegistrationError, "identifyRegistrationError");
 function identifyAuthenticationError({ error, options }) {
   const { publicKey } = options;
   if (!publicKey) {
@@ -13943,13 +13644,9 @@ function identifyAuthenticationError({ error, options }) {
     cause: error
   });
 }
-__name(identifyAuthenticationError, "identifyAuthenticationError");
 
 // node_modules/@supabase/auth-js/dist/module/lib/webauthn.js
 var WebAuthnAbortService = class {
-  static {
-    __name(this, "WebAuthnAbortService");
-  }
   /**
    * Create an abort signal for a new WebAuthn operation.
    * Automatically cancels any existing operation.
@@ -14017,7 +13714,6 @@ function deserializeCredentialCreationOptions(options) {
   }
   return result;
 }
-__name(deserializeCredentialCreationOptions, "deserializeCredentialCreationOptions");
 function deserializeCredentialRequestOptions(options) {
   if (!options) {
     throw new Error("Credential request options are required");
@@ -14045,7 +13741,6 @@ function deserializeCredentialRequestOptions(options) {
   }
   return result;
 }
-__name(deserializeCredentialRequestOptions, "deserializeCredentialRequestOptions");
 function serializeCredentialCreationResponse(credential) {
   var _a;
   if ("toJSON" in credential && typeof credential.toJSON === "function") {
@@ -14065,7 +13760,6 @@ function serializeCredentialCreationResponse(credential) {
     authenticatorAttachment: (_a = credentialWithAttachment.authenticatorAttachment) !== null && _a !== void 0 ? _a : void 0
   };
 }
-__name(serializeCredentialCreationResponse, "serializeCredentialCreationResponse");
 function serializeCredentialRequestResponse(credential) {
   var _a;
   if ("toJSON" in credential && typeof credential.toJSON === "function") {
@@ -14090,19 +13784,16 @@ function serializeCredentialRequestResponse(credential) {
     authenticatorAttachment: (_a = credentialWithAttachment.authenticatorAttachment) !== null && _a !== void 0 ? _a : void 0
   };
 }
-__name(serializeCredentialRequestResponse, "serializeCredentialRequestResponse");
 function isValidDomain(hostname) {
   return (
     // Consider localhost valid as well since it's okay wrt Secure Contexts
     hostname === "localhost" || /^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/i.test(hostname)
   );
 }
-__name(isValidDomain, "isValidDomain");
 function browserSupportsWebAuthn() {
   var _a, _b;
   return !!(isBrowser() && "PublicKeyCredential" in window && window.PublicKeyCredential && "credentials" in navigator && typeof ((_a = navigator === null || navigator === void 0 ? void 0 : navigator.credentials) === null || _a === void 0 ? void 0 : _a.create) === "function" && typeof ((_b = navigator === null || navigator === void 0 ? void 0 : navigator.credentials) === null || _b === void 0 ? void 0 : _b.get) === "function");
 }
-__name(browserSupportsWebAuthn, "browserSupportsWebAuthn");
 async function createCredential(options) {
   try {
     const response = await navigator.credentials.create(
@@ -14132,7 +13823,6 @@ async function createCredential(options) {
     };
   }
 }
-__name(createCredential, "createCredential");
 async function getCredential(options) {
   try {
     const response = await navigator.credentials.get(
@@ -14162,7 +13852,6 @@ async function getCredential(options) {
     };
   }
 }
-__name(getCredential, "getCredential");
 var DEFAULT_CREATION_OPTIONS = {
   hints: ["security-key"],
   authenticatorSelection: {
@@ -14181,8 +13870,8 @@ var DEFAULT_REQUEST_OPTIONS = {
   attestation: "direct"
 };
 function deepMerge(...sources) {
-  const isObject = /* @__PURE__ */ __name((val) => val !== null && typeof val === "object" && !Array.isArray(val), "isObject");
-  const isArrayBufferLike = /* @__PURE__ */ __name((val) => val instanceof ArrayBuffer || ArrayBuffer.isView(val), "isArrayBufferLike");
+  const isObject = (val) => val !== null && typeof val === "object" && !Array.isArray(val);
+  const isArrayBufferLike = (val) => val instanceof ArrayBuffer || ArrayBuffer.isView(val);
   const result = {};
   for (const source of sources) {
     if (!source)
@@ -14209,19 +13898,13 @@ function deepMerge(...sources) {
   }
   return result;
 }
-__name(deepMerge, "deepMerge");
 function mergeCredentialCreationOptions(baseOptions, overrides) {
   return deepMerge(DEFAULT_CREATION_OPTIONS, baseOptions, overrides || {});
 }
-__name(mergeCredentialCreationOptions, "mergeCredentialCreationOptions");
 function mergeCredentialRequestOptions(baseOptions, overrides) {
   return deepMerge(DEFAULT_REQUEST_OPTIONS, baseOptions, overrides || {});
 }
-__name(mergeCredentialRequestOptions, "mergeCredentialRequestOptions");
 var WebAuthnApi = class {
-  static {
-    __name(this, "WebAuthnApi");
-  }
   constructor(client) {
     this.client = client;
     this.enroll = this._enroll.bind(this);
@@ -14505,9 +14188,6 @@ var DEFAULT_OPTIONS = {
 };
 var GLOBAL_JWKS = {};
 var GoTrueClient = class _GoTrueClient {
-  static {
-    __name(this, "GoTrueClient");
-  }
   /**
    * The JWKS used for verifying asymmetric JWTs
    */
@@ -17778,10 +17458,10 @@ var GoTrueClient = class _GoTrueClient {
     const subscription = {
       id,
       callback,
-      unsubscribe: /* @__PURE__ */ __name(() => {
+      unsubscribe: () => {
         this._debug("#unsubscribe()", "state change callback with id removed", id);
         this.stateChangeEmitters.delete(id);
-      }, "unsubscribe")
+      }
     };
     this._debug("#onAuthStateChange()", "registered callback with id", id);
     this.stateChangeEmitters.set(id, subscription);
@@ -18789,7 +18469,7 @@ var GoTrueClient = class _GoTrueClient {
     }
   }
   async _verify(params) {
-    const run = /* @__PURE__ */ __name(async () => {
+    const run = async () => {
       try {
         return await this._useSession(async (result) => {
           var _a;
@@ -18818,14 +18498,14 @@ var GoTrueClient = class _GoTrueClient {
         }
         throw error;
       }
-    }, "run");
+    };
     if (this.lock != null) {
       return this._acquireLock(this.lockAcquireTimeout, run);
     }
     return run();
   }
   async _challenge(params) {
-    const run = /* @__PURE__ */ __name(async () => {
+    const run = async () => {
       try {
         return await this._useSession(async (result) => {
           var _a;
@@ -18864,7 +18544,7 @@ var GoTrueClient = class _GoTrueClient {
         }
         throw error;
       }
-    }, "run");
+    };
     if (this.lock != null) {
       return this._acquireLock(this.lockAcquireTimeout, run);
     }
@@ -18987,7 +18667,7 @@ var GoTrueClient = class _GoTrueClient {
         return await _request(this.fetch, "GET", `${this.url}/oauth/authorizations/${authorizationId}`, {
           headers: this.headers,
           jwt: session.access_token,
-          xform: /* @__PURE__ */ __name((data) => ({ data, error: null }), "xform")
+          xform: (data) => ({ data, error: null })
         });
       });
     } catch (error) {
@@ -19015,7 +18695,7 @@ var GoTrueClient = class _GoTrueClient {
           headers: this.headers,
           jwt: session.access_token,
           body: { action: "approve" },
-          xform: /* @__PURE__ */ __name((data) => ({ data, error: null }), "xform")
+          xform: (data) => ({ data, error: null })
         });
         if (response.data && response.data.redirect_url) {
           if (isBrowser() && !(options === null || options === void 0 ? void 0 : options.skipBrowserRedirect)) {
@@ -19049,7 +18729,7 @@ var GoTrueClient = class _GoTrueClient {
           headers: this.headers,
           jwt: session.access_token,
           body: { action: "deny" },
-          xform: /* @__PURE__ */ __name((data) => ({ data, error: null }), "xform")
+          xform: (data) => ({ data, error: null })
         });
         if (response.data && response.data.redirect_url) {
           if (isBrowser() && !(options === null || options === void 0 ? void 0 : options.skipBrowserRedirect)) {
@@ -19082,7 +18762,7 @@ var GoTrueClient = class _GoTrueClient {
         return await _request(this.fetch, "GET", `${this.url}/user/oauth/grants`, {
           headers: this.headers,
           jwt: session.access_token,
-          xform: /* @__PURE__ */ __name((data) => ({ data, error: null }), "xform")
+          xform: (data) => ({ data, error: null })
         });
       });
     } catch (error) {
@@ -19507,7 +19187,7 @@ var GoTrueClient = class _GoTrueClient {
         const { data, error } = await _request(this.fetch, "GET", `${this.url}/passkeys`, {
           headers: this.headers,
           jwt: session.access_token,
-          xform: /* @__PURE__ */ __name((data2) => ({ data: data2, error: null }), "xform")
+          xform: (data2) => ({ data: data2, error: null })
         });
         if (error) {
           return this._returnResult({ data: null, error });
@@ -19628,7 +19308,6 @@ function __awaiter2(thisArg, _arguments, P, generator) {
       resolve(value);
     });
   }
-  __name(adopt, "adopt");
   return new (P || (P = Promise))(function(resolve, reject) {
     function fulfilled(value) {
       try {
@@ -19637,7 +19316,6 @@ function __awaiter2(thisArg, _arguments, P, generator) {
         reject(e);
       }
     }
-    __name(fulfilled, "fulfilled");
     function rejected(value) {
       try {
         step(generator["throw"](value));
@@ -19645,15 +19323,12 @@ function __awaiter2(thisArg, _arguments, P, generator) {
         reject(e);
       }
     }
-    __name(rejected, "rejected");
     function step(result) {
       result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
     }
-    __name(step, "step");
     step((generator = generator.apply(thisArg, _arguments || [])).next());
   });
 }
-__name(__awaiter2, "__awaiter");
 var otelModulePromise = null;
 var OTEL_PKG = "@opentelemetry/api";
 function loadOtel() {
@@ -19665,7 +19340,6 @@ function loadOtel() {
   ).catch(() => null);
   return otelModulePromise;
 }
-__name(loadOtel, "loadOtel");
 function extractTraceContext() {
   return __awaiter2(this, void 0, void 0, function* () {
     try {
@@ -19685,7 +19359,6 @@ function extractTraceContext() {
     }
   });
 }
-__name(extractTraceContext, "extractTraceContext");
 function parseTraceParent(traceparent) {
   if (!traceparent || typeof traceparent !== "string") return null;
   const parts = traceparent.split("-");
@@ -19703,7 +19376,6 @@ function parseTraceParent(traceparent) {
     isSampled: (parseInt(traceFlags, 16) & 1) === 1
   };
 }
-__name(parseTraceParent, "parseTraceParent");
 function shouldPropagateToTarget(targetUrl, targets) {
   if (!targetUrl || !targets || targets.length === 0) return false;
   let url;
@@ -19726,7 +19398,6 @@ function shouldPropagateToTarget(targetUrl, targets) {
   }
   return false;
 }
-__name(shouldPropagateToTarget, "shouldPropagateToTarget");
 function matchStringTarget(hostname, target) {
   if (target === hostname) return true;
   if (target.startsWith("*.")) {
@@ -19737,7 +19408,6 @@ function matchStringTarget(hostname, target) {
   }
   return false;
 }
-__name(matchStringTarget, "matchStringTarget");
 function getDefaultPropagationTargets(supabaseUrl) {
   const targets = [];
   try {
@@ -19749,7 +19419,6 @@ function getDefaultPropagationTargets(supabaseUrl) {
   targets.push("localhost", "127.0.0.1", "[::1]");
   return targets;
 }
-__name(getDefaultPropagationTargets, "getDefaultPropagationTargets");
 function _typeof3(o) {
   "@babel/helpers - typeof";
   return _typeof3 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o$1) {
@@ -19758,7 +19427,6 @@ function _typeof3(o) {
     return o$1 && "function" == typeof Symbol && o$1.constructor === Symbol && o$1 !== Symbol.prototype ? "symbol" : typeof o$1;
   }, _typeof3(o);
 }
-__name(_typeof3, "_typeof");
 function toPrimitive3(t, r) {
   if ("object" != _typeof3(t) || !t) return t;
   var e = t[Symbol.toPrimitive];
@@ -19769,12 +19437,10 @@ function toPrimitive3(t, r) {
   }
   return ("string" === r ? String : Number)(t);
 }
-__name(toPrimitive3, "toPrimitive");
 function toPropertyKey3(t) {
   var i = toPrimitive3(t, "string");
   return "symbol" == _typeof3(i) ? i : i + "";
 }
-__name(toPropertyKey3, "toPropertyKey");
 function _defineProperty3(e, r, t) {
   return (r = toPropertyKey3(r)) in e ? Object.defineProperty(e, r, {
     value: t,
@@ -19783,7 +19449,6 @@ function _defineProperty3(e, r, t) {
     writable: true
   }) : e[r] = t, e;
 }
-__name(_defineProperty3, "_defineProperty");
 function ownKeys3(e, r) {
   var t = Object.keys(e);
   if (Object.getOwnPropertySymbols) {
@@ -19794,7 +19459,6 @@ function ownKeys3(e, r) {
   }
   return t;
 }
-__name(ownKeys3, "ownKeys");
 function _objectSpread23(e) {
   for (var r = 1; r < arguments.length; r++) {
     var t = null != arguments[r] ? arguments[r] : {};
@@ -19806,15 +19470,14 @@ function _objectSpread23(e) {
   }
   return e;
 }
-__name(_objectSpread23, "_objectSpread2");
-var resolveFetch4 = /* @__PURE__ */ __name((customFetch) => {
+var resolveFetch4 = (customFetch) => {
   if (customFetch) return (...args) => customFetch(...args);
   return (...args) => fetch(...args);
-}, "resolveFetch");
-var resolveHeadersConstructor = /* @__PURE__ */ __name(() => {
+};
+var resolveHeadersConstructor = () => {
   return Headers;
-}, "resolveHeadersConstructor");
-var fetchWithAuth = /* @__PURE__ */ __name((supabaseKey, supabaseUrl, getAccessToken, customFetch, tracePropagationOptions) => {
+};
+var fetchWithAuth = (supabaseKey, supabaseUrl, getAccessToken, customFetch, tracePropagationOptions) => {
   const fetch$1 = resolveFetch4(customFetch);
   const HeadersConstructor = resolveHeadersConstructor();
   const traceEnabled = (tracePropagationOptions === null || tracePropagationOptions === void 0 ? void 0 : tracePropagationOptions.enabled) === true;
@@ -19836,7 +19499,7 @@ var fetchWithAuth = /* @__PURE__ */ __name((supabaseKey, supabaseUrl, getAccessT
     }
     return fetch$1(input, _objectSpread23(_objectSpread23({}, init), {}, { headers }));
   };
-}, "fetchWithAuth");
+};
 async function getTraceHeaders(input, targets, respectSampling) {
   if (!shouldPropagateToTarget(typeof input === "string" ? input : input instanceof URL ? input : input.url, targets)) return null;
   const traceContext = await extractTraceContext();
@@ -19847,15 +19510,12 @@ async function getTraceHeaders(input, targets, respectSampling) {
   }
   return traceContext;
 }
-__name(getTraceHeaders, "getTraceHeaders");
 function normalizeTracePropagation(value) {
   return typeof value === "boolean" ? { enabled: value } : value;
 }
-__name(normalizeTracePropagation, "normalizeTracePropagation");
 function ensureTrailingSlash(url) {
   return url.endsWith("/") ? url : url + "/";
 }
-__name(ensureTrailingSlash, "ensureTrailingSlash");
 function applySettingDefaults(options, defaults) {
   var _DEFAULT_GLOBAL_OPTIO, _globalOptions$header, _ref, _tracePropagationOpti, _ref2, _tracePropagationOpti2;
   const { db: dbOptions, auth: authOptions, realtime: realtimeOptions, global: globalOptions } = options;
@@ -19872,13 +19532,12 @@ function applySettingDefaults(options, defaults) {
       enabled: (_ref = (_tracePropagationOpti = tracePropagationOptions === null || tracePropagationOptions === void 0 ? void 0 : tracePropagationOptions.enabled) !== null && _tracePropagationOpti !== void 0 ? _tracePropagationOpti : DEFAULT_TRACE_PROPAGATION_OPTIONS$1 === null || DEFAULT_TRACE_PROPAGATION_OPTIONS$1 === void 0 ? void 0 : DEFAULT_TRACE_PROPAGATION_OPTIONS$1.enabled) !== null && _ref !== void 0 ? _ref : false,
       respectSamplingDecision: (_ref2 = (_tracePropagationOpti2 = tracePropagationOptions === null || tracePropagationOptions === void 0 ? void 0 : tracePropagationOptions.respectSamplingDecision) !== null && _tracePropagationOpti2 !== void 0 ? _tracePropagationOpti2 : DEFAULT_TRACE_PROPAGATION_OPTIONS$1 === null || DEFAULT_TRACE_PROPAGATION_OPTIONS$1 === void 0 ? void 0 : DEFAULT_TRACE_PROPAGATION_OPTIONS$1.respectSamplingDecision) !== null && _ref2 !== void 0 ? _ref2 : true
     },
-    accessToken: /* @__PURE__ */ __name(async () => "", "accessToken")
+    accessToken: async () => ""
   };
   if (options.accessToken) result.accessToken = options.accessToken;
   else delete result.accessToken;
   return result;
 }
-__name(applySettingDefaults, "applySettingDefaults");
 function validateSupabaseUrl(supabaseUrl) {
   const trimmedUrl = supabaseUrl === null || supabaseUrl === void 0 ? void 0 : supabaseUrl.trim();
   if (!trimmedUrl) throw new Error("supabaseUrl is required.");
@@ -19889,19 +19548,12 @@ function validateSupabaseUrl(supabaseUrl) {
     throw Error("Invalid supabaseUrl: Provided URL is malformed.");
   }
 }
-__name(validateSupabaseUrl, "validateSupabaseUrl");
 var SupabaseAuthClient = class extends AuthClient_default {
-  static {
-    __name(this, "SupabaseAuthClient");
-  }
   constructor(options) {
     super(options);
   }
 };
 var SupabaseClient = class {
-  static {
-    __name(this, "SupabaseClient");
-  }
   /**
   * Create a new client for use in the browser.
   *
@@ -20141,9 +19793,9 @@ var SupabaseClient = class {
       this.auth = this._initSupabaseAuthClient((_settings$auth = settings.auth) !== null && _settings$auth !== void 0 ? _settings$auth : {}, this.headers, settings.global.fetch);
     } else {
       this.accessToken = settings.accessToken;
-      this.auth = new Proxy({}, { get: /* @__PURE__ */ __name((_, prop) => {
+      this.auth = new Proxy({}, { get: (_, prop) => {
         throw new Error(`@supabase/supabase-js: Supabase Client is configured with the accessToken option, accessing supabase.auth.${String(prop)} is not possible`);
-      }, "get") });
+      } });
     }
     this.fetch = fetchWithAuth(supabaseKey, supabaseUrl, this._getAccessToken.bind(this), settings.global.fetch, settings.tracePropagation);
     this.realtime = this._initRealtimeClient(_objectSpread23({
@@ -20329,9 +19981,9 @@ var SupabaseClient = class {
     }
   }
 };
-var createClient = /* @__PURE__ */ __name((supabaseUrl, supabaseKey, options) => {
+var createClient = (supabaseUrl, supabaseKey, options) => {
   return new SupabaseClient(supabaseUrl, supabaseKey, options);
-}, "createClient");
+};
 function shouldShowDeprecationWarning() {
   if (typeof window !== "undefined") return false;
   const _process = globalThis["process"];
@@ -20342,7 +19994,6 @@ function shouldShowDeprecationWarning() {
   if (!versionMatch) return false;
   return parseInt(versionMatch[1], 10) <= 18;
 }
-__name(shouldShowDeprecationWarning, "shouldShowDeprecationWarning");
 if (shouldShowDeprecationWarning()) console.warn("\u26A0\uFE0F  Node.js 18 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 20 or later. For more information, visit: https://github.com/orgs/supabase/discussions/37217");
 
 // cloudflare-worker-sync.ts
@@ -20379,7 +20030,7 @@ function extractSummaryMetadata(messages, conv) {
       }
     }
   }
-  const parseSummaryText = /* @__PURE__ */ __name((text) => {
+  const parseSummaryText = (text) => {
     if (!text) return;
     const sMatch = text.match(/Customer Sentiment:\s*(.*?)(?=\s*(?:Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Name|Phone Number|Full Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Expected Salary|Start Date|Photo)|$)/i);
     if (sMatch && !sentiment) sentiment = sMatch[1].trim();
@@ -20420,7 +20071,7 @@ function extractSummaryMetadata(messages, conv) {
     if (startMatch && startMatch[1].trim() && !startDate) startDate = startMatch[1].trim();
     const posMatch = text.match(new RegExp(`(?:Position Applied|Position):\\s*(.*?)${lookahead}`, "i"));
     if (posMatch && posMatch[1].trim() && !positionApplied) positionApplied = posMatch[1].trim();
-  }, "parseSummaryText");
+  };
   if (Array.isArray(messages)) {
     for (const m of messages) {
       if (m && m.msgType === 64 && m.msgInfo) {
@@ -20441,7 +20092,7 @@ function extractSummaryMetadata(messages, conv) {
   }
   if (conv.conv_summary) parseSummaryText(conv.conv_summary);
   if (conv.summary) parseSummaryText(conv.summary);
-  const cleanField = /* @__PURE__ */ __name((val) => {
+  const cleanField = (val) => {
     if (!val) return null;
     let s = val.split(/\[nxlink_id:/i)[0].trim();
     s = s.replace(/Customer Name:.*$/is, "").replace(/Phone Number:.*$/is, "").replace(/["}'\\\}\],]+$/g, "").trim();
@@ -20449,7 +20100,7 @@ function extractSummaryMetadata(messages, conv) {
       return null;
     }
     return s;
-  }, "cleanField");
+  };
   return {
     customer_sentiment: cleanField(sentiment),
     conversation_summary: cleanField(summary),
@@ -20471,7 +20122,6 @@ function extractSummaryMetadata(messages, conv) {
     position_applied: cleanField(positionApplied)
   };
 }
-__name(extractSummaryMetadata, "extractSummaryMetadata");
 function shouldSyncToWebhook(tags) {
   if (!Array.isArray(tags) || tags.length === 0) return false;
   const lowerTags = tags.map((t) => typeof t === "string" ? t.toLowerCase().trim() : "");
@@ -20484,7 +20134,6 @@ function shouldSyncToWebhook(tags) {
   if (hasEmergencyOrCheckBooking) return false;
   return lowerTags.some((t) => t.includes("hot lead") || t.includes("warm lead") || t.includes("booking appointment") || t.includes("job application"));
 }
-__name(shouldSyncToWebhook, "shouldSyncToWebhook");
 async function runSync(env) {
   const tokenUrl = env.NXAI_TOKEN_URL || "https://asia-east1-lark-demo-67aa3.cloudfunctions.net/nxaiToken";
   const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
@@ -20729,7 +20378,6 @@ async function runSync(env) {
   }
   return { success: true, syncedCount, webhookPushedCount, totalChecked: conversations.length };
 }
-__name(runSync, "runSync");
 var cloudflare_worker_sync_default = {
   async scheduled(controller, env, ctx) {
     ctx.waitUntil(runSync(env));
@@ -20766,6 +20414,3 @@ var cloudflare_worker_sync_default = {
 export {
   cloudflare_worker_sync_default as default
 };
-//# sourceMappingURL=cloudflare-worker-sync.js.map
-
-------formdata-undici-060383839796--
