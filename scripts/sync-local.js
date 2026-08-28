@@ -96,17 +96,17 @@ function extractSummaryMetadata(messages, conv) {
   let extractedName = null;
   let extractedPhone = null;
 
+  let extractedEmail = null;
   let gender = null;
-  let height = null;
-  let weight = null;
   let age = null;
   let qualification = null;
   let address = null;
-  let transportation = null;
-  let medicalCondition = null;
+  let jobTitle = null;
   let workingExperience = null;
+  let reason = null;
+  let currentSalary = null;
   let expectedSalary = null;
-  let startDate = null;
+  let noticePeriod = null;
   let photo = null;
   let positionApplied = null;
 
@@ -127,46 +127,44 @@ function extractSummaryMetadata(messages, conv) {
 
   const parseText = (sumText) => {
     if (!sumText) return;
-    const sentMatch = sumText.match(/Customer Sentiment:\s*([^\r\n]+?)(?=\s*(?:Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Name|Phone Number|Full Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Expected Salary|Start Date|Photo|Position Applied|Position)|$)/i);
-    const summMatch = sumText.match(/Conversation Summary:\s*([^\r\n]+?)(?=\s*(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Name|Phone Number|Full Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Expected Salary|Start Date|Photo|Position Applied|Position)|$)/i);
-    const stepsMatch = sumText.match(/(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions):\s*([^\r\n]+?)(?=\s*(?:Customer Name|Phone Number|Full Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Expected Salary|Start Date|Photo|Position Applied|Position)|$)/i);
+    const sentMatch = sumText.match(/Customer Sentiment:\s*([^\r\n]+?)(?=\s*(?:Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Name|Phone Number|Full Name|Gender|Age|Contact Number|Email|Residential Address|Address|Highest Qualification|Education Level|Qualification|Job Title|Working Experience|Reason|Current Salary|Expected Salary|Notice Period|Photo|Position Applied|Position)|$)/i);
+    const summMatch = sumText.match(/Conversation Summary:\s*([^\r\n]+?)(?=\s*(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Name|Phone Number|Full Name|Gender|Age|Contact Number|Email|Residential Address|Address|Highest Qualification|Education Level|Qualification|Job Title|Working Experience|Reason|Current Salary|Expected Salary|Notice Period|Photo|Position Applied|Position)|$)/i);
+    const stepsMatch = sumText.match(/(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions):\s*([^\r\n]+?)(?=\s*(?:Customer Name|Phone Number|Full Name|Gender|Age|Contact Number|Email|Residential Address|Address|Highest Qualification|Education Level|Qualification|Job Title|Working Experience|Reason|Current Salary|Expected Salary|Notice Period|Photo|Position Applied|Position)|$)/i);
 
-    // PlanetGroup Specific Fields lookahead pattern to avoid capturing into the next field
-    const lookahead = '(?=\\s*(?:Full Name|Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Work Experience|Expected Salary|Start Date|Photo|Position Applied|Position|Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Sentiment)|$)';
+    const lookahead = '(?=\\s*(?:Position Applied|Position|Full Name|Customer Name|Name|Gender|Age|Contact Number|Phone Number|Phone|Email Address|Email|Address|Residential Address|Highest Qualification|Education Level|Qualification|Job Title|Working Experience|Work Experience|Reason|Current Salary|Expected Salary|Notice Period|Photo|Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Sentiment)|$)';
 
-    const nameMatch = sumText.match(new RegExp(`(?:Full Name|Customer Name|Name):\\s*(.*?)${lookahead}`, 'i'));
-    const phoneMatch = sumText.match(new RegExp(`(?:Phone Number|Phone):\\s*(.*?)${lookahead}`, 'i'));
-    const genderMatch = sumText.match(new RegExp(`Gender:\\s*(.*?)${lookahead}`, 'i'));
-    const heightMatch = sumText.match(new RegExp(`Height:\\s*(.*?)${lookahead}`, 'i'));
-    const weightMatch = sumText.match(new RegExp(`Weight:\\s*(.*?)${lookahead}`, 'i'));
-    const ageMatch = sumText.match(new RegExp(`Age:\\s*(.*?)${lookahead}`, 'i'));
-    const qualMatch = sumText.match(new RegExp(`(?:Highest Qualification|Qualification):\\s*(.*?)${lookahead}`, 'i'));
-    const addrMatch = sumText.match(new RegExp(`Address:\\s*(.*?)${lookahead}`, 'i'));
-    const transMatch = sumText.match(new RegExp(`Transportation:\\s*(.*?)${lookahead}`, 'i'));
-    const medMatch = sumText.match(new RegExp(`Medical Condition:\\s*(.*?)${lookahead}`, 'i'));
-    const expMatch = sumText.match(new RegExp(`(?:Working Experience|Work Experience):\\s*(.*?)${lookahead}`, 'i'));
-    const salMatch = sumText.match(new RegExp(`Expected Salary:\\s*(.*?)${lookahead}`, 'i'));
-    const startMatch = sumText.match(new RegExp(`Start Date:\\s*(.*?)${lookahead}`, 'i'));
     const posMatch = sumText.match(new RegExp(`(?:Position Applied|Position):\\s*(.*?)${lookahead}`, 'i'));
+    const nameMatch = sumText.match(new RegExp(`(?:Full Name|Customer Name|Name):\\s*(.*?)${lookahead}`, 'i'));
+    const genderMatch = sumText.match(new RegExp(`Gender:\\s*(.*?)${lookahead}`, 'i'));
+    const ageMatch = sumText.match(new RegExp(`Age:\\s*(.*?)${lookahead}`, 'i'));
+    const phoneMatch = sumText.match(new RegExp(`(?:Contact Number|Phone Number|Phone):\\s*(.*?)${lookahead}`, 'i'));
+    const emailMatch = sumText.match(new RegExp(`(?:Email Address|Email):\\s*(.*?)${lookahead}`, 'i'));
+    const addrMatch = sumText.match(new RegExp(`(?:Residential Address|Address):\\s*(.*?)${lookahead}`, 'i'));
+    const qualMatch = sumText.match(new RegExp(`(?:Highest Qualification|Education Level|Qualification):\\s*(.*?)${lookahead}`, 'i'));
+    const jobTitleMatch = sumText.match(new RegExp(`Job Title:\\s*(.*?)${lookahead}`, 'i'));
+    const expMatch = sumText.match(new RegExp(`(?:Working Experience|Work Experience):\\s*(.*?)${lookahead}`, 'i'));
+    const reasonMatch = sumText.match(new RegExp(`Reason:\\s*(.*?)${lookahead}`, 'i'));
+    const currentSalMatch = sumText.match(new RegExp(`Current Salary:\\s*(.*?)${lookahead}`, 'i'));
+    const salMatch = sumText.match(new RegExp(`Expected Salary:\\s*(.*?)${lookahead}`, 'i'));
+    const noticeMatch = sumText.match(new RegExp(`Notice Period:\\s*(.*?)${lookahead}`, 'i'));
 
     if (sentMatch && sentMatch[1] && !sentiment) sentiment = sentMatch[1].trim();
     if (summMatch && summMatch[1] && !summary) summary = summMatch[1].trim();
     if (stepsMatch && stepsMatch[1] && !nextSteps) nextSteps = stepsMatch[1].trim();
-    if (nameMatch && nameMatch[1] && !extractedName) extractedName = nameMatch[1].trim();
-    if (phoneMatch && phoneMatch[1] && !extractedPhone) extractedPhone = phoneMatch[1].trim();
-
-    if (genderMatch && genderMatch[1] && !gender) gender = genderMatch[1].trim();
-    if (heightMatch && heightMatch[1] && !height) height = heightMatch[1].trim();
-    if (weightMatch && weightMatch[1] && !weight) weight = weightMatch[1].trim();
-    if (ageMatch && ageMatch[1] && !age) age = ageMatch[1].trim();
-    if (qualMatch && qualMatch[1] && !qualification) qualification = qualMatch[1].trim();
-    if (addrMatch && addrMatch[1] && !address) address = addrMatch[1].trim();
-    if (transMatch && transMatch[1] && !transportation) transportation = transMatch[1].trim();
-    if (medMatch && medMatch[1] && !medicalCondition) medicalCondition = medMatch[1].trim();
-    if (expMatch && expMatch[1] && !workingExperience) workingExperience = expMatch[1].trim();
-    if (salMatch && salMatch[1] && !expectedSalary) expectedSalary = salMatch[1].trim();
-    if (startMatch && startMatch[1] && !startDate) startDate = startMatch[1].trim();
     if (posMatch && posMatch[1] && !positionApplied) positionApplied = posMatch[1].trim();
+    if (nameMatch && nameMatch[1] && !extractedName) extractedName = nameMatch[1].trim();
+    if (genderMatch && genderMatch[1] && !gender) gender = genderMatch[1].trim();
+    if (ageMatch && ageMatch[1] && !age) age = ageMatch[1].trim();
+    if (phoneMatch && phoneMatch[1] && !extractedPhone) extractedPhone = phoneMatch[1].trim();
+    if (emailMatch && emailMatch[1] && !extractedEmail) extractedEmail = emailMatch[1].trim();
+    if (addrMatch && addrMatch[1] && !address) address = addrMatch[1].trim();
+    if (qualMatch && qualMatch[1] && !qualification) qualification = qualMatch[1].trim();
+    if (jobTitleMatch && jobTitleMatch[1] && !jobTitle) jobTitle = jobTitleMatch[1].trim();
+    if (expMatch && expMatch[1] && !workingExperience) workingExperience = expMatch[1].trim();
+    if (reasonMatch && reasonMatch[1] && !reason) reason = reasonMatch[1].trim();
+    if (currentSalMatch && currentSalMatch[1] && !currentSalary) currentSalary = currentSalMatch[1].trim();
+    if (salMatch && salMatch[1] && !expectedSalary) expectedSalary = salMatch[1].trim();
+    if (noticeMatch && noticeMatch[1] && !noticePeriod) noticePeriod = noticeMatch[1].trim();
   };
 
   if (Array.isArray(messages)) {
@@ -209,19 +207,19 @@ function extractSummaryMetadata(messages, conv) {
     nextSteps: cleanField(nextSteps),
     extractedName: cleanField(extractedName),
     extractedPhone: cleanField(extractedPhone),
+    extractedEmail: cleanField(extractedEmail),
+    position_applied: cleanField(positionApplied),
     gender: cleanField(gender),
-    height: cleanField(height),
-    weight: cleanField(weight),
     age: cleanField(age),
     qualification: cleanField(qualification),
     address: cleanField(address),
-    transportation: cleanField(transportation),
-    medical_condition: cleanField(medicalCondition),
+    job_title: cleanField(jobTitle),
     working_experience: cleanField(workingExperience),
+    reason: cleanField(reason),
+    current_salary: cleanField(currentSalary),
     expected_salary: cleanField(expectedSalary),
-    start_date: cleanField(startDate),
-    photo: photo,
-    position_applied: cleanField(positionApplied)
+    notice_period: cleanField(noticePeriod),
+    photo: photo
   };
 }
 
@@ -305,11 +303,26 @@ async function main() {
     // Check if already in Supabase
     const { data: existing } = await supabase
       .from('conversations')
-      .select('id')
+      .select('id, customer_name, conversation_summary, conversation_tags, current_salary, job_title')
       .ilike('conversation_transcript', `%nxlink_id:${convId}%`)
       .limit(1);
 
+    let needsUpdateOrInsert = false;
+    let existingRow = null;
+
     if (existing && existing.length > 0) {
+      existingRow = existing[0];
+      const tagsListConv = Array.isArray(conv.tags) ? conv.tags.map(t => typeof t === 'string' ? t : t.name).filter(Boolean) : [];
+      const tagsChanged = tagsListConv.length > 0 && JSON.stringify(existingRow.conversation_tags || []) !== JSON.stringify(tagsListConv);
+      const isMissingNewFields = existingRow.current_salary === null || existingRow.job_title === null;
+      if (!existingRow.customer_name || !existingRow.conversation_summary || tagsChanged || isMissingNewFields) {
+        needsUpdateOrInsert = true;
+      }
+    } else {
+      needsUpdateOrInsert = true;
+    }
+
+    if (!needsUpdateOrInsert) {
       skippedCount++;
       continue;
     }
@@ -389,17 +402,17 @@ async function main() {
       nextSteps,
       extractedName,
       extractedPhone,
+      extractedEmail,
       gender,
-      height,
-      weight,
       age,
       qualification,
       address,
-      transportation,
-      medical_condition,
+      job_title,
       working_experience,
+      reason,
+      current_salary,
       expected_salary,
-      start_date,
+      notice_period,
       photo,
       position_applied
     } = extractSummaryMetadata(messages, conv);
@@ -423,9 +436,10 @@ async function main() {
       }
     }
 
-    // Extract customer name & phone
+    // Extract customer name & phone & email
     let customerName = extractedName || conv.customer_name;
     let customerPhone = extractedPhone || conv.customer_phone || conv.phone_number;
+    let customerEmail = extractedEmail || conv.email_address || conv.email;
 
     if (!customerName || customerName.startsWith('Customer #') || customerName.startsWith('Anonymous')) {
       for (const m of messages) {
@@ -460,41 +474,80 @@ async function main() {
         .trim();
     }
 
-    const { error: insertErr } = await supabase
-      .from('conversations')
-      .insert([{
-        customer_name: customerName || conv.customer_phone || `Customer #${convId}`,
-        phone_number: customerPhone || null,
-        email_address: conv.email_address || null,
-        customer_sentiment: sentiment || 'Neutral',
-        company_name: conv.company_name || null,
-        conversation_summary: cleanSummary || '[MY]PLANETGROUP AI Bot Consultation',
-        next_steps: nextSteps || null,
-        conversation_date: convDate,
-        conversation_time: convTime,
-        conversation_tags: tagsList.length > 0 ? tagsList : null,
-        conversation_transcript: cleanTranscript,
-        call_audio_url: callAudioUrl,
-        gender,
-        height,
-        weight,
-        age,
-        qualification,
-        address,
-        transportation,
-        medical_condition,
-        working_experience,
-        expected_salary,
-        start_date,
-        photo,
-        position_applied
-      }]);
+    let wasIngestedOrUpdated = false;
 
-    if (insertErr) {
-      console.error(`     ❌ Supabase Insert Error for ${convId}:`, insertErr.message);
+    if (existingRow) {
+      const { error: updateErr } = await supabase
+        .from('conversations')
+        .update({
+          customer_name: customerName || conv.customer_phone || `Customer #${convId}`,
+          phone_number: customerPhone || null,
+          email_address: customerEmail || null,
+          customer_sentiment: sentiment || 'Neutral',
+          conversation_summary: cleanSummary || '[MY]PLANETGROUP AI Bot Consultation',
+          next_steps: nextSteps || null,
+          conversation_tags: tagsList.length > 0 ? tagsList : null,
+          call_audio_url: callAudioUrl,
+          position_applied,
+          gender,
+          age,
+          qualification,
+          address,
+          job_title,
+          working_experience,
+          reason,
+          current_salary,
+          expected_salary,
+          notice_period,
+          photo
+        })
+        .eq('id', existingRow.id);
+
+      if (updateErr) {
+        console.error(`     ❌ Supabase Update Error for ${convId}:`, updateErr.message);
+      } else {
+        console.log(`     ✅ Updated [MY]PLANETGROUP ID ${convId} (${customerName || 'Anonymous'})`);
+        insertedCount++;
+        wasIngestedOrUpdated = true;
+      }
     } else {
-      console.log(`     ✅ Synced [MY]PLANETGROUP ID ${convId} (${customerName || 'Anonymous'}) ${callAudioUrl ? '(With Audio MP3 🎵)' : ''}`);
-      insertedCount++;
+      const { error: insertErr } = await supabase
+        .from('conversations')
+        .insert([{
+          customer_name: customerName || conv.customer_phone || `Customer #${convId}`,
+          phone_number: customerPhone || null,
+          email_address: customerEmail || null,
+          customer_sentiment: sentiment || 'Neutral',
+          company_name: conv.company_name || null,
+          conversation_summary: cleanSummary || '[MY]PLANETGROUP AI Bot Consultation',
+          next_steps: nextSteps || null,
+          conversation_date: convDate,
+          conversation_time: convTime,
+          conversation_tags: tagsList.length > 0 ? tagsList : null,
+          conversation_transcript: cleanTranscript,
+          call_audio_url: callAudioUrl,
+          position_applied,
+          gender,
+          age,
+          qualification,
+          address,
+          job_title,
+          working_experience,
+          reason,
+          current_salary,
+          expected_salary,
+          notice_period,
+          photo
+        }]);
+
+      if (insertErr) {
+        console.error(`     ❌ Supabase Insert Error for ${convId}:`, insertErr.message);
+      } else {
+        console.log(`     ✅ Synced [MY]PLANETGROUP ID ${convId} (${customerName || 'Anonymous'}) ${callAudioUrl ? '(With Audio MP3 🎵)' : ''}`);
+        insertedCount++;
+        wasIngestedOrUpdated = true;
+      }
+    }
 
       // Auto-push to 3rd party webhook if record qualifies under tag rules
       if (shouldSyncToWebhook(tagsList)) {
@@ -509,7 +562,7 @@ async function main() {
               "Customer Name": customerName || 'Unknown',
               "Phone Number": customerPhone || 'Not Provided',
               "Company Name": conv.company_name || null,
-              "Email Address": conv.email_address || null,
+              "Email Address": customerEmail || null,
               "Tags": tagsList,
               "Full Summary": cleanSummary || null,
               "Sentiment": sentiment || 'Neutral',
@@ -518,16 +571,15 @@ async function main() {
               "Conversation Date": convDate,
               "Position Applied": position_applied || null,
               "Gender": gender || null,
-              "Height": height || null,
-              "Weight": weight || null,
               "Age": age || null,
               "Highest Qualification": qualification || null,
               "Address": address || null,
-              "Transportation": transportation || null,
-              "Medical Condition": medical_condition || null,
+              "Job Title": job_title || null,
               "Working Experience": working_experience || null,
+              "Reason": reason || null,
+              "Current Salary": current_salary || null,
               "Expected Salary": expected_salary || null,
-              "Start Date": start_date || null,
+              "Notice Period": notice_period || null,
               "Photo URL": photo || null
             }
           };
@@ -550,7 +602,6 @@ async function main() {
         }
       }
     }
-  }
 
   console.log('\n==========================================');
   console.log(`🎉 INGESTION COMPLETE!`);

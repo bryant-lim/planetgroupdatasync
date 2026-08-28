@@ -15,19 +15,18 @@ export interface ConversationData {
   webhook_status?: 'synced' | 'not_synced' | 'failed' | null;
   webhook_error?: string | null;
   webhook_synced_at?: string | null;
+  position_applied?: string | null;
   gender?: string | null;
-  height?: string | null;
-  weight?: string | null;
   age?: string | null;
   qualification?: string | null;
   address?: string | null;
-  transportation?: string | null;
-  medical_condition?: string | null;
+  job_title?: string | null;
   working_experience?: string | null;
+  reason?: string | null;
+  current_salary?: string | null;
   expected_salary?: string | null;
-  start_date?: string | null;
+  notice_period?: string | null;
   photo?: string | null;
-  position_applied?: string | null;
   created_at: string;
 }
 

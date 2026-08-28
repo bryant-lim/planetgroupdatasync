@@ -41,19 +41,18 @@ interface Conversation {
   webhook_status?: 'synced' | 'not_synced' | 'failed' | null;
   webhook_error?: string | null;
   webhook_synced_at?: string | null;
+  position_applied?: string | null;
   gender?: string | null;
-  height?: string | null;
-  weight?: string | null;
   age?: string | null;
   qualification?: string | null;
   address?: string | null;
-  transportation?: string | null;
-  medical_condition?: string | null;
+  job_title?: string | null;
   working_experience?: string | null;
+  reason?: string | null;
+  current_salary?: string | null;
   expected_salary?: string | null;
-  start_date?: string | null;
+  notice_period?: string | null;
   photo?: string | null;
-  position_applied?: string | null;
   created_at: string;
 }
 
@@ -858,7 +857,7 @@ export default function Dashboard() {
                 </div>
 
                 {/* Candidate Application Details (PlanetGroup) */}
-                {(selectedConvo.gender || selectedConvo.age || selectedConvo.qualification || selectedConvo.address || selectedConvo.photo || selectedConvo.position_applied) && (
+                {(selectedConvo.gender || selectedConvo.age || selectedConvo.qualification || selectedConvo.address || selectedConvo.job_title || selectedConvo.working_experience || selectedConvo.reason || selectedConvo.current_salary || selectedConvo.expected_salary || selectedConvo.notice_period || selectedConvo.photo || selectedConvo.position_applied) && (
                   <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-3">
                     <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider font-heading">
                       Job Application Details
@@ -884,28 +883,34 @@ export default function Dashboard() {
                               <td className="py-2 text-slate-800 font-bold">{selectedConvo.age}</td>
                             </tr>
                           )}
-                          {selectedConvo.height && (
-                            <tr className="border-b border-slate-200/50">
-                              <td className="py-2 pr-4 font-semibold text-slate-500">Height</td>
-                              <td className="py-2 text-slate-800 font-bold">{selectedConvo.height}</td>
-                            </tr>
-                          )}
-                          {selectedConvo.weight && (
-                            <tr className="border-b border-slate-200/50">
-                              <td className="py-2 pr-4 font-semibold text-slate-500">Weight</td>
-                              <td className="py-2 text-slate-800 font-bold">{selectedConvo.weight}</td>
-                            </tr>
-                          )}
                           {selectedConvo.qualification && (
                             <tr className="border-b border-slate-200/50">
-                              <td className="py-2 pr-4 font-semibold text-slate-500">Qualification</td>
+                              <td className="py-2 pr-4 font-semibold text-slate-500">Highest Qualification</td>
                               <td className="py-2 text-slate-800 font-bold">{selectedConvo.qualification}</td>
                             </tr>
                           )}
-                          {selectedConvo.transportation && (
+                          {selectedConvo.job_title && (
                             <tr className="border-b border-slate-200/50">
-                              <td className="py-2 pr-4 font-semibold text-slate-500">Transportation</td>
-                              <td className="py-2 text-slate-800 font-bold">{selectedConvo.transportation}</td>
+                              <td className="py-2 pr-4 font-semibold text-slate-500">Job Title</td>
+                              <td className="py-2 text-slate-800 font-bold">{selectedConvo.job_title}</td>
+                            </tr>
+                          )}
+                          {selectedConvo.working_experience && (
+                            <tr className="border-b border-slate-200/50">
+                              <td className="py-2 pr-4 font-semibold text-slate-500">Working Experience</td>
+                              <td className="py-2 text-slate-800 font-bold whitespace-pre-wrap">{selectedConvo.working_experience}</td>
+                            </tr>
+                          )}
+                          {selectedConvo.reason && (
+                            <tr className="border-b border-slate-200/50">
+                              <td className="py-2 pr-4 font-semibold text-slate-500">Reason</td>
+                              <td className="py-2 text-slate-800 font-bold whitespace-pre-wrap">{selectedConvo.reason}</td>
+                            </tr>
+                          )}
+                          {selectedConvo.current_salary && (
+                            <tr className="border-b border-slate-200/50">
+                              <td className="py-2 pr-4 font-semibold text-slate-500">Current Salary</td>
+                              <td className="py-2 text-slate-800 font-bold">{selectedConvo.current_salary}</td>
                             </tr>
                           )}
                           {selectedConvo.expected_salary && (
@@ -914,22 +919,10 @@ export default function Dashboard() {
                               <td className="py-2 text-slate-800 font-bold">{selectedConvo.expected_salary}</td>
                             </tr>
                           )}
-                          {selectedConvo.start_date && (
+                          {selectedConvo.notice_period && (
                             <tr className="border-b border-slate-200/50">
-                              <td className="py-2 pr-4 font-semibold text-slate-500">Start Date</td>
-                              <td className="py-2 text-slate-800 font-bold">{selectedConvo.start_date}</td>
-                            </tr>
-                          )}
-                          {selectedConvo.medical_condition && (
-                            <tr className="border-b border-slate-200/50">
-                              <td className="py-2 pr-4 font-semibold text-slate-500">Medical Condition</td>
-                              <td className="py-2 text-slate-800 font-bold">{selectedConvo.medical_condition}</td>
-                            </tr>
-                          )}
-                          {selectedConvo.working_experience && (
-                            <tr className="border-b border-slate-200/50">
-                              <td className="py-2 pr-4 font-semibold text-slate-500">Working Experience</td>
-                              <td className="py-2 text-slate-800 font-bold whitespace-pre-wrap">{selectedConvo.working_experience}</td>
+                              <td className="py-2 pr-4 font-semibold text-slate-500">Notice Period</td>
+                              <td className="py-2 text-slate-800 font-bold">{selectedConvo.notice_period}</td>
                             </tr>
                           )}
                           {selectedConvo.address && (

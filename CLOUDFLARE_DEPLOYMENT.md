@@ -10,18 +10,21 @@ The Cloudflare Worker manages the background sync every 5 minutes and handles th
 ### Step A: Deploy the Worker
 You can deploy the Worker using either of these two methods:
 
-#### Method 1: Deploy via browser (Recommended if CLI auth fails)
-1. Go to your **Cloudflare Dashboard** > **Workers & Pages** > **Create Application** > **Workers** > **Create Worker** (or **Start with Hello World!**).
-2. Name your worker `nxlink-sync-planetgroup-worker` and click **Deploy**.
-3. Once deployed, click **Edit Code**.
-4. Open the compiled bundle file [`worker-dist/index.js`](file:///Users/bryantlim/Documents/chillor-repo/nxlink-sync-planetgroup/worker-dist/index.js) on your PC, copy its entire content, paste it into the Cloudflare online code editor, and click **Save and deploy**.
-
-#### Method 2: Deploy via Wrangler CLI
-1. Deploy the Worker script using Wrangler:
+#### Method 1: Deploy via Wrangler CLI (Recommended)
+1. Deploy directly using Wrangler:
    ```bash
    npx wrangler deploy
    ```
-3. Copy the URL of your deployed Worker (e.g., `nxlink-pg-datasync.tabsoft-account.workers.dev/`). You will need this URL for the Pages setup.
+2. Copy the URL of your deployed Worker (e.g., `nxlink-sync-planetgroup-worker.xxxx.workers.dev`).
+
+#### Method 2: Deploy via Cloudflare Dashboard Web Editor
+1. Go to **Cloudflare Dashboard** > **Workers & Pages** > **Create Application** > **Workers** > **Create Worker**.
+2. Name your worker `nxlink-sync-planetgroup-worker` and click **Deploy**.
+3. Click **Edit Code**.
+4. > [!NOTE]
+   > **Fixing "Uncaught SyntaxError: Unexpected token 'export'":**
+   > If Cloudflare displays an `Unexpected token 'export'` error, go to **Settings** > **General** / **Runtime** for your Worker in the Cloudflare Dashboard, and ensure the **Worker Format** is set to **ES Module (ESM)** instead of **Service Worker**.
+5. Copy the entire content of [`worker-dist/index.js`](file:///Users/bryantlim/Documents/chillor-repo/nxlink-sync-planetgroup/worker-dist/index.js), paste it into the Cloudflare code editor, and click **Save and deploy**.
 
 
 ### Step B: Configure Worker Environment Secrets

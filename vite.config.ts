@@ -103,17 +103,17 @@ function netlifyFunctionsDevPlugin(): Plugin {
               let extractedName: string | null = null;
               let extractedPhone: string | null = null;
 
+              let extractedEmail: string | null = null;
               let gender: string | null = null;
-              let height: string | null = null;
-              let weight: string | null = null;
               let age: string | null = null;
               let qualification: string | null = null;
               let address: string | null = null;
-              let transportation: string | null = null;
-              let medicalCondition: string | null = null;
+              let jobTitle: string | null = null;
               let workingExperience: string | null = null;
+              let reason: string | null = null;
+              let currentSalary: string | null = null;
               let expectedSalary: string | null = null;
-              let startDate: string | null = null;
+              let noticePeriod: string | null = null;
               let photo: string | null = null;
               let positionApplied: string | null = null;
 
@@ -134,62 +134,62 @@ function netlifyFunctionsDevPlugin(): Plugin {
 
               const parseSummaryText = (text: string) => {
                 if (!text) return;
-                const sMatch = text.match(/Customer Sentiment:\s*(.*?)(?=\s*(?:Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Name|Phone Number|Full Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Expected Salary|Start Date|Photo)|$)/i);
+                const sMatch = text.match(/Customer Sentiment:\s*(.*?)(?=\s*(?:Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Name|Phone Number|Full Name|Gender|Age|Contact Number|Email|Residential Address|Address|Highest Qualification|Education Level|Qualification|Job Title|Working Experience|Reason|Current Salary|Expected Salary|Notice Period|Photo|Position Applied|Position)|$)/i);
                 if (sMatch) sentiment = sMatch[1].trim();
 
-                const sumMatch = text.match(/Conversation Summary:\s*(.*?)(?=\s*(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Name|Phone Number|Full Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Expected Salary|Start Date|Photo)|$)/i);
+                const sumMatch = text.match(/Conversation Summary:\s*(.*?)(?=\s*(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Name|Phone Number|Full Name|Gender|Age|Contact Number|Email|Residential Address|Address|Highest Qualification|Education Level|Qualification|Job Title|Working Experience|Reason|Current Salary|Expected Salary|Notice Period|Photo|Position Applied|Position)|$)/i);
                 if (sumMatch) summary = sumMatch[1].trim();
 
-                const nsMatch = text.match(/(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions):\s*(.*?)(?=\s*(?:Customer Name|Phone Number|Full Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Expected Salary|Start Date|Photo)|$)/i);
+                const nsMatch = text.match(/(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions):\s*(.*?)(?=\s*(?:Customer Name|Phone Number|Full Name|Gender|Age|Contact Number|Email|Residential Address|Address|Highest Qualification|Education Level|Qualification|Job Title|Working Experience|Reason|Current Salary|Expected Salary|Notice Period|Photo|Position Applied|Position)|$)/i);
                 if (nsMatch) nextSteps = nsMatch[1].trim();
 
-                const lookahead = '(?=\\s*(?:Full Name|Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Work Experience|Expected Salary|Start Date|Photo|Position Applied|Position|Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Sentiment)|$)';
+                const lookahead = '(?=\\s*(?:Position Applied|Position|Full Name|Customer Name|Name|Gender|Age|Contact Number|Phone Number|Phone|Email Address|Email|Address|Residential Address|Highest Qualification|Education Level|Qualification|Job Title|Working Experience|Work Experience|Reason|Current Salary|Expected Salary|Notice Period|Photo|Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Sentiment)|$)';
+
+                const posMatch = text.match(new RegExp(`(?:Position Applied|Position):\\s*(.*?)${lookahead}`, 'i'));
+                if (posMatch && posMatch[1].trim() && !positionApplied) positionApplied = posMatch[1].trim();
 
                 const nMatch = text.match(new RegExp(`(?:Full Name|Customer Name|Name):\\s*(.*?)${lookahead}`, 'i'));
                 if (nMatch && nMatch[1].trim() && nMatch[1].trim().toLowerCase() !== 'n/a') {
                   extractedName = nMatch[1].trim();
                 }
 
-                const pMatch = text.match(new RegExp(`(?:Phone Number|Phone):\\s*(.*?)${lookahead}`, 'i'));
-                if (pMatch && pMatch[1].trim() && pMatch[1].trim().toLowerCase() !== 'n/a') {
-                  extractedPhone = pMatch[1].trim();
-                }
-
                 const genderMatch = text.match(new RegExp(`Gender:\\s*(.*?)${lookahead}`, 'i'));
                 if (genderMatch && genderMatch[1].trim() && !gender) gender = genderMatch[1].trim();
-
-                const heightMatch = text.match(new RegExp(`Height:\\s*(.*?)${lookahead}`, 'i'));
-                if (heightMatch && heightMatch[1].trim() && !height) height = heightMatch[1].trim();
-
-                const weightMatch = text.match(new RegExp(`Weight:\\s*(.*?)${lookahead}`, 'i'));
-                if (weightMatch && weightMatch[1].trim() && !weight) weight = weightMatch[1].trim();
 
                 const ageMatch = text.match(new RegExp(`Age:\\s*(.*?)${lookahead}`, 'i'));
                 if (ageMatch && ageMatch[1].trim() && !age) age = ageMatch[1].trim();
 
-                const qualMatch = text.match(new RegExp(`(?:Highest Qualification|Qualification):\\s*(.*?)${lookahead}`, 'i'));
-                if (qualMatch && qualMatch[1].trim() && !qualification) qualification = qualMatch[1].trim();
+                const pMatch = text.match(new RegExp(`(?:Contact Number|Phone Number|Phone):\\s*(.*?)${lookahead}`, 'i'));
+                if (pMatch && pMatch[1].trim() && pMatch[1].trim().toLowerCase() !== 'n/a') {
+                  extractedPhone = pMatch[1].trim();
+                }
 
-                const addrMatch = text.match(new RegExp(`Address:\\s*(.*?)${lookahead}`, 'i'));
+                const emailMatch = text.match(new RegExp(`(?:Email Address|Email):\\s*(.*?)${lookahead}`, 'i'));
+                if (emailMatch && emailMatch[1].trim() && !extractedEmail) extractedEmail = emailMatch[1].trim();
+
+                const addrMatch = text.match(new RegExp(`(?:Residential Address|Address):\\s*(.*?)${lookahead}`, 'i'));
                 if (addrMatch && addrMatch[1].trim() && !address) address = addrMatch[1].trim();
 
-                const transMatch = text.match(new RegExp(`Transportation:\\s*(.*?)${lookahead}`, 'i'));
-                if (transMatch && transMatch[1].trim() && !transportation) transportation = transMatch[1].trim();
+                const qualMatch = text.match(new RegExp(`(?:Highest Qualification|Education Level|Qualification):\\s*(.*?)${lookahead}`, 'i'));
+                if (qualMatch && qualMatch[1].trim() && !qualification) qualification = qualMatch[1].trim();
 
-                const medMatch = text.match(new RegExp(`Medical Condition:\\s*(.*?)${lookahead}`, 'i'));
-                if (medMatch && medMatch[1].trim() && !medicalCondition) medicalCondition = medMatch[1].trim();
+                const jobTitleMatch = text.match(new RegExp(`Job Title:\\s*(.*?)${lookahead}`, 'i'));
+                if (jobTitleMatch && jobTitleMatch[1].trim() && !jobTitle) jobTitle = jobTitleMatch[1].trim();
 
                 const expMatch = text.match(new RegExp(`(?:Working Experience|Work Experience):\\s*(.*?)${lookahead}`, 'i'));
                 if (expMatch && expMatch[1].trim() && !workingExperience) workingExperience = expMatch[1].trim();
 
+                const reasonMatch = text.match(new RegExp(`Reason:\\s*(.*?)${lookahead}`, 'i'));
+                if (reasonMatch && reasonMatch[1].trim() && !reason) reason = reasonMatch[1].trim();
+
+                const currentSalMatch = text.match(new RegExp(`Current Salary:\\s*(.*?)${lookahead}`, 'i'));
+                if (currentSalMatch && currentSalMatch[1].trim() && !currentSalary) currentSalary = currentSalMatch[1].trim();
+
                 const salMatch = text.match(new RegExp(`Expected Salary:\\s*(.*?)${lookahead}`, 'i'));
                 if (salMatch && salMatch[1].trim() && !expectedSalary) expectedSalary = salMatch[1].trim();
 
-                const startMatch = text.match(new RegExp(`Start Date:\\s*(.*?)${lookahead}`, 'i'));
-                if (startMatch && startMatch[1].trim() && !startDate) startDate = startMatch[1].trim();
-
-                const posMatch = text.match(new RegExp(`(?:Position Applied|Position):\\s*(.*?)${lookahead}`, 'i'));
-                if (posMatch && posMatch[1].trim() && !positionApplied) positionApplied = posMatch[1].trim();
+                const noticeMatch = text.match(new RegExp(`Notice Period:\\s*(.*?)${lookahead}`, 'i'));
+                if (noticeMatch && noticeMatch[1].trim() && !noticePeriod) noticePeriod = noticeMatch[1].trim();
               };
 
               for (const m of messages) {
@@ -224,6 +224,7 @@ function netlifyFunctionsDevPlugin(): Plugin {
 
               const finalName = cleanField(extractedName || conv.customer_name || conv.customerName || null);
               const finalPhone = cleanField(extractedPhone || conv.customer_phone || conv.phone || null);
+              const finalEmail = cleanField(extractedEmail || conv.email_address || conv.email || null);
 
               let tagsList: string[] = [];
               if (Array.isArray(conv.tags)) {
@@ -259,24 +260,24 @@ function netlifyFunctionsDevPlugin(): Plugin {
                   await supabase.from('conversations').update({
                     customer_name: finalName,
                     phone_number: finalPhone,
+                    email_address: finalEmail,
                     customer_sentiment: cleanField(sentiment),
                     conversation_summary: cleanField(summary),
                     next_steps: cleanField(nextSteps),
                     conversation_tags: tagsList,
                     call_audio_url: callAudioUrl,
+                    position_applied: cleanField(positionApplied),
                     gender: cleanField(gender),
-                    height: cleanField(height),
-                    weight: cleanField(weight),
                     age: cleanField(age),
                     qualification: cleanField(qualification),
                     address: cleanField(address),
-                    transportation: cleanField(transportation),
-                    medical_condition: cleanField(medicalCondition),
+                    job_title: cleanField(jobTitle),
                     working_experience: cleanField(workingExperience),
+                    reason: cleanField(reason),
+                    current_salary: cleanField(currentSalary),
                     expected_salary: cleanField(expectedSalary),
-                    start_date: cleanField(startDate),
-                    photo,
-                    position_applied: cleanField(positionApplied)
+                    notice_period: cleanField(noticePeriod),
+                    photo
                   }).eq('id', row.id);
                   wasIngestedOrUpdated = true;
                 }
@@ -284,29 +285,28 @@ function netlifyFunctionsDevPlugin(): Plugin {
                 const { error: insErr } = await supabase.from('conversations').insert([{
                   customer_name: finalName,
                   phone_number: finalPhone,
+                  email_address: finalEmail,
                   customer_sentiment: cleanField(sentiment),
                   conversation_summary: cleanField(summary),
                   next_steps: cleanField(nextSteps),
                   company_name: conv.company_name || null,
-                  email_address: conv.email_address || null,
                   conversation_tags: tagsList,
                   conversation_date: new Date().toISOString().split('T')[0],
                   conversation_time: new Date().toISOString().split('T')[1].split('.')[0],
                   conversation_transcript: rawTranscript,
                   call_audio_url: callAudioUrl,
+                  position_applied: cleanField(positionApplied),
                   gender: cleanField(gender),
-                  height: cleanField(height),
-                  weight: cleanField(weight),
                   age: cleanField(age),
                   qualification: cleanField(qualification),
                   address: cleanField(address),
-                  transportation: cleanField(transportation),
-                  medical_condition: cleanField(medicalCondition),
+                  job_title: cleanField(jobTitle),
                   working_experience: cleanField(workingExperience),
+                  reason: cleanField(reason),
+                  current_salary: cleanField(currentSalary),
                   expected_salary: cleanField(expectedSalary),
-                  start_date: cleanField(startDate),
-                  photo,
-                  position_applied: cleanField(positionApplied)
+                  notice_period: cleanField(noticePeriod),
+                  photo
                 }]);
 
                 if (!insErr) {
@@ -337,13 +337,25 @@ function netlifyFunctionsDevPlugin(): Plugin {
                         "Customer Name": finalName || 'Unknown',
                         "Phone Number": finalPhone || 'Not Provided',
                         "Company Name": conv.company_name || null,
-                        "Email Address": conv.email_address || null,
+                        "Email Address": finalEmail || null,
                         "Tags": tagsList,
                         "Full Summary": cleanField(summary) || null,
                         "Sentiment": cleanField(sentiment) || 'Neutral',
                         "Next Steps": cleanField(nextSteps) || null,
                         "Call Audio URL": callAudioUrl,
-                        "Conversation Date": new Date().toISOString().split('T')[0]
+                        "Conversation Date": new Date().toISOString().split('T')[0],
+                        "Position Applied": cleanField(positionApplied) || null,
+                        "Gender": cleanField(gender) || null,
+                        "Age": cleanField(age) || null,
+                        "Highest Qualification": cleanField(qualification) || null,
+                        "Address": cleanField(address) || null,
+                        "Job Title": cleanField(jobTitle) || null,
+                        "Working Experience": cleanField(workingExperience) || null,
+                        "Reason": cleanField(reason) || null,
+                        "Current Salary": cleanField(currentSalary) || null,
+                        "Expected Salary": cleanField(expectedSalary) || null,
+                        "Notice Period": cleanField(noticePeriod) || null,
+                        "Photo URL": photo || null
                       }
                     })
                   });

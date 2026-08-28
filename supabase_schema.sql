@@ -16,21 +16,34 @@ CREATE TABLE IF NOT EXISTS public.conversations (
     webhook_status TEXT DEFAULT 'not_synced',
     webhook_synced_at TIMESTAMP WITH TIME ZONE,
     webhook_error TEXT,
+    position_applied TEXT,
     gender TEXT,
-    height TEXT,
-    weight TEXT,
     age TEXT,
     qualification TEXT,
     address TEXT,
-    transportation TEXT,
-    medical_condition TEXT,
+    job_title TEXT,
     working_experience TEXT,
+    reason TEXT,
+    current_salary TEXT,
     expected_salary TEXT,
-    start_date TEXT,
+    notice_period TEXT,
     photo TEXT,
-    position_applied TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
+
+-- Migrate existing table columns if table already existed
+ALTER TABLE public.conversations
+  ADD COLUMN IF NOT EXISTS job_title TEXT,
+  ADD COLUMN IF NOT EXISTS reason TEXT,
+  ADD COLUMN IF NOT EXISTS current_salary TEXT,
+  ADD COLUMN IF NOT EXISTS notice_period TEXT;
+
+ALTER TABLE public.conversations
+  DROP COLUMN IF EXISTS height,
+  DROP COLUMN IF EXISTS weight,
+  DROP COLUMN IF EXISTS transportation,
+  DROP COLUMN IF EXISTS medical_condition,
+  DROP COLUMN IF EXISTS start_date;
 
 -- Drop ticket tables if they exist
 DROP TABLE IF EXISTS public.ticket_notes CASCADE;

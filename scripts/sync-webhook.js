@@ -111,7 +111,19 @@ async function main() {
         "Sentiment": c.customer_sentiment || 'Neutral',
         "Next Steps": c.next_steps || null,
         "Call Audio URL": c.call_audio_url || null,
-        "Conversation Date": c.conversation_date || null
+        "Conversation Date": c.conversation_date || null,
+        "Position Applied": c.position_applied || null,
+        "Gender": c.gender || null,
+        "Age": c.age || null,
+        "Highest Qualification": c.qualification || null,
+        "Address": c.address || null,
+        "Job Title": c.job_title || null,
+        "Working Experience": c.working_experience || null,
+        "Reason": c.reason || null,
+        "Current Salary": c.current_salary || null,
+        "Expected Salary": c.expected_salary || null,
+        "Notice Period": c.notice_period || null,
+        "Photo URL": c.photo || null
       }
     };
 

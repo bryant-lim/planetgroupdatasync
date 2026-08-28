@@ -1,6 +1,7 @@
 name = "nxlink-sync-planetgroup-worker"
 main = "cloudflare-worker-sync.ts"
 compatibility_date = "2026-08-23"
+account_id = "b771f88cc6e239524474b06e15637bf4"
 
 # Cron trigger: run every 5 minutes
 [triggers]
