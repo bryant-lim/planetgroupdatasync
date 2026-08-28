@@ -857,100 +857,78 @@ export default function Dashboard() {
                 </div>
 
                 {/* Candidate Application Details (PlanetGroup) */}
-                {(selectedConvo.gender || selectedConvo.age || selectedConvo.qualification || selectedConvo.address || selectedConvo.job_title || selectedConvo.working_experience || selectedConvo.reason || selectedConvo.current_salary || selectedConvo.expected_salary || selectedConvo.notice_period || selectedConvo.photo || selectedConvo.position_applied) && (
-                  <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-3">
-                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider font-heading">
-                      Job Application Details
-                    </h4>
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-left border-collapse text-xs">
-                        <tbody>
-                          {selectedConvo.position_applied && (
-                            <tr className="border-b border-slate-200/50">
-                              <td className="py-2 pr-4 font-semibold text-slate-500 w-1/3">Position Applied</td>
-                              <td className="py-2 text-slate-800 font-bold">{selectedConvo.position_applied}</td>
-                            </tr>
-                          )}
-                          {selectedConvo.gender && (
-                            <tr className="border-b border-slate-200/50">
-                              <td className="py-2 pr-4 font-semibold text-slate-500 w-1/3">Gender</td>
-                              <td className="py-2 text-slate-800 font-bold">{selectedConvo.gender}</td>
-                            </tr>
-                          )}
-                          {selectedConvo.age && (
-                            <tr className="border-b border-slate-200/50">
-                              <td className="py-2 pr-4 font-semibold text-slate-500">Age</td>
-                              <td className="py-2 text-slate-800 font-bold">{selectedConvo.age}</td>
-                            </tr>
-                          )}
-                          {selectedConvo.qualification && (
-                            <tr className="border-b border-slate-200/50">
-                              <td className="py-2 pr-4 font-semibold text-slate-500">Highest Qualification</td>
-                              <td className="py-2 text-slate-800 font-bold">{selectedConvo.qualification}</td>
-                            </tr>
-                          )}
-                          {selectedConvo.job_title && (
-                            <tr className="border-b border-slate-200/50">
-                              <td className="py-2 pr-4 font-semibold text-slate-500">Job Title</td>
-                              <td className="py-2 text-slate-800 font-bold">{selectedConvo.job_title}</td>
-                            </tr>
-                          )}
-                          {selectedConvo.working_experience && (
-                            <tr className="border-b border-slate-200/50">
-                              <td className="py-2 pr-4 font-semibold text-slate-500">Working Experience</td>
-                              <td className="py-2 text-slate-800 font-bold whitespace-pre-wrap">{selectedConvo.working_experience}</td>
-                            </tr>
-                          )}
-                          {selectedConvo.reason && (
-                            <tr className="border-b border-slate-200/50">
-                              <td className="py-2 pr-4 font-semibold text-slate-500">Reason</td>
-                              <td className="py-2 text-slate-800 font-bold whitespace-pre-wrap">{selectedConvo.reason}</td>
-                            </tr>
-                          )}
-                          {selectedConvo.current_salary && (
-                            <tr className="border-b border-slate-200/50">
-                              <td className="py-2 pr-4 font-semibold text-slate-500">Current Salary</td>
-                              <td className="py-2 text-slate-800 font-bold">{selectedConvo.current_salary}</td>
-                            </tr>
-                          )}
-                          {selectedConvo.expected_salary && (
-                            <tr className="border-b border-slate-200/50">
-                              <td className="py-2 pr-4 font-semibold text-slate-500">Expected Salary</td>
-                              <td className="py-2 text-slate-800 font-bold">{selectedConvo.expected_salary}</td>
-                            </tr>
-                          )}
-                          {selectedConvo.notice_period && (
-                            <tr className="border-b border-slate-200/50">
-                              <td className="py-2 pr-4 font-semibold text-slate-500">Notice Period</td>
-                              <td className="py-2 text-slate-800 font-bold">{selectedConvo.notice_period}</td>
-                            </tr>
-                          )}
-                          {selectedConvo.address && (
-                            <tr className="border-b border-slate-200/50">
-                              <td className="py-2 pr-4 font-semibold text-slate-500">Address</td>
-                              <td className="py-2 text-slate-800 font-bold whitespace-pre-wrap">{selectedConvo.address}</td>
-                            </tr>
-                          )}
-                          {selectedConvo.photo && (
-                            <tr>
-                              <td className="py-2 pr-4 font-semibold text-slate-500">Applicant Photo</td>
-                              <td className="py-2 text-slate-800 font-bold">
-                                <a 
-                                  href={selectedConvo.photo} 
-                                  target="_blank" 
-                                  rel="noopener noreferrer" 
-                                  className="inline-flex items-center text-emerald-600 hover:text-emerald-800 underline"
-                                >
-                                  View Uploaded Photo ↗
-                                </a>
-                              </td>
-                            </tr>
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
+                <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-3">
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider font-heading">
+                    Job Application Details
+                  </h4>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left border-collapse text-xs">
+                      <tbody>
+                        <tr className="border-b border-slate-200/50">
+                          <td className="py-2 pr-4 font-semibold text-slate-500 w-1/3">Position Applied</td>
+                          <td className="py-2 text-slate-800 font-bold">{selectedConvo.position_applied || 'N/A'}</td>
+                        </tr>
+                        <tr className="border-b border-slate-200/50">
+                          <td className="py-2 pr-4 font-semibold text-slate-500">Gender</td>
+                          <td className="py-2 text-slate-800 font-bold">{selectedConvo.gender || 'N/A'}</td>
+                        </tr>
+                        <tr className="border-b border-slate-200/50">
+                          <td className="py-2 pr-4 font-semibold text-slate-500">Age</td>
+                          <td className="py-2 text-slate-800 font-bold">{selectedConvo.age || 'N/A'}</td>
+                        </tr>
+                        <tr className="border-b border-slate-200/50">
+                          <td className="py-2 pr-4 font-semibold text-slate-500">Highest Qualification</td>
+                          <td className="py-2 text-slate-800 font-bold">{selectedConvo.qualification || 'N/A'}</td>
+                        </tr>
+                        <tr className="border-b border-slate-200/50">
+                          <td className="py-2 pr-4 font-semibold text-slate-500">Job Title</td>
+                          <td className="py-2 text-slate-800 font-bold">{selectedConvo.job_title || 'N/A'}</td>
+                        </tr>
+                        <tr className="border-b border-slate-200/50">
+                          <td className="py-2 pr-4 font-semibold text-slate-500">Working Experience</td>
+                          <td className="py-2 text-slate-800 font-bold whitespace-pre-wrap">{selectedConvo.working_experience || 'N/A'}</td>
+                        </tr>
+                        <tr className="border-b border-slate-200/50">
+                          <td className="py-2 pr-4 font-semibold text-slate-500">Reason</td>
+                          <td className="py-2 text-slate-800 font-bold whitespace-pre-wrap">{selectedConvo.reason || 'N/A'}</td>
+                        </tr>
+                        <tr className="border-b border-slate-200/50">
+                          <td className="py-2 pr-4 font-semibold text-slate-500">Current Salary</td>
+                          <td className="py-2 text-slate-800 font-bold">{selectedConvo.current_salary || 'N/A'}</td>
+                        </tr>
+                        <tr className="border-b border-slate-200/50">
+                          <td className="py-2 pr-4 font-semibold text-slate-500">Expected Salary</td>
+                          <td className="py-2 text-slate-800 font-bold">{selectedConvo.expected_salary || 'N/A'}</td>
+                        </tr>
+                        <tr className="border-b border-slate-200/50">
+                          <td className="py-2 pr-4 font-semibold text-slate-500">Notice Period</td>
+                          <td className="py-2 text-slate-800 font-bold">{selectedConvo.notice_period || 'N/A'}</td>
+                        </tr>
+                        <tr className="border-b border-slate-200/50">
+                          <td className="py-2 pr-4 font-semibold text-slate-500">Address</td>
+                          <td className="py-2 text-slate-800 font-bold whitespace-pre-wrap">{selectedConvo.address || 'N/A'}</td>
+                        </tr>
+                        <tr>
+                          <td className="py-2 pr-4 font-semibold text-slate-500">Applicant Photo</td>
+                          <td className="py-2 text-slate-800 font-bold">
+                            {selectedConvo.photo ? (
+                              <a 
+                                href={selectedConvo.photo} 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="inline-flex items-center text-emerald-600 hover:text-emerald-800 underline"
+                              >
+                                View Uploaded Photo ↗
+                              </a>
+                            ) : (
+                              'N/A'
+                            )}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
-                )}
+                </div>
 
                 {/* Full Conversation Summary */}
                 <div className="bg-white border border-slate-200 p-4 rounded-xl space-y-2 shadow-2xs">
