@@ -47,8 +47,8 @@ function shouldSyncToWebhook(tags) {
   );
   if (hasEmergencyOrCheckBooking) return false;
 
-  // Sync if contains Hot Lead or Booking Appointment
-  return lowerTags.some(t => t.includes('hot lead') || t.includes('booking appointment'));
+  // Sync if contains Hot Lead, Warm Lead, Booking Appointment, or Job Application
+  return lowerTags.some(t => t.includes('hot lead') || t.includes('warm lead') || t.includes('booking appointment') || t.includes('job application'));
 }
 
 async function main() {

@@ -15,7 +15,7 @@ async function main() {
   console.log('🔑 Getting plat_token...');
   const token = execSync(`python3 "${pyScriptPath}"`, { encoding: 'utf8', cwd: ROOT_DIR }).trim();
 
-  const ids = ['2877519', '2877483', '2877500'];
+  const ids = ['3135008'];
 
   // Fetch page 1 list to get conversation objects
   const resp = await fetch('https://app.nxlink.ai/admin/nx_flow_manager/conversation', {
