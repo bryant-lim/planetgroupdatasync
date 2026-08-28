@@ -223,6 +223,21 @@ function extractSummaryMetadata(messages, conv) {
   };
 }
 
+function shouldSyncToWebhook(tags) {
+  if (!Array.isArray(tags) || tags.length === 0) return false;
+  const lowerTags = tags.map(t => (typeof t === 'string' ? t.toLowerCase().trim() : ''));
+  const routingOnlyTags = ['to agent', 'branch agent', 'contact agent'];
+  const isOnlyRouting = lowerTags.every(t => routingOnlyTags.includes(t));
+  if (isOnlyRouting) return false;
+
+  const hasEmergencyOrCheckBooking = lowerTags.some(t =>
+    t.includes('emergency') || t.includes('check booking')
+  );
+  if (hasEmergencyOrCheckBooking) return false;
+
+  return lowerTags.some(t => t.includes('hot lead') || t.includes('warm lead') || t.includes('booking appointment') || t.includes('job application') || t.includes('job enquiry') || t.includes('enquiry'));
+}
+
 async function main() {
   console.log('==========================================');
   console.log('🔄 NXLINK Local Ingestion & Sync Tool');
