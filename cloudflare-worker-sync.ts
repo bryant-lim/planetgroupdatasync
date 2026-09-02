@@ -201,7 +201,7 @@ async function runSync(env: Env) {
   }
 
   let conversations: any[] = [];
-  const maxPagesToScan = 5; // Scan up to 5 pages (500 conversations)
+  const maxPagesToScan = 3; // Scan up to 3 pages (300 conversations)
 
   for (let pageNum = 1; pageNum <= maxPagesToScan; pageNum++) {
     const convResp = await fetch('https://app.nxlink.ai/admin/nx_flow_manager/conversation', {
@@ -237,7 +237,7 @@ async function runSync(env: Env) {
       const orQuery = convIds.map(id => `conversation_transcript.ilike.%[nxlink_id:${id}]%`).join(',');
       const { data: existingRows } = await supabase
         .from('conversations')
-        .select('id, customer_name, conversation_summary, conversation_tags, conversation_transcript, current_salary, job_title')
+        .select('id, customer_name, conversation_summary, conversation_tags, conversation_transcript, current_salary, job_title, webhook_status')
         .or(orQuery);
 
       if (existingRows) {
@@ -255,12 +255,40 @@ async function runSync(env: Env) {
     }
   }
 
+  // Priority sorting:
+  // 1: Webhook-eligible leads not yet synced (or incomplete)
+  // 2: Brand new records not in existingMap
+  // 3: Existing records with tag changes or incomplete data
+  // 4: Empty sessions
+  pgConvs.sort((a, b) => {
+    const aId = String(a.id || a.conversationId || a.uuid || '');
+    const bId = String(b.id || b.conversationId || b.uuid || '');
+    const aRow = existingMap.get(aId);
+    const bRow = existingMap.get(bId);
+
+    const aTags = Array.isArray(a.tags) ? a.tags.map((t: any) => (typeof t === 'string' ? t : t.name)).filter(Boolean) : [];
+    const bTags = Array.isArray(b.tags) ? b.tags.map((t: any) => (typeof t === 'string' ? t : t.name)).filter(Boolean) : [];
+
+    const aIsWebhookEligible = shouldSyncToWebhook(aTags);
+    const bIsWebhookEligible = shouldSyncToWebhook(bTags);
+
+    const aNeedsWebhookPush = aIsWebhookEligible && (!aRow || aRow.webhook_status !== 'synced' || !aRow.customer_name);
+    const bNeedsWebhookPush = bIsWebhookEligible && (!bRow || bRow.webhook_status !== 'synced' || !bRow.customer_name);
+
+    if (aNeedsWebhookPush && !bNeedsWebhookPush) return -1;
+    if (!aNeedsWebhookPush && bNeedsWebhookPush) return 1;
+
+    const aExists = aRow ? 1 : 0;
+    const bExists = bRow ? 1 : 0;
+    return aExists - bExists;
+  });
+
   let syncedCount = 0;
   let webhookPushedCount = 0;
   let activeFetchesCount = 0; // Protect against Cloudflare Worker Free 50 subrequest limit
   const maxSyncLimit = parseInt(env.MAX_SYNC_LIMIT || '10', 10);
 
-  for (const conv of conversations) {
+  for (const conv of pgConvs) {
     const flowName = conv.auto_flow_name || conv.autoFlowName || '';
     if (!flowName.toLowerCase().includes('planetgroup')) continue;
 
@@ -272,14 +300,20 @@ async function runSync(env: Env) {
       tagsList = conv.tags.map((t: any) => (typeof t === 'string' ? t : t.name)).filter(Boolean);
     }
 
+    const isWebhookEligible = shouldSyncToWebhook(tagsList);
     let needsUpdateOrInsert = false;
     let existingRow: any = null;
 
     if (existingMap.has(String(convId))) {
       existingRow = existingMap.get(String(convId));
       const tagsChanged = tagsList.length > 0 && JSON.stringify(existingRow.conversation_tags || []) !== JSON.stringify(tagsList);
-      const isMissingNewFields = existingRow.current_salary === null || existingRow.job_title === null;
-      if (!existingRow.customer_name || !existingRow.conversation_summary || tagsChanged || isMissingNewFields) {
+      const isWebhookUnsynced = isWebhookEligible && existingRow.webhook_status !== 'synced';
+      const isIncomplete = !existingRow.customer_name || !existingRow.conversation_summary;
+
+      // Skip empty 0-message sessions from repeatedly re-fetching
+      if (tagsList.length === 0 && !conv.conv_summary && !conv.summary && existingRow.customer_name === null) {
+        needsUpdateOrInsert = false;
+      } else if (isWebhookUnsynced || tagsChanged || isIncomplete) {
         needsUpdateOrInsert = true;
       }
     } else {
@@ -392,7 +426,11 @@ async function runSync(env: Env) {
       }
     }
 
-    if (wasIngestedOrUpdated && shouldSyncToWebhook(tagsList)) {
+    const alreadySyncedToWebhook = existingRow && existingRow.webhook_status === 'synced';
+    const wasIncompleteSynced = existingRow && existingRow.webhook_status === 'synced' && !existingRow.customer_name && !!meta.customer_name;
+    const shouldPushToWebhook = (!alreadySyncedToWebhook || wasIncompleteSynced) && shouldSyncToWebhook(tagsList);
+
+    if (wasIngestedOrUpdated && shouldPushToWebhook) {
       const webhookUrl = env.NXLINK_WEBHOOK_URL || 'https://asia-southeast1-planet-group-d2436.cloudfunctions.net/jobApplication';
       const clientId = env.NXLINK_WEBHOOK_CLIENT_ID || 'nxlink_70a248a4b37bae828e53035a';
       const clientSecret = env.NXLINK_WEBHOOK_CLIENT_SECRET || 'f2c3fb34bdbbdc38a7ae08a5bee0748083bc587e916cefd976b189936702d50b';

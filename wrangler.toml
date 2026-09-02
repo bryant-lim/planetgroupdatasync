@@ -3,6 +3,14 @@ main = "cloudflare-worker-sync.ts"
 compatibility_date = "2026-08-23"
 account_id = "b771f88cc6e239524474b06e15637bf4"
 
-# Cron trigger: run every 5 minutes
+# Cron trigger: run every 1 minute
 [triggers]
-crons = ["*/5 * * * *"]
+crons = ["* * * * *"]
+
+[vars]
+SUPABASE_URL = "https://qcxcgdmrcijikkbufjkq.supabase.co"
+SUPABASE_SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFjeGNnZG1yY2lqaWtrYnVmamtxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NzQ0NTAwOSwiZXhwIjoyMTAzMDIxMDA5fQ.Cnqx4zb-96tXsl-H2868FqNJBo_EglrY8CVZelNXf0Q"
+NXLINK_WEBHOOK_URL = "https://asia-southeast1-planet-group-d2436.cloudfunctions.net/jobApplication"
+NXLINK_WEBHOOK_CLIENT_ID = "nxlink_70a248a4b37bae828e53035a"
+NXLINK_WEBHOOK_CLIENT_SECRET = "f2c3fb34bdbbdc38a7ae08a5bee0748083bc587e916cefd976b189936702d50b"
+NXLINK_PLAT_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJ1SWQiOjU3OTk0LCJkZXZpY2VVbmlxdWVJZGVudGlmaWNhdGlvbiI6IjhjMDQ1ODgwLTllYWEtMTFmMS1hMzgzLTRmMTBhY2U2MjgwMyIsInV1SWQiOiI2YThhNzYwM2U0YjA5OTU4YTAxNTRlNmEifQ.UxE8J47rURFUY-C7uuDpIpwNEUQwdtZ-OpO2te9xR_w"

@@ -20003,17 +20003,17 @@ function extractSummaryMetadata(messages, conv) {
   let nextSteps = null;
   let extractedName = null;
   let extractedPhone = null;
+  let extractedEmail = null;
   let gender = null;
-  let height = null;
-  let weight = null;
   let age = null;
   let qualification = null;
   let address = null;
-  let transportation = null;
-  let medicalCondition = null;
+  let jobTitle = null;
   let workingExperience = null;
+  let reason = null;
+  let currentSalary = null;
   let expectedSalary = null;
-  let startDate = null;
+  let noticePeriod = null;
   let photo = null;
   let positionApplied = null;
   if (Array.isArray(messages)) {
@@ -20032,45 +20032,45 @@ function extractSummaryMetadata(messages, conv) {
   }
   const parseSummaryText = (text) => {
     if (!text) return;
-    const sMatch = text.match(/Customer Sentiment:\s*(.*?)(?=\s*(?:Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Name|Phone Number|Full Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Expected Salary|Start Date|Photo)|$)/i);
+    const sMatch = text.match(/Customer Sentiment:\s*(.*?)(?=\s*(?:Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Name|Phone Number|Full Name|Gender|Age|Contact Number|Email|Residential Address|Address|Highest Qualification|Education Level|Qualification|Job Title|Working Experience|Reason|Current Salary|Expected Salary|Notice Period|Photo|Position Applied|Position)|$)/i);
     if (sMatch && !sentiment) sentiment = sMatch[1].trim();
-    const sumMatch = text.match(/Conversation Summary:\s*(.*?)(?=\s*(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Name|Phone Number|Full Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Expected Salary|Start Date|Photo)|$)/i);
+    const sumMatch = text.match(/Conversation Summary:\s*(.*?)(?=\s*(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Name|Phone Number|Full Name|Gender|Age|Contact Number|Email|Residential Address|Address|Highest Qualification|Education Level|Qualification|Job Title|Working Experience|Reason|Current Salary|Expected Salary|Notice Period|Photo|Position Applied|Position)|$)/i);
     if (sumMatch && !summary) summary = sumMatch[1].trim();
-    const nsMatch = text.match(/(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions):\s*(.*?)(?=\s*(?:Customer Name|Phone Number|Full Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Expected Salary|Start Date|Photo)|$)/i);
+    const nsMatch = text.match(/(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions):\s*(.*?)(?=\s*(?:Customer Name|Phone Number|Full Name|Gender|Age|Contact Number|Email|Residential Address|Address|Highest Qualification|Education Level|Qualification|Job Title|Working Experience|Reason|Current Salary|Expected Salary|Notice Period|Photo|Position Applied|Position)|$)/i);
     if (nsMatch && !nextSteps) nextSteps = nsMatch[1].trim();
-    const lookahead = "(?=\\s*(?:Full Name|Name|Gender|Height|Weight|Age|Highest Qualification|Qualification|Address|Transportation|Medical Condition|Working Experience|Work Experience|Expected Salary|Start Date|Photo|Position Applied|Position|Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Sentiment)|$)";
+    const lookahead = "(?=\\s*(?:Position Applied|Position|Full Name|Customer Name|Name|Gender|Age|Contact Number|Phone Number|Phone|Email Address|Email|Address|Residential Address|Highest Qualification|Education Level|Qualification|Job Title|Working Experience|Work Experience|Reason|Current Salary|Expected Salary|Notice Period|Photo|Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Sentiment)|$)";
+    const posMatch = text.match(new RegExp(`(?:Position Applied|Position):\\s*(.*?)${lookahead}`, "i"));
+    if (posMatch && posMatch[1].trim() && !positionApplied) positionApplied = posMatch[1].trim();
     const nMatch = text.match(new RegExp(`(?:Full Name|Customer Name|Name):\\s*(.*?)${lookahead}`, "i"));
     if (nMatch && nMatch[1].trim() && nMatch[1].trim().toLowerCase() !== "n/a" && !extractedName) {
       extractedName = nMatch[1].trim();
     }
-    const pMatch = text.match(new RegExp(`(?:Phone Number|Phone):\\s*(.*?)${lookahead}`, "i"));
+    const genderMatch = text.match(new RegExp(`Gender:\\s*(.*?)${lookahead}`, "i"));
+    if (genderMatch && genderMatch[1].trim() && !gender) gender = genderMatch[1].trim();
+    const ageMatch = text.match(new RegExp(`Age:\\s*(.*?)${lookahead}`, "i"));
+    if (ageMatch && ageMatch[1].trim() && !age) age = ageMatch[1].trim();
+    const pMatch = text.match(new RegExp(`(?:Contact Number|Phone Number|Phone):\\s*(.*?)${lookahead}`, "i"));
     if (pMatch && pMatch[1].trim() && pMatch[1].trim().toLowerCase() !== "n/a" && !extractedPhone) {
       extractedPhone = pMatch[1].trim();
     }
-    const genderMatch = text.match(new RegExp(`Gender:\\s*(.*?)${lookahead}`, "i"));
-    if (genderMatch && genderMatch[1].trim() && !gender) gender = genderMatch[1].trim();
-    const heightMatch = text.match(new RegExp(`Height:\\s*(.*?)${lookahead}`, "i"));
-    if (heightMatch && heightMatch[1].trim() && !height) height = heightMatch[1].trim();
-    const weightMatch = text.match(new RegExp(`Weight:\\s*(.*?)${lookahead}`, "i"));
-    if (weightMatch && weightMatch[1].trim() && !weight) weight = weightMatch[1].trim();
-    const ageMatch = text.match(new RegExp(`Age:\\s*(.*?)${lookahead}`, "i"));
-    if (ageMatch && ageMatch[1].trim() && !age) age = ageMatch[1].trim();
-    const qualMatch = text.match(new RegExp(`(?:Highest Qualification|Qualification):\\s*(.*?)${lookahead}`, "i"));
-    if (qualMatch && qualMatch[1].trim() && !qualification) qualification = qualMatch[1].trim();
-    const addrMatch = text.match(new RegExp(`Address:\\s*(.*?)${lookahead}`, "i"));
+    const emailMatch = text.match(new RegExp(`(?:Email Address|Email):\\s*(.*?)${lookahead}`, "i"));
+    if (emailMatch && emailMatch[1].trim() && !extractedEmail) extractedEmail = emailMatch[1].trim();
+    const addrMatch = text.match(new RegExp(`(?:Residential Address|Address):\\s*(.*?)${lookahead}`, "i"));
     if (addrMatch && addrMatch[1].trim() && !address) address = addrMatch[1].trim();
-    const transMatch = text.match(new RegExp(`Transportation:\\s*(.*?)${lookahead}`, "i"));
-    if (transMatch && transMatch[1].trim() && !transportation) transportation = transMatch[1].trim();
-    const medMatch = text.match(new RegExp(`Medical Condition:\\s*(.*?)${lookahead}`, "i"));
-    if (medMatch && medMatch[1].trim() && !medicalCondition) medicalCondition = medMatch[1].trim();
+    const qualMatch = text.match(new RegExp(`(?:Highest Qualification|Education Level|Qualification):\\s*(.*?)${lookahead}`, "i"));
+    if (qualMatch && qualMatch[1].trim() && !qualification) qualification = qualMatch[1].trim();
+    const jobTitleMatch = text.match(new RegExp(`Job Title:\\s*(.*?)${lookahead}`, "i"));
+    if (jobTitleMatch && jobTitleMatch[1].trim() && !jobTitle) jobTitle = jobTitleMatch[1].trim();
     const expMatch = text.match(new RegExp(`(?:Working Experience|Work Experience):\\s*(.*?)${lookahead}`, "i"));
     if (expMatch && expMatch[1].trim() && !workingExperience) workingExperience = expMatch[1].trim();
+    const reasonMatch = text.match(new RegExp(`Reason:\\s*(.*?)${lookahead}`, "i"));
+    if (reasonMatch && reasonMatch[1].trim() && !reason) reason = reasonMatch[1].trim();
+    const currentSalMatch = text.match(new RegExp(`Current Salary:\\s*(.*?)${lookahead}`, "i"));
+    if (currentSalMatch && currentSalMatch[1].trim() && !currentSalary) currentSalary = currentSalMatch[1].trim();
     const salMatch = text.match(new RegExp(`Expected Salary:\\s*(.*?)${lookahead}`, "i"));
     if (salMatch && salMatch[1].trim() && !expectedSalary) expectedSalary = salMatch[1].trim();
-    const startMatch = text.match(new RegExp(`Start Date:\\s*(.*?)${lookahead}`, "i"));
-    if (startMatch && startMatch[1].trim() && !startDate) startDate = startMatch[1].trim();
-    const posMatch = text.match(new RegExp(`(?:Position Applied|Position):\\s*(.*?)${lookahead}`, "i"));
-    if (posMatch && posMatch[1].trim() && !positionApplied) positionApplied = posMatch[1].trim();
+    const noticeMatch = text.match(new RegExp(`Notice Period:\\s*(.*?)${lookahead}`, "i"));
+    if (noticeMatch && noticeMatch[1].trim() && !noticePeriod) noticePeriod = noticeMatch[1].trim();
   };
   if (Array.isArray(messages)) {
     for (const m of messages) {
@@ -20107,19 +20107,19 @@ function extractSummaryMetadata(messages, conv) {
     next_steps: cleanField(nextSteps),
     customer_name: cleanField(extractedName || conv.customer_name || conv.customerName || null),
     phone_number: cleanField(extractedPhone || conv.customer_phone || conv.phone || null),
+    email_address: cleanField(extractedEmail || conv.email_address || conv.email || null),
+    position_applied: cleanField(positionApplied),
     gender: cleanField(gender),
-    height: cleanField(height),
-    weight: cleanField(weight),
     age: cleanField(age),
     qualification: cleanField(qualification),
     address: cleanField(address),
-    transportation: cleanField(transportation),
-    medical_condition: cleanField(medicalCondition),
+    job_title: cleanField(jobTitle),
     working_experience: cleanField(workingExperience),
+    reason: cleanField(reason),
+    current_salary: cleanField(currentSalary),
     expected_salary: cleanField(expectedSalary),
-    start_date: cleanField(startDate),
-    photo,
-    position_applied: cleanField(positionApplied)
+    notice_period: cleanField(noticePeriod),
+    photo
   };
 }
 function shouldSyncToWebhook(tags) {
@@ -20132,7 +20132,7 @@ function shouldSyncToWebhook(tags) {
     (t) => t.includes("emergency") || t.includes("check booking")
   );
   if (hasEmergencyOrCheckBooking) return false;
-  return lowerTags.some((t) => t.includes("hot lead") || t.includes("warm lead") || t.includes("booking appointment") || t.includes("job application"));
+  return lowerTags.some((t) => t.includes("hot lead") || t.includes("warm lead") || t.includes("booking appointment") || t.includes("job application") || t.includes("job enquiry") || t.includes("enquiry"));
 }
 async function runSync(env) {
   const tokenUrl = env.NXAI_TOKEN_URL || "https://asia-east1-lark-demo-67aa3.cloudfunctions.net/nxaiToken";
@@ -20158,7 +20158,7 @@ async function runSync(env) {
     token = "";
   }
   let conversations = [];
-  const maxPagesToScan = 5;
+  const maxPagesToScan = 3;
   for (let pageNum = 1; pageNum <= maxPagesToScan; pageNum++) {
     const convResp = await fetch("https://app.nxlink.ai/admin/nx_flow_manager/conversation", {
       method: "POST",
@@ -20184,7 +20184,7 @@ async function runSync(env) {
   if (convIds.length > 0) {
     try {
       const orQuery = convIds.map((id) => `conversation_transcript.ilike.%[nxlink_id:${id}]%`).join(",");
-      const { data: existingRows } = await supabase.from("conversations").select("id, customer_name, conversation_summary, conversation_tags, conversation_transcript").or(orQuery);
+      const { data: existingRows } = await supabase.from("conversations").select("id, customer_name, conversation_summary, conversation_tags, conversation_transcript, current_salary, job_title, webhook_status").or(orQuery);
       if (existingRows) {
         for (const row of existingRows) {
           const transcript = row.conversation_transcript || "";
@@ -20199,11 +20199,28 @@ async function runSync(env) {
       console.error("Error querying Supabase for existing conversations:", err);
     }
   }
+  pgConvs.sort((a, b) => {
+    const aId = String(a.id || a.conversationId || a.uuid || "");
+    const bId = String(b.id || b.conversationId || b.uuid || "");
+    const aRow = existingMap.get(aId);
+    const bRow = existingMap.get(bId);
+    const aTags = Array.isArray(a.tags) ? a.tags.map((t) => typeof t === "string" ? t : t.name).filter(Boolean) : [];
+    const bTags = Array.isArray(b.tags) ? b.tags.map((t) => typeof t === "string" ? t : t.name).filter(Boolean) : [];
+    const aIsWebhookEligible = shouldSyncToWebhook(aTags);
+    const bIsWebhookEligible = shouldSyncToWebhook(bTags);
+    const aNeedsWebhookPush = aIsWebhookEligible && (!aRow || aRow.webhook_status !== "synced" || !aRow.customer_name);
+    const bNeedsWebhookPush = bIsWebhookEligible && (!bRow || bRow.webhook_status !== "synced" || !bRow.customer_name);
+    if (aNeedsWebhookPush && !bNeedsWebhookPush) return -1;
+    if (!aNeedsWebhookPush && bNeedsWebhookPush) return 1;
+    const aExists = aRow ? 1 : 0;
+    const bExists = bRow ? 1 : 0;
+    return aExists - bExists;
+  });
   let syncedCount = 0;
   let webhookPushedCount = 0;
   let activeFetchesCount = 0;
   const maxSyncLimit = parseInt(env.MAX_SYNC_LIMIT || "10", 10);
-  for (const conv of conversations) {
+  for (const conv of pgConvs) {
     const flowName = conv.auto_flow_name || conv.autoFlowName || "";
     if (!flowName.toLowerCase().includes("planetgroup")) continue;
     const convId = conv.id || conv.conversationId || conv.uuid;
@@ -20212,12 +20229,17 @@ async function runSync(env) {
     if (Array.isArray(conv.tags)) {
       tagsList = conv.tags.map((t) => typeof t === "string" ? t : t.name).filter(Boolean);
     }
+    const isWebhookEligible = shouldSyncToWebhook(tagsList);
     let needsUpdateOrInsert = false;
     let existingRow = null;
     if (existingMap.has(String(convId))) {
       existingRow = existingMap.get(String(convId));
       const tagsChanged = tagsList.length > 0 && JSON.stringify(existingRow.conversation_tags || []) !== JSON.stringify(tagsList);
-      if (!existingRow.customer_name || !existingRow.conversation_summary || tagsChanged) {
+      const isWebhookUnsynced = isWebhookEligible && existingRow.webhook_status !== "synced";
+      const isIncomplete = !existingRow.customer_name || !existingRow.conversation_summary;
+      if (tagsList.length === 0 && !conv.conv_summary && !conv.summary && existingRow.customer_name === null) {
+        needsUpdateOrInsert = false;
+      } else if (isWebhookUnsynced || tagsChanged || isIncomplete) {
         needsUpdateOrInsert = true;
       }
     } else {
@@ -20270,6 +20292,7 @@ async function runSync(env) {
       await supabase.from("conversations").update({
         customer_name: meta.customer_name,
         phone_number: meta.phone_number,
+        email_address: meta.email_address,
         customer_sentiment: meta.customer_sentiment,
         conversation_summary: meta.conversation_summary,
         next_steps: meta.next_steps,
@@ -20277,55 +20300,56 @@ async function runSync(env) {
         conversation_date: cDateStr,
         conversation_time: cTimeStr,
         call_audio_url: callAudioUrl,
+        position_applied: meta.position_applied,
         gender: meta.gender,
-        height: meta.height,
-        weight: meta.weight,
         age: meta.age,
         qualification: meta.qualification,
         address: meta.address,
-        transportation: meta.transportation,
-        medical_condition: meta.medical_condition,
+        job_title: meta.job_title,
         working_experience: meta.working_experience,
+        reason: meta.reason,
+        current_salary: meta.current_salary,
         expected_salary: meta.expected_salary,
-        start_date: meta.start_date,
-        photo: meta.photo,
-        position_applied: meta.position_applied
+        notice_period: meta.notice_period,
+        photo: meta.photo
       }).eq("id", existingRow.id);
       wasIngestedOrUpdated = true;
     } else {
       const { error } = await supabase.from("conversations").insert([{
         customer_name: meta.customer_name,
         phone_number: meta.phone_number,
+        email_address: meta.email_address || conv.email_address || null,
         customer_sentiment: meta.customer_sentiment,
         conversation_summary: meta.conversation_summary,
         next_steps: meta.next_steps,
         company_name: conv.company_name || null,
-        email_address: conv.email_address || null,
         conversation_tags: tagsList,
         conversation_date: cDateStr,
         conversation_time: cTimeStr,
         conversation_transcript: rawTranscript,
         call_audio_url: callAudioUrl,
+        position_applied: meta.position_applied,
         gender: meta.gender,
-        height: meta.height,
-        weight: meta.weight,
         age: meta.age,
         qualification: meta.qualification,
         address: meta.address,
-        transportation: meta.transportation,
-        medical_condition: meta.medical_condition,
+        job_title: meta.job_title,
         working_experience: meta.working_experience,
+        reason: meta.reason,
+        current_salary: meta.current_salary,
         expected_salary: meta.expected_salary,
-        start_date: meta.start_date,
-        photo: meta.photo,
-        position_applied: meta.position_applied
+        notice_period: meta.notice_period,
+        photo: meta.photo
       }]);
       if (!error) {
         syncedCount++;
         wasIngestedOrUpdated = true;
       }
     }
-    if (wasIngestedOrUpdated && shouldSyncToWebhook(tagsList)) {
+    const alreadySyncedToWebhook = existingRow && existingRow.webhook_status === "synced";
+    const wasIncompleteSynced = existingRow && existingRow.webhook_status === "synced" && !existingRow.customer_name && !!meta.customer_name;
+    const shouldPushToWebhook = (!alreadySyncedToWebhook || wasIncompleteSynced) && shouldSyncToWebhook(tagsList);
+    if (wasIngestedOrUpdated && shouldPushToWebhook) {
       const webhookUrl = env.NXLINK_WEBHOOK_URL || "https://asia-southeast1-planet-group-d2436.cloudfunctions.net/jobApplication";
       const clientId = env.NXLINK_WEBHOOK_CLIENT_ID || "nxlink_70a248a4b37bae828e53035a";
       const clientSecret = env.NXLINK_WEBHOOK_CLIENT_SECRET || "f2c3fb34bdbbdc38a7ae08a5bee0748083bc587e916cefd976b189936702d50b";
@@ -20340,7 +20364,7 @@ async function runSync(env) {
                 "Customer Name": meta.customer_name || "Unknown",
                 "Phone Number": meta.phone_number || "Not Provided",
                 "Company Name": conv.company_name || null,
-                "Email Address": conv.email_address || null,
+                "Email Address": meta.email_address || conv.email_address || null,
                 "Tags": tagsList,
                 "Full Summary": meta.conversation_summary || null,
                 "Sentiment": meta.customer_sentiment || "Neutral",
@@ -20349,16 +20373,15 @@ async function runSync(env) {
                 "Conversation Date": cDateStr,
                 "Position Applied": meta.position_applied || null,
                 "Gender": meta.gender || null,
-                "Height": meta.height || null,
-                "Weight": meta.weight || null,
                 "Age": meta.age || null,
                 "Highest Qualification": meta.qualification || null,
                 "Address": meta.address || null,
-                "Transportation": meta.transportation || null,
-                "Medical Condition": meta.medical_condition || null,
+                "Job Title": meta.job_title || null,
                 "Working Experience": meta.working_experience || null,
+                "Reason": meta.reason || null,
+                "Current Salary": meta.current_salary || null,
                 "Expected Salary": meta.expected_salary || null,
-                "Start Date": meta.start_date || null,
+                "Notice Period": meta.notice_period || null,
                 "Photo URL": meta.photo || null
               }
             })
