@@ -6,7 +6,7 @@ export default function ApiDocs() {
   const [copiedWebhook, setCopiedWebhook] = React.useState(false);
 
   const ingestUrl = window.location.origin + '/.netlify/functions/ingest-crm';
-  const webhookUrl = 'https://asia-southeast1-planet-group-d2436.cloudfunctions.net/jobApplication';
+  const webhookUrl = 'https://hype-hr-441002907541.asia-southeast1.run.app/intake/chatbot';
 
   const ingestSample = `{
   "payload": "Customer Sentiment: Positive Conversation Summary: Customer requested appointment... Next Steps: Contact via WhatsApp Company Name: Dental Home Email Address: crystal@example.com Conversation Tag: Hot Lead, Booking Appointment"

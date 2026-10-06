@@ -12,7 +12,8 @@
     "sync:local": "node scripts/sync-local.js",
     "sync:dentalhome": "node scripts/sync-local.js",
     "sync:planetgroup": "node scripts/sync-local.js",
-    "sync:webhook": "node scripts/sync-webhook.js"
+    "sync:webhook": "node scripts/sync-webhook.js",
+    "token:refresh": "node scripts/update-token.js"
   },
   "dependencies": {
     "@netlify/functions": "^5.3.0",

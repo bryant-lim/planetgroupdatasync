@@ -109,6 +109,24 @@ function extractSummaryMetadata(messages, conv) {
   let noticePeriod = null;
   let photo = null;
   let positionApplied = null;
+  let openingType = null;
+  let height = null;
+  let weight = null;
+  let retailExperience = null;
+  let spmCredits = null;
+  let photoFullBody = null;
+  let transportation = null;
+  let languages = null;
+  let medicalCondition = null;
+  let consent = null;
+  let postcode = null;
+  let resumeUrl = null;
+  let dob = null;
+  let maritalStatus = null;
+  let smokerVaper = null;
+  let qualificationUrl = null;
+  let retailIndustryExperience = null;
+  let whyInterested = null;
 
   // Extract photo from messages
   if (Array.isArray(messages)) {
@@ -131,15 +149,20 @@ function extractSummaryMetadata(messages, conv) {
     const summMatch = sumText.match(/Conversation Summary:\s*([^\r\n]+?)(?=\s*(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Name|Phone Number|Full Name|Gender|Age|Contact Number|Email|Residential Address|Address|Highest Qualification|Education Level|Qualification|Job Title|Working Experience|Reason|Current Salary|Expected Salary|Notice Period|Photo|Position Applied|Position)|$)/i);
     const stepsMatch = sumText.match(/(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions):\s*([^\r\n]+?)(?=\s*(?:Customer Name|Phone Number|Full Name|Gender|Age|Contact Number|Email|Residential Address|Address|Highest Qualification|Education Level|Qualification|Job Title|Working Experience|Reason|Current Salary|Expected Salary|Notice Period|Photo|Position Applied|Position)|$)/i);
 
-    const lookahead = '(?=\\s*(?:Position Applied|Position|Full Name|Customer Name|Name|Gender|Age|Contact Number|Phone Number|Phone|Email Address|Email|Address|Residential Address|Highest Qualification|Education Level|Qualification|Job Title|Working Experience|Work Experience|Reason|Current Salary|Expected Salary|Notice Period|Photo|Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Sentiment)|$)';
+    const lookahead = '(?=\\s*(?:Opening Type|OpeningType|Position Applied|Position|Full Name|Customer Name|Name|Gender|Age|Date of Birth|DOB|Marital Status|Smoker or Vaper|Smoker\\/Vaper|Contact Number|Phone Number|Phone|Email Address|Email|Residential Address|Address|Postcode|Qualification Document|Qualification URL|Highest Qualification|Education Level|Qualification|Job Title|Working Experience|Work Experience|Reason|Current Salary|Expected Salary|Notice Period|Photo Full Body URL|Full Body Photo|Photo|Height|Weight|Languages|Transportation|Retail Industry Experience|Retail Experience|Why Interested|SPM Credits|Medical Condition|Resume URL|Resume|Consent|Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Sentiment):|$)';
 
+    const otMatch = sumText.match(new RegExp(`(?:Opening Type|OpeningType):\\s*(.*?)${lookahead}`, 'i'));
     const posMatch = sumText.match(new RegExp(`(?:Position Applied|Position):\\s*(.*?)${lookahead}`, 'i'));
     const nameMatch = sumText.match(new RegExp(`(?:Full Name|Customer Name|Name):\\s*(.*?)${lookahead}`, 'i'));
     const genderMatch = sumText.match(new RegExp(`Gender:\\s*(.*?)${lookahead}`, 'i'));
     const ageMatch = sumText.match(new RegExp(`Age:\\s*(.*?)${lookahead}`, 'i'));
+    const dobMatch = sumText.match(new RegExp(`(?:Date of Birth|DOB):\\s*(.*?)${lookahead}`, 'i'));
+    const msMatch = sumText.match(new RegExp(`Marital Status:\\s*(.*?)${lookahead}`, 'i'));
+    const svMatch = sumText.match(new RegExp(`(?:Smoker or Vaper|Smoker\\/Vaper):\\s*(.*?)${lookahead}`, 'i'));
     const phoneMatch = sumText.match(new RegExp(`(?:Contact Number|Phone Number|Phone):\\s*(.*?)${lookahead}`, 'i'));
     const emailMatch = sumText.match(new RegExp(`(?:Email Address|Email):\\s*(.*?)${lookahead}`, 'i'));
     const addrMatch = sumText.match(new RegExp(`(?:Residential Address|Address):\\s*(.*?)${lookahead}`, 'i'));
+    const postMatch = sumText.match(new RegExp(`Postcode:\\s*(.*?)${lookahead}`, 'i'));
     const qualMatch = sumText.match(new RegExp(`(?:Highest Qualification|Education Level|Qualification):\\s*(.*?)${lookahead}`, 'i'));
     const jobTitleMatch = sumText.match(new RegExp(`Job Title:\\s*(.*?)${lookahead}`, 'i'));
     const expMatch = sumText.match(new RegExp(`(?:Working Experience|Work Experience):\\s*(.*?)${lookahead}`, 'i'));
@@ -147,17 +170,36 @@ function extractSummaryMetadata(messages, conv) {
     const currentSalMatch = sumText.match(new RegExp(`Current Salary:\\s*(.*?)${lookahead}`, 'i'));
     const salMatch = sumText.match(new RegExp(`Expected Salary:\\s*(.*?)${lookahead}`, 'i'));
     const noticeMatch = sumText.match(new RegExp(`Notice Period:\\s*(.*?)${lookahead}`, 'i'));
+    const photoMatch = sumText.match(new RegExp(`Photo:\\s*(.*?)${lookahead}`, 'i'));
+    const heightMatch = sumText.match(new RegExp(`Height:\\s*(.*?)${lookahead}`, 'i'));
+    const weightMatch = sumText.match(new RegExp(`Weight:\\s*(.*?)${lookahead}`, 'i'));
+    const langMatch = sumText.match(new RegExp(`Languages:\\s*(.*?)${lookahead}`, 'i'));
+    const transMatch = sumText.match(new RegExp(`Transportation:\\s*(.*?)${lookahead}`, 'i'));
+    const retExpMatch = sumText.match(new RegExp(`Retail Experience:\\s*(.*?)${lookahead}`, 'i'));
+    const retIndExpMatch = sumText.match(new RegExp(`Retail Industry Experience:\\s*(.*?)${lookahead}`, 'i'));
+    const whyMatch = sumText.match(new RegExp(`Why Interested:\\s*(.*?)${lookahead}`, 'i'));
+    const spmMatch = sumText.match(new RegExp(`SPM Credits:\\s*(.*?)${lookahead}`, 'i'));
+    const medMatch = sumText.match(new RegExp(`Medical Condition:\\s*(.*?)${lookahead}`, 'i'));
+    const fbPhotoMatch = sumText.match(new RegExp(`(?:Full Body Photo|Photo Full Body URL):\\s*(.*?)${lookahead}`, 'i'));
+    const resMatch = sumText.match(new RegExp(`(?:Resume|Resume URL):\\s*(.*?)${lookahead}`, 'i'));
+    const qDocMatch = sumText.match(new RegExp(`(?:Qualification Document|Qualification URL):\\s*(.*?)${lookahead}`, 'i'));
+    const consentMatch = sumText.match(new RegExp(`Consent:\\s*(.*?)${lookahead}`, 'i'));
 
     if (sentMatch && sentMatch[1] && !sentiment) sentiment = sentMatch[1].trim();
     if (summMatch && summMatch[1] && !summary) summary = summMatch[1].trim();
     if (stepsMatch && stepsMatch[1] && !nextSteps) nextSteps = stepsMatch[1].trim();
+    if (otMatch && otMatch[1] && !openingType) openingType = otMatch[1].trim();
     if (posMatch && posMatch[1] && !positionApplied) positionApplied = posMatch[1].trim();
     if (nameMatch && nameMatch[1] && !extractedName) extractedName = nameMatch[1].trim();
     if (genderMatch && genderMatch[1] && !gender) gender = genderMatch[1].trim();
     if (ageMatch && ageMatch[1] && !age) age = ageMatch[1].trim();
+    if (dobMatch && dobMatch[1] && !dob) dob = dobMatch[1].trim();
+    if (msMatch && msMatch[1] && !maritalStatus) maritalStatus = msMatch[1].trim();
+    if (svMatch && svMatch[1] && !smokerVaper) smokerVaper = svMatch[1].trim();
     if (phoneMatch && phoneMatch[1] && !extractedPhone) extractedPhone = phoneMatch[1].trim();
     if (emailMatch && emailMatch[1] && !extractedEmail) extractedEmail = emailMatch[1].trim();
     if (addrMatch && addrMatch[1] && !address) address = addrMatch[1].trim();
+    if (postMatch && postMatch[1] && !postcode) postcode = postMatch[1].trim();
     if (qualMatch && qualMatch[1] && !qualification) qualification = qualMatch[1].trim();
     if (jobTitleMatch && jobTitleMatch[1] && !jobTitle) jobTitle = jobTitleMatch[1].trim();
     if (expMatch && expMatch[1] && !workingExperience) workingExperience = expMatch[1].trim();
@@ -165,6 +207,23 @@ function extractSummaryMetadata(messages, conv) {
     if (currentSalMatch && currentSalMatch[1] && !currentSalary) currentSalary = currentSalMatch[1].trim();
     if (salMatch && salMatch[1] && !expectedSalary) expectedSalary = salMatch[1].trim();
     if (noticeMatch && noticeMatch[1] && !noticePeriod) noticePeriod = noticeMatch[1].trim();
+    if (photoMatch && photoMatch[1] && !photo) photo = photoMatch[1].trim();
+    if (heightMatch && heightMatch[1] && !height) height = heightMatch[1].trim();
+    if (weightMatch && weightMatch[1] && !weight) weight = weightMatch[1].trim();
+    if (langMatch && langMatch[1] && !languages) languages = langMatch[1].trim();
+    if (transMatch && transMatch[1] && !transportation) transportation = transMatch[1].trim();
+    if (retExpMatch && retExpMatch[1] && !retailExperience) retailExperience = retExpMatch[1].trim();
+    if (retIndExpMatch && retIndExpMatch[1]) {
+      if (!retailIndustryExperience) retailIndustryExperience = retIndExpMatch[1].trim();
+      if (!retailExperience) retailExperience = retIndExpMatch[1].trim();
+    }
+    if (whyMatch && whyMatch[1] && !whyInterested) whyInterested = whyMatch[1].trim();
+    if (spmMatch && spmMatch[1] && !spmCredits) spmCredits = spmMatch[1].trim();
+    if (medMatch && medMatch[1] && !medicalCondition) medicalCondition = medMatch[1].trim();
+    if (fbPhotoMatch && fbPhotoMatch[1] && !photoFullBody) photoFullBody = fbPhotoMatch[1].trim();
+    if (resMatch && resMatch[1] && !resumeUrl) resumeUrl = resMatch[1].trim();
+    if (qDocMatch && qDocMatch[1] && !qualificationUrl) qualificationUrl = qDocMatch[1].trim();
+    if (consentMatch && consentMatch[1] && !consent) consent = consentMatch[1].trim();
   };
 
   if (Array.isArray(messages)) {
@@ -189,6 +248,12 @@ function extractSummaryMetadata(messages, conv) {
   // Fallbacks from conv object
   if (!summary && conv.conv_summary) parseText(conv.conv_summary);
   if (!summary && conv.summary) parseText(conv.summary);
+
+  // Automatically parse 5-digit postcode from address if not explicitly present
+  if (!postcode && address) {
+    const pcMatch = address.match(/\b(\d{5})\b/);
+    if (pcMatch) postcode = pcMatch[1];
+  }
 
   // Clean trailing artifacts
   const cleanField = (val) => {
@@ -219,7 +284,25 @@ function extractSummaryMetadata(messages, conv) {
     current_salary: cleanField(currentSalary),
     expected_salary: cleanField(expectedSalary),
     notice_period: cleanField(noticePeriod),
-    photo: photo
+    photo: cleanField(photo),
+    opening_type: cleanField(openingType),
+    height: cleanField(height),
+    weight: cleanField(weight),
+    retail_experience: cleanField(retailExperience),
+    spm_credits: cleanField(spmCredits),
+    photo_full_body_url: cleanField(photoFullBody),
+    transportation: cleanField(transportation),
+    languages: cleanField(languages),
+    medical_condition: cleanField(medicalCondition),
+    consent: cleanField(consent),
+    postcode: cleanField(postcode),
+    resume_url: cleanField(resumeUrl),
+    date_of_birth: cleanField(dob),
+    marital_status: cleanField(maritalStatus),
+    smoker_or_vaper: cleanField(smokerVaper),
+    qualification_url: cleanField(qualificationUrl),
+    retail_industry_experience: cleanField(retailIndustryExperience),
+    why_interested: cleanField(whyInterested)
   };
 }
 
@@ -356,20 +439,20 @@ async function main() {
       console.warn(`     Warning: transcript fetch failed for ${convId}`);
     }
 
-    // FILTER ONLY [MY]PLANETGROUP FLOWS
-    let isPlanetGroup = false;
-    if (conv.flow_name === '[MY]PLANETGROUP' || conv.auto_flow_name === '[MY]PLANETGROUP') {
-      isPlanetGroup = true;
-    } else {
+    // FILTER [MY]PLANETGROUP AND [MY]PLANETGROUP-V3 FLOWS
+    const flowLower = (conv.flow_name || conv.auto_flow_name || '').toLowerCase();
+    let isPlanetGroup = flowLower.includes('planetgroup') || flowLower.includes('planetgp') || conv.auto_flow_id === 1821 || conv.auto_flow_id === 1881;
+    if (!isPlanetGroup && Array.isArray(messages)) {
       for (const m of messages) {
-        if (m.autoFlowId === 1821) {
+        if (m.autoFlowId === 1821 || m.autoFlowId === 1881) {
           isPlanetGroup = true;
           break;
         }
         if (m.msgType === 200 && m.msgInfo) {
           try {
             const p = typeof m.msgInfo === 'string' ? JSON.parse(m.msgInfo) : m.msgInfo;
-            if (p.name === '[MY]PLANETGROUP') {
+            const pName = (p.name || '').toLowerCase();
+            if (pName.includes('planetgroup') || pName.includes('planetgp')) {
               isPlanetGroup = true;
               break;
             }
@@ -429,7 +512,25 @@ async function main() {
       expected_salary,
       notice_period,
       photo,
-      position_applied
+      position_applied,
+      opening_type,
+      height,
+      weight,
+      retail_experience,
+      spm_credits,
+      photo_full_body_url,
+      transportation,
+      languages,
+      medical_condition,
+      consent,
+      postcode,
+      resume_url,
+      date_of_birth,
+      marital_status,
+      smoker_or_vaper,
+      qualification_url,
+      retail_industry_experience,
+      why_interested
     } = extractSummaryMetadata(messages, conv);
 
     // Date formatting (NXLINK created_at timestamp)
@@ -514,7 +615,25 @@ async function main() {
           current_salary,
           expected_salary,
           notice_period,
-          photo
+          photo,
+          opening_type,
+          height,
+          weight,
+          retail_experience,
+          spm_credits,
+          photo_full_body_url,
+          transportation,
+          languages,
+          medical_condition,
+          consent,
+          postcode,
+          resume_url,
+          date_of_birth,
+          marital_status,
+          smoker_or_vaper,
+          qualification_url,
+          retail_industry_experience,
+          why_interested
         })
         .eq('id', existingRow.id);
 
@@ -552,7 +671,25 @@ async function main() {
           current_salary,
           expected_salary,
           notice_period,
-          photo
+          photo,
+          opening_type,
+          height,
+          weight,
+          retail_experience,
+          spm_credits,
+          photo_full_body_url,
+          transportation,
+          languages,
+          medical_condition,
+          consent,
+          postcode,
+          resume_url,
+          date_of_birth,
+          marital_status,
+          smoker_or_vaper,
+          qualification_url,
+          retail_industry_experience,
+          why_interested
         }]);
 
       if (insertErr) {
@@ -567,9 +704,9 @@ async function main() {
       // Auto-push to 3rd party webhook if record qualifies under tag rules
       if (shouldSyncToWebhook(tagsList)) {
         try {
-          const webhookUrl = process.env.NXLINK_WEBHOOK_URL || 'https://asia-southeast1-planet-group-d2436.cloudfunctions.net/jobApplication';
-          const clientId = process.env.NXLINK_WEBHOOK_CLIENT_ID || 'nxlink_70a248a4b37bae828e53035a';
-          const clientSecret = process.env.NXLINK_WEBHOOK_CLIENT_SECRET || 'f2c3fb34bdbbdc38a7ae08a5bee0748083bc587e916cefd976b189936702d50b';
+          const webhookUrl = process.env.NXLINK_WEBHOOK_URL || 'https://hype-hr-441002907541.asia-southeast1.run.app/intake/chatbot';
+          const clientId = process.env.NXLINK_WEBHOOK_CLIENT_ID || 'hype-chatbot';
+          const clientSecret = process.env.NXLINK_WEBHOOK_CLIENT_SECRET || 'b7074fc1902d8ae2cd096612539700078f485611445c54d1d6bb06d226649443';
 
           const autoPayload = {
             fields: {
@@ -595,7 +732,25 @@ async function main() {
               "Current Salary": current_salary || null,
               "Expected Salary": expected_salary || null,
               "Notice Period": notice_period || null,
-              "Photo URL": photo || null
+              "Photo URL": photo || null,
+              "Opening Type": opening_type || null,
+              "Height": height || null,
+              "Weight": weight || null,
+              "Retail Experience": retail_experience || null,
+              "SPM Credits": spm_credits || null,
+              "Photo Full Body URL": photo_full_body_url || null,
+              "Transportation": transportation || null,
+              "Languages": languages || null,
+              "Medical Condition": medical_condition || null,
+              "Consent": consent || null,
+              "Postcode": postcode || null,
+              "Resume URL": resume_url || null,
+              "Date of Birth": date_of_birth || null,
+              "Marital Status": marital_status || null,
+              "Smoker or Vaper": smoker_or_vaper || null,
+              "Qualification URL": qualification_url || null,
+              "Retail Industry Experience": retail_industry_experience || null,
+              "Why Interested": why_interested || null
             }
           };
 

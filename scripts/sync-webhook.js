@@ -61,9 +61,9 @@ async function main() {
   const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
 
-  const webhookUrl = process.env.NXLINK_WEBHOOK_URL || 'https://asia-southeast1-planet-group-d2436.cloudfunctions.net/jobApplication';
-  const clientId = process.env.NXLINK_WEBHOOK_CLIENT_ID || 'nxlink_70a248a4b37bae828e53035a';
-  const clientSecret = process.env.NXLINK_WEBHOOK_CLIENT_SECRET || 'f2c3fb34bdbbdc38a7ae08a5bee0748083bc587e916cefd976b189936702d50b';
+  const webhookUrl = process.env.NXLINK_WEBHOOK_URL || 'https://hype-hr-441002907541.asia-southeast1.run.app/intake/chatbot';
+  const clientId = process.env.NXLINK_WEBHOOK_CLIENT_ID || 'hype-chatbot';
+  const clientSecret = process.env.NXLINK_WEBHOOK_CLIENT_SECRET || 'b7074fc1902d8ae2cd096612539700078f485611445c54d1d6bb06d226649443';
 
   const supabase = createClient(supabaseUrl, supabaseKey, {
     auth: { persistSession: false },
@@ -123,7 +123,25 @@ async function main() {
         "Current Salary": c.current_salary || null,
         "Expected Salary": c.expected_salary || null,
         "Notice Period": c.notice_period || null,
-        "Photo URL": c.photo || null
+        "Photo URL": c.photo || null,
+        "Opening Type": c.opening_type || null,
+        "Height": c.height || null,
+        "Weight": c.weight || null,
+        "Retail Experience": c.retail_experience || null,
+        "SPM Credits": c.spm_credits || null,
+        "Photo Full Body URL": c.photo_full_body_url || null,
+        "Transportation": c.transportation || null,
+        "Languages": c.languages || null,
+        "Medical Condition": c.medical_condition || null,
+        "Consent": c.consent || null,
+        "Postcode": c.postcode || null,
+        "Resume URL": c.resume_url || null,
+        "Date of Birth": c.date_of_birth || null,
+        "Marital Status": c.marital_status || null,
+        "Smoker or Vaper": c.smoker_or_vaper || null,
+        "Qualification URL": c.qualification_url || null,
+        "Retail Industry Experience": c.retail_industry_experience || null,
+        "Why Interested": c.why_interested || null
       }
     };
 

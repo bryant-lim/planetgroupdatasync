@@ -4,7 +4,7 @@ This document outlines the JSON payload sent by the sync scheduler to the Lark w
 
 ## Webhook Endpoint Configuration
 * **Environment Variable**: `NXLINK_WEBHOOK_URL`
-* **Default Target**: `https://asia-southeast1-planet-group-d2436.cloudfunctions.net/jobApplication`
+* **Default Target**: `https://hype-hr-441002907541.asia-southeast1.run.app/intake/chatbot`
 * **Headers Sent**:
   * `Content-Type: application/json`
   * `X-Client-Id`: (From `NXLINK_WEBHOOK_CLIENT_ID`)
@@ -41,7 +41,25 @@ Below is the complete payload containing all conversation and parsed candidate p
     "Current Salary": "RM2,500",
     "Expected Salary": "RM3,000",
     "Notice Period": "1 Month",
-    "Photo URL": "https://app.nxlink.ai/admin/photo/3046322.png"
+    "Photo URL": "https://app.nxlink.ai/admin/photo/3046322.png",
+    "Opening Type": "HQ",
+    "Height": "172cm",
+    "Weight": "65kg",
+    "Retail Experience": "2 Years",
+    "SPM Credits": "5 Credits",
+    "Photo Full Body URL": "https://app.nxlink.ai/admin/photo/full_body_3046322.png",
+    "Transportation": "Own Car",
+    "Languages": "English, Malay, Mandarin",
+    "Medical Condition": "None",
+    "Consent": "Yes",
+    "Postcode": "40100",
+    "Resume URL": "https://app.nxlink.ai/admin/resume/3046322.pdf",
+    "Date of Birth": "2002-05-15",
+    "Marital Status": "Single",
+    "Smoker or Vaper": "No",
+    "Qualification URL": "https://app.nxlink.ai/admin/docs/cert_3046322.pdf",
+    "Retail Industry Experience": "2 Years in Retail Fashion",
+    "Why Interested": "Passionate about customer engagement and brand growth"
   }
 }
 ```
@@ -73,4 +91,22 @@ Below is the complete payload containing all conversation and parsed candidate p
 | **`Expected Salary`** | `expected_salary` | `"RM3,000"` | Candidate expected salary |
 | **`Notice Period`** | `notice_period` | `"1 Month"` | Notice period before starting |
 | **`Photo URL`** | `photo` | `"https://..."` | Link to candidate's profile/uploaded photo |
+| **`Opening Type`** | `opening_type` | `"HQ"` / `"Store"` | Category of opening |
+| **`Height`** | `height` | `"172cm"` | Candidate height |
+| **`Weight`** | `weight` | `"65kg"` | Candidate weight |
+| **`Retail Experience`** | `retail_experience` | `"2 Years"` | Retail experience |
+| **`SPM Credits`** | `spm_credits` | `"5 Credits"` | Academic SPM result credits |
+| **`Photo Full Body URL`**| `photo_full_body_url` | `"https://..."` | Full body photo link |
+| **`Transportation`** | `transportation` | `"Own Car"` | Transportation mode |
+| **`Languages`** | `languages` | `"English, Malay"` | Spoken languages |
+| **`Medical Condition`** | `medical_condition` | `"None"` | Medical conditions or declarations |
+| **`Consent`** | `consent` | `"Yes"` | Candidate consent |
+| **`Postcode`** | `postcode` | `"40100"` | 5-digit postcode (parsed from Address or explicit) |
+| **`Resume URL`** | `resume_url` | `"https://..."` | Uploaded resume URL |
+| **`Date of Birth`** | `date_of_birth` | `"2002-05-15"` | Date of birth |
+| **`Marital Status`** | `marital_status` | `"Single"` | Marital status |
+| **`Smoker or Vaper`** | `smoker_or_vaper` | `"No"` | Smoking/vaping status |
+| **`Qualification URL`**| `qualification_url` | `"https://..."` | Qualification certificate document URL |
+| **`Retail Industry Experience`** | `retail_industry_experience` | `"2 Years in Fashion"` | Specific industry experience |
+| **`Why Interested`** | `why_interested` | `"Career growth"` | Reason for interest in this role |
 

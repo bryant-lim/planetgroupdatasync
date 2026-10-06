@@ -53,6 +53,24 @@ interface Conversation {
   expected_salary?: string | null;
   notice_period?: string | null;
   photo?: string | null;
+  opening_type?: string | null;
+  height?: string | null;
+  weight?: string | null;
+  retail_experience?: string | null;
+  spm_credits?: string | null;
+  photo_full_body_url?: string | null;
+  transportation?: string | null;
+  languages?: string | null;
+  medical_condition?: string | null;
+  consent?: string | null;
+  postcode?: string | null;
+  resume_url?: string | null;
+  date_of_birth?: string | null;
+  marital_status?: string | null;
+  smoker_or_vaper?: string | null;
+  qualification_url?: string | null;
+  retail_industry_experience?: string | null;
+  why_interested?: string | null;
   created_at: string;
 }
 
@@ -212,9 +230,9 @@ export default function Dashboard() {
     let success = 0;
     let fail = 0;
 
-    const webhookUrl = 'https://asia-southeast1-planet-group-d2436.cloudfunctions.net/jobApplication';
-    const clientId = 'nxlink_70a248a4b37bae828e53035a';
-    const clientSecret = 'f2c3fb34bdbbdc38a7ae08a5bee0748083bc587e916cefd976b189936702d50b';
+    const webhookUrl = 'https://hype-hr-441002907541.asia-southeast1.run.app/intake/chatbot';
+    const clientId = 'hype-chatbot';
+    const clientSecret = 'b7074fc1902d8ae2cd096612539700078f485611445c54d1d6bb06d226649443';
 
     const statusMap = getWebhookStatusMap();
 
@@ -388,16 +406,16 @@ export default function Dashboard() {
     try {
       const syncUrl = import.meta.env.VITE_SYNC_URL || '/.netlify/functions/sync-nxlink';
       const resp = await fetch(syncUrl);
-      if (resp.ok) {
-        const data = await resp.json();
+      const data = await resp.json().catch(() => ({}));
+      if (resp.ok && data.success !== false) {
         const msg = data.syncedCount > 0
-          ? `✅ NXLINK Sync Complete! ${data.syncedCount} new conversation(s) ingested (${data.webhookCount || 0} pushed to Webhook).`
-          : `✅ NXLINK Sync Complete! Up to date (${data.totalFound || 0} checked).`;
+          ? `✅ NXLINK Sync Complete! ${data.syncedCount} new conversation(s) ingested (${data.webhookPushedCount || data.webhookCount || 0} pushed to Webhook).`
+          : `✅ NXLINK Sync Complete! Up to date (${data.totalChecked || data.totalFound || 0} checked).`;
         setWebhookStatus(msg);
         fetchConversations();
       } else {
         await fetchConversations();
-        setWebhookStatus('✅ Refreshed view from database.');
+        setWebhookStatus(`❌ Sync Notice: ${data.error || 'Sync request failed.'}`);
       }
     } catch (e: any) {
       await fetchConversations();
@@ -840,7 +858,7 @@ export default function Dashboard() {
                   <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider font-heading">
                     Customer Details
                   </h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-heading">
+                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs font-heading">
                     <div>
                       <span className="text-slate-400 font-semibold uppercase text-[10px] block">Customer Name</span>
                       <span className="font-bold text-slate-900 text-sm">{selectedConvo.customer_name || 'Unknown'}</span>
@@ -848,6 +866,10 @@ export default function Dashboard() {
                     <div>
                       <span className="text-slate-400 font-semibold uppercase text-[10px] block">Phone Number</span>
                       <span className="font-bold text-slate-800 font-mono">{selectedConvo.phone_number || 'N/A'}</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-400 font-semibold uppercase text-[10px] block">Email Address</span>
+                      <span className="font-bold text-slate-800 font-mono break-all">{selectedConvo.email_address || 'N/A'}</span>
                     </div>
                     <div>
                       <span className="text-slate-400 font-semibold uppercase text-[10px] block">Company Name</span>
@@ -865,7 +887,11 @@ export default function Dashboard() {
                     <table className="w-full text-left border-collapse text-xs">
                       <tbody>
                         <tr className="border-b border-slate-200/50">
-                          <td className="py-2 pr-4 font-semibold text-slate-500 w-1/3">Position Applied</td>
+                          <td className="py-2 pr-4 font-semibold text-slate-500 w-1/3">Opening Type</td>
+                          <td className="py-2 text-slate-800 font-bold">{selectedConvo.opening_type || 'N/A'}</td>
+                        </tr>
+                        <tr className="border-b border-slate-200/50">
+                          <td className="py-2 pr-4 font-semibold text-slate-500">Position Applied</td>
                           <td className="py-2 text-slate-800 font-bold">{selectedConvo.position_applied || 'N/A'}</td>
                         </tr>
                         <tr className="border-b border-slate-200/50">
@@ -877,8 +903,24 @@ export default function Dashboard() {
                           <td className="py-2 text-slate-800 font-bold">{selectedConvo.age || 'N/A'}</td>
                         </tr>
                         <tr className="border-b border-slate-200/50">
+                          <td className="py-2 pr-4 font-semibold text-slate-500">Date of Birth</td>
+                          <td className="py-2 text-slate-800 font-bold">{selectedConvo.date_of_birth || 'N/A'}</td>
+                        </tr>
+                        <tr className="border-b border-slate-200/50">
+                          <td className="py-2 pr-4 font-semibold text-slate-500">Marital Status</td>
+                          <td className="py-2 text-slate-800 font-bold">{selectedConvo.marital_status || 'N/A'}</td>
+                        </tr>
+                        <tr className="border-b border-slate-200/50">
+                          <td className="py-2 pr-4 font-semibold text-slate-500">Smoker or Vaper</td>
+                          <td className="py-2 text-slate-800 font-bold">{selectedConvo.smoker_or_vaper || 'N/A'}</td>
+                        </tr>
+                        <tr className="border-b border-slate-200/50">
                           <td className="py-2 pr-4 font-semibold text-slate-500">Highest Qualification</td>
                           <td className="py-2 text-slate-800 font-bold">{selectedConvo.qualification || 'N/A'}</td>
+                        </tr>
+                        <tr className="border-b border-slate-200/50">
+                          <td className="py-2 pr-4 font-semibold text-slate-500">SPM Credits</td>
+                          <td className="py-2 text-slate-800 font-bold">{selectedConvo.spm_credits || 'N/A'}</td>
                         </tr>
                         <tr className="border-b border-slate-200/50">
                           <td className="py-2 pr-4 font-semibold text-slate-500">Job Title</td>
@@ -887,6 +929,14 @@ export default function Dashboard() {
                         <tr className="border-b border-slate-200/50">
                           <td className="py-2 pr-4 font-semibold text-slate-500">Working Experience</td>
                           <td className="py-2 text-slate-800 font-bold whitespace-pre-wrap">{selectedConvo.working_experience || 'N/A'}</td>
+                        </tr>
+                        <tr className="border-b border-slate-200/50">
+                          <td className="py-2 pr-4 font-semibold text-slate-500">Retail Experience</td>
+                          <td className="py-2 text-slate-800 font-bold whitespace-pre-wrap">{selectedConvo.retail_experience || selectedConvo.retail_industry_experience || 'N/A'}</td>
+                        </tr>
+                        <tr className="border-b border-slate-200/50">
+                          <td className="py-2 pr-4 font-semibold text-slate-500">Why Interested</td>
+                          <td className="py-2 text-slate-800 font-bold whitespace-pre-wrap">{selectedConvo.why_interested || 'N/A'}</td>
                         </tr>
                         <tr className="border-b border-slate-200/50">
                           <td className="py-2 pr-4 font-semibold text-slate-500">Reason</td>
@@ -905,10 +955,34 @@ export default function Dashboard() {
                           <td className="py-2 text-slate-800 font-bold">{selectedConvo.notice_period || 'N/A'}</td>
                         </tr>
                         <tr className="border-b border-slate-200/50">
+                          <td className="py-2 pr-4 font-semibold text-slate-500">Height / Weight</td>
+                          <td className="py-2 text-slate-800 font-bold">{selectedConvo.height || 'N/A'} / {selectedConvo.weight || 'N/A'}</td>
+                        </tr>
+                        <tr className="border-b border-slate-200/50">
+                          <td className="py-2 pr-4 font-semibold text-slate-500">Languages</td>
+                          <td className="py-2 text-slate-800 font-bold">{selectedConvo.languages || 'N/A'}</td>
+                        </tr>
+                        <tr className="border-b border-slate-200/50">
+                          <td className="py-2 pr-4 font-semibold text-slate-500">Transportation</td>
+                          <td className="py-2 text-slate-800 font-bold">{selectedConvo.transportation || 'N/A'}</td>
+                        </tr>
+                        <tr className="border-b border-slate-200/50">
+                          <td className="py-2 pr-4 font-semibold text-slate-500">Medical Condition</td>
+                          <td className="py-2 text-slate-800 font-bold">{selectedConvo.medical_condition || 'N/A'}</td>
+                        </tr>
+                        <tr className="border-b border-slate-200/50">
+                          <td className="py-2 pr-4 font-semibold text-slate-500">Consent</td>
+                          <td className="py-2 text-slate-800 font-bold">{selectedConvo.consent || 'N/A'}</td>
+                        </tr>
+                        <tr className="border-b border-slate-200/50">
+                          <td className="py-2 pr-4 font-semibold text-slate-500">Postcode</td>
+                          <td className="py-2 text-slate-800 font-bold">{selectedConvo.postcode || 'N/A'}</td>
+                        </tr>
+                        <tr className="border-b border-slate-200/50">
                           <td className="py-2 pr-4 font-semibold text-slate-500">Address</td>
                           <td className="py-2 text-slate-800 font-bold whitespace-pre-wrap">{selectedConvo.address || 'N/A'}</td>
                         </tr>
-                        <tr>
+                        <tr className="border-b border-slate-200/50">
                           <td className="py-2 pr-4 font-semibold text-slate-500">Applicant Photo</td>
                           <td className="py-2 text-slate-800 font-bold">
                             {selectedConvo.photo ? (
@@ -916,13 +990,49 @@ export default function Dashboard() {
                                 href={selectedConvo.photo} 
                                 target="_blank" 
                                 rel="noopener noreferrer" 
-                                className="inline-flex items-center text-emerald-600 hover:text-emerald-800 underline"
+                                className="inline-flex items-center text-emerald-600 hover:text-emerald-800 underline mr-3"
                               >
-                                View Uploaded Photo ↗
+                                View Photo ↗
                               </a>
                             ) : (
                               'N/A'
                             )}
+                            {selectedConvo.photo_full_body_url && (
+                              <a 
+                                href={selectedConvo.photo_full_body_url} 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="inline-flex items-center text-emerald-600 hover:text-emerald-800 underline"
+                              >
+                                View Full Body Photo ↗
+                              </a>
+                            )}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="py-2 pr-4 font-semibold text-slate-500">Documents</td>
+                          <td className="py-2 text-slate-800 font-bold">
+                            {selectedConvo.resume_url ? (
+                              <a 
+                                href={selectedConvo.resume_url} 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="inline-flex items-center text-emerald-600 hover:text-emerald-800 underline mr-3"
+                              >
+                                View Resume ↗
+                              </a>
+                            ) : null}
+                            {selectedConvo.qualification_url ? (
+                              <a 
+                                href={selectedConvo.qualification_url} 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="inline-flex items-center text-emerald-600 hover:text-emerald-800 underline"
+                              >
+                                View Qualification Document ↗
+                              </a>
+                            ) : null}
+                            {!selectedConvo.resume_url && !selectedConvo.qualification_url && 'N/A'}
                           </td>
                         </tr>
                       </tbody>

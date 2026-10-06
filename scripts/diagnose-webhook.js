@@ -2,9 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-const webhookUrl = 'https://asia-southeast1-planet-group-d2436.cloudfunctions.net/jobApplication';
-const clientId = 'nxlink_70a248a4b37bae828e53035a';
-const clientSecret = 'f2c3fb34bdbbdc38a7ae08a5bee0748083bc587e916cefd976b189936702d50b';
+const webhookUrl = 'https://hype-hr-441002907541.asia-southeast1.run.app/intake/chatbot';
+const clientId = 'hype-chatbot';
+const clientSecret = 'b7074fc1902d8ae2cd096612539700078f485611445c54d1d6bb06d226649443';
 
 async function testPayload(name, fields) {
   console.log(`\n🧪 Testing Payload: ${name}`);

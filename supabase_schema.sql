@@ -28,6 +28,24 @@ CREATE TABLE IF NOT EXISTS public.conversations (
     expected_salary TEXT,
     notice_period TEXT,
     photo TEXT,
+    opening_type TEXT,
+    height TEXT,
+    weight TEXT,
+    retail_experience TEXT,
+    spm_credits TEXT,
+    photo_full_body_url TEXT,
+    transportation TEXT,
+    languages TEXT,
+    medical_condition TEXT,
+    consent TEXT,
+    postcode TEXT,
+    resume_url TEXT,
+    date_of_birth TEXT,
+    marital_status TEXT,
+    smoker_or_vaper TEXT,
+    qualification_url TEXT,
+    retail_industry_experience TEXT,
+    why_interested TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
@@ -36,14 +54,25 @@ ALTER TABLE public.conversations
   ADD COLUMN IF NOT EXISTS job_title TEXT,
   ADD COLUMN IF NOT EXISTS reason TEXT,
   ADD COLUMN IF NOT EXISTS current_salary TEXT,
-  ADD COLUMN IF NOT EXISTS notice_period TEXT;
-
-ALTER TABLE public.conversations
-  DROP COLUMN IF EXISTS height,
-  DROP COLUMN IF EXISTS weight,
-  DROP COLUMN IF EXISTS transportation,
-  DROP COLUMN IF EXISTS medical_condition,
-  DROP COLUMN IF EXISTS start_date;
+  ADD COLUMN IF NOT EXISTS notice_period TEXT,
+  ADD COLUMN IF NOT EXISTS opening_type TEXT,
+  ADD COLUMN IF NOT EXISTS height TEXT,
+  ADD COLUMN IF NOT EXISTS weight TEXT,
+  ADD COLUMN IF NOT EXISTS retail_experience TEXT,
+  ADD COLUMN IF NOT EXISTS spm_credits TEXT,
+  ADD COLUMN IF NOT EXISTS photo_full_body_url TEXT,
+  ADD COLUMN IF NOT EXISTS transportation TEXT,
+  ADD COLUMN IF NOT EXISTS languages TEXT,
+  ADD COLUMN IF NOT EXISTS medical_condition TEXT,
+  ADD COLUMN IF NOT EXISTS consent TEXT,
+  ADD COLUMN IF NOT EXISTS postcode TEXT,
+  ADD COLUMN IF NOT EXISTS resume_url TEXT,
+  ADD COLUMN IF NOT EXISTS date_of_birth TEXT,
+  ADD COLUMN IF NOT EXISTS marital_status TEXT,
+  ADD COLUMN IF NOT EXISTS smoker_or_vaper TEXT,
+  ADD COLUMN IF NOT EXISTS qualification_url TEXT,
+  ADD COLUMN IF NOT EXISTS retail_industry_experience TEXT,
+  ADD COLUMN IF NOT EXISTS why_interested TEXT;
 
 -- Drop ticket tables if they exist
 DROP TABLE IF EXISTS public.ticket_notes CASCADE;

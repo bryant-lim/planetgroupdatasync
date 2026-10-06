@@ -20403,7 +20403,13 @@ async function runSync(env) {
 }
 var cloudflare_worker_sync_default = {
   async scheduled(controller, env, ctx) {
-    ctx.waitUntil(runSync(env));
+    try {
+      console.log("Cron trigger started");
+      const result = await runSync(env);
+      console.log("Cron trigger completed:", JSON.stringify(result));
+    } catch (err) {
+      console.error("Scheduled cron error:", err);
+    }
   },
   async fetch(request, env, ctx) {
     if (request.method === "OPTIONS") {

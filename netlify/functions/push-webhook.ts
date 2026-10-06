@@ -34,9 +34,9 @@ export const handler: Handler = async (event) => {
       };
     }
 
-    const webhookUrl = process.env.NXLINK_WEBHOOK_URL || 'https://asia-southeast1-planet-group-d2436.cloudfunctions.net/jobApplication';
-    const clientId = process.env.NXLINK_WEBHOOK_CLIENT_ID || 'nxlink_70a248a4b37bae828e53035a';
-    const clientSecret = process.env.NXLINK_WEBHOOK_CLIENT_SECRET || 'f2c3fb34bdbbdc38a7ae08a5bee0748083bc587e916cefd976b189936702d50b';
+    const webhookUrl = process.env.NXLINK_WEBHOOK_URL || 'https://hype-hr-441002907541.asia-southeast1.run.app/intake/chatbot';
+    const clientId = process.env.NXLINK_WEBHOOK_CLIENT_ID || 'hype-chatbot';
+    const clientSecret = process.env.NXLINK_WEBHOOK_CLIENT_SECRET || 'b7074fc1902d8ae2cd096612539700078f485611445c54d1d6bb06d226649443';
 
     console.log(`Backend proxy forwarding payload to ${webhookUrl}...`);
 

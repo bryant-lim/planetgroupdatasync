@@ -30,6 +30,24 @@ function extractSummaryMetadata(messages: any[], conv: any) {
   let noticePeriod: string | null = null;
   let photo: string | null = null;
   let positionApplied: string | null = null;
+  let openingType: string | null = null;
+  let height: string | null = null;
+  let weight: string | null = null;
+  let retailExperience: string | null = null;
+  let spmCredits: string | null = null;
+  let photoFullBody: string | null = null;
+  let transportation: string | null = null;
+  let languages: string | null = null;
+  let medicalCondition: string | null = null;
+  let consent: string | null = null;
+  let postcode: string | null = null;
+  let resumeUrl: string | null = null;
+  let dob: string | null = null;
+  let maritalStatus: string | null = null;
+  let smokerVaper: string | null = null;
+  let qualificationUrl: string | null = null;
+  let retailIndustryExperience: string | null = null;
+  let whyInterested: string | null = null;
 
   // Extract photo from messages
   if (Array.isArray(messages)) {
@@ -57,7 +75,10 @@ function extractSummaryMetadata(messages: any[], conv: any) {
     const nsMatch = text.match(/(?:Next Steps|Follow-up Suggestions|Follow Up Suggestions):\s*(.*?)(?=\s*(?:Customer Name|Phone Number|Full Name|Gender|Age|Contact Number|Email|Residential Address|Address|Highest Qualification|Education Level|Qualification|Job Title|Working Experience|Reason|Current Salary|Expected Salary|Notice Period|Photo|Position Applied|Position)|$)/i);
     if (nsMatch && !nextSteps) nextSteps = nsMatch[1].trim();
 
-    const lookahead = '(?=\\s*(?:Position Applied|Position|Full Name|Customer Name|Name|Gender|Age|Contact Number|Phone Number|Phone|Email Address|Email|Address|Residential Address|Highest Qualification|Education Level|Qualification|Job Title|Working Experience|Work Experience|Reason|Current Salary|Expected Salary|Notice Period|Photo|Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Sentiment)|$)';
+    const lookahead = '(?=\\s*(?:Opening Type|OpeningType|Position Applied|Position|Full Name|Customer Name|Name|Gender|Age|Date of Birth|DOB|Marital Status|Smoker or Vaper|Smoker\\/Vaper|Contact Number|Phone Number|Phone|Email Address|Email|Residential Address|Address|Postcode|Qualification Document|Qualification URL|Highest Qualification|Education Level|Qualification|Job Title|Working Experience|Work Experience|Reason|Current Salary|Expected Salary|Notice Period|Photo Full Body URL|Full Body Photo|Photo|Height|Weight|Languages|Transportation|Retail Industry Experience|Retail Experience|Why Interested|SPM Credits|Medical Condition|Resume URL|Resume|Consent|Conversation Summary|Next Steps|Follow-up Suggestions|Follow Up Suggestions|Customer Sentiment):|$)';
+
+    const otMatch = text.match(new RegExp(`(?:Opening Type|OpeningType):\\s*(.*?)${lookahead}`, 'i'));
+    if (otMatch && otMatch[1].trim() && !openingType) openingType = otMatch[1].trim();
 
     const posMatch = text.match(new RegExp(`(?:Position Applied|Position):\\s*(.*?)${lookahead}`, 'i'));
     if (posMatch && posMatch[1].trim() && !positionApplied) positionApplied = posMatch[1].trim();
@@ -73,6 +94,15 @@ function extractSummaryMetadata(messages: any[], conv: any) {
     const ageMatch = text.match(new RegExp(`Age:\\s*(.*?)${lookahead}`, 'i'));
     if (ageMatch && ageMatch[1].trim() && !age) age = ageMatch[1].trim();
 
+    const dobMatch = text.match(new RegExp(`(?:Date of Birth|DOB):\\s*(.*?)${lookahead}`, 'i'));
+    if (dobMatch && dobMatch[1].trim() && !dob) dob = dobMatch[1].trim();
+
+    const msMatch = text.match(new RegExp(`Marital Status:\\s*(.*?)${lookahead}`, 'i'));
+    if (msMatch && msMatch[1].trim() && !maritalStatus) maritalStatus = msMatch[1].trim();
+
+    const svMatch = text.match(new RegExp(`(?:Smoker or Vaper|Smoker\\/Vaper):\\s*(.*?)${lookahead}`, 'i'));
+    if (svMatch && svMatch[1].trim() && !smokerVaper) smokerVaper = svMatch[1].trim();
+
     const pMatch = text.match(new RegExp(`(?:Contact Number|Phone Number|Phone):\\s*(.*?)${lookahead}`, 'i'));
     if (pMatch && pMatch[1].trim() && pMatch[1].trim().toLowerCase() !== 'n/a' && !extractedPhone) {
       extractedPhone = pMatch[1].trim();
@@ -83,6 +113,9 @@ function extractSummaryMetadata(messages: any[], conv: any) {
 
     const addrMatch = text.match(new RegExp(`(?:Residential Address|Address):\\s*(.*?)${lookahead}`, 'i'));
     if (addrMatch && addrMatch[1].trim() && !address) address = addrMatch[1].trim();
+
+    const postMatch = text.match(new RegExp(`Postcode:\\s*(.*?)${lookahead}`, 'i'));
+    if (postMatch && postMatch[1].trim() && !postcode) postcode = postMatch[1].trim();
 
     const qualMatch = text.match(new RegExp(`(?:Highest Qualification|Education Level|Qualification):\\s*(.*?)${lookahead}`, 'i'));
     if (qualMatch && qualMatch[1].trim() && !qualification) qualification = qualMatch[1].trim();
@@ -104,6 +137,51 @@ function extractSummaryMetadata(messages: any[], conv: any) {
 
     const noticeMatch = text.match(new RegExp(`Notice Period:\\s*(.*?)${lookahead}`, 'i'));
     if (noticeMatch && noticeMatch[1].trim() && !noticePeriod) noticePeriod = noticeMatch[1].trim();
+
+    const photoMatch = text.match(new RegExp(`Photo:\\s*(.*?)${lookahead}`, 'i'));
+    if (photoMatch && photoMatch[1].trim() && !photo) photo = photoMatch[1].trim();
+
+    const heightMatch = text.match(new RegExp(`Height:\\s*(.*?)${lookahead}`, 'i'));
+    if (heightMatch && heightMatch[1].trim() && !height) height = heightMatch[1].trim();
+
+    const weightMatch = text.match(new RegExp(`Weight:\\s*(.*?)${lookahead}`, 'i'));
+    if (weightMatch && weightMatch[1].trim() && !weight) weight = weightMatch[1].trim();
+
+    const langMatch = text.match(new RegExp(`Languages:\\s*(.*?)${lookahead}`, 'i'));
+    if (langMatch && langMatch[1].trim() && !languages) languages = langMatch[1].trim();
+
+    const transMatch = text.match(new RegExp(`Transportation:\\s*(.*?)${lookahead}`, 'i'));
+    if (transMatch && transMatch[1].trim() && !transportation) transportation = transMatch[1].trim();
+
+    const retExpMatch = text.match(new RegExp(`Retail Experience:\\s*(.*?)${lookahead}`, 'i'));
+    if (retExpMatch && retExpMatch[1].trim() && !retailExperience) retailExperience = retExpMatch[1].trim();
+
+    const retIndExpMatch = text.match(new RegExp(`Retail Industry Experience:\\s*(.*?)${lookahead}`, 'i'));
+    if (retIndExpMatch && retIndExpMatch[1].trim()) {
+      if (!retailIndustryExperience) retailIndustryExperience = retIndExpMatch[1].trim();
+      if (!retailExperience) retailExperience = retIndExpMatch[1].trim();
+    }
+
+    const whyMatch = text.match(new RegExp(`Why Interested:\\s*(.*?)${lookahead}`, 'i'));
+    if (whyMatch && whyMatch[1].trim() && !whyInterested) whyInterested = whyMatch[1].trim();
+
+    const spmMatch = text.match(new RegExp(`SPM Credits:\\s*(.*?)${lookahead}`, 'i'));
+    if (spmMatch && spmMatch[1].trim() && !spmCredits) spmCredits = spmMatch[1].trim();
+
+    const medMatch = text.match(new RegExp(`Medical Condition:\\s*(.*?)${lookahead}`, 'i'));
+    if (medMatch && medMatch[1].trim() && !medicalCondition) medicalCondition = medMatch[1].trim();
+
+    const fbPhotoMatch = text.match(new RegExp(`(?:Full Body Photo|Photo Full Body URL):\\s*(.*?)${lookahead}`, 'i'));
+    if (fbPhotoMatch && fbPhotoMatch[1].trim() && !photoFullBody) photoFullBody = fbPhotoMatch[1].trim();
+
+    const resMatch = text.match(new RegExp(`(?:Resume|Resume URL):\\s*(.*?)${lookahead}`, 'i'));
+    if (resMatch && resMatch[1].trim() && !resumeUrl) resumeUrl = resMatch[1].trim();
+
+    const qDocMatch = text.match(new RegExp(`(?:Qualification Document|Qualification URL):\\s*(.*?)${lookahead}`, 'i'));
+    if (qDocMatch && qDocMatch[1].trim() && !qualificationUrl) qualificationUrl = qDocMatch[1].trim();
+
+    const consentMatch = text.match(new RegExp(`Consent:\\s*(.*?)${lookahead}`, 'i'));
+    if (consentMatch && consentMatch[1].trim() && !consent) consent = consentMatch[1].trim();
   };
 
   if (Array.isArray(messages)) {
@@ -127,6 +205,12 @@ function extractSummaryMetadata(messages: any[], conv: any) {
 
   if (conv.conv_summary) parseSummaryText(conv.conv_summary);
   if (conv.summary) parseSummaryText(conv.summary);
+
+  // Automatically parse 5-digit postcode from address if not explicitly present
+  if (!postcode && address) {
+    const pcMatch = address.match(/\b(\d{5})\b/);
+    if (pcMatch) postcode = pcMatch[1];
+  }
 
   const cleanField = (val: string | null) => {
     if (!val) return null;
@@ -156,7 +240,25 @@ function extractSummaryMetadata(messages: any[], conv: any) {
     current_salary: cleanField(currentSalary),
     expected_salary: cleanField(expectedSalary),
     notice_period: cleanField(noticePeriod),
-    photo
+    photo: cleanField(photo),
+    opening_type: cleanField(openingType),
+    height: cleanField(height),
+    weight: cleanField(weight),
+    retail_experience: cleanField(retailExperience),
+    spm_credits: cleanField(spmCredits),
+    photo_full_body_url: cleanField(photoFullBody),
+    transportation: cleanField(transportation),
+    languages: cleanField(languages),
+    medical_condition: cleanField(medicalCondition),
+    consent: cleanField(consent),
+    postcode: cleanField(postcode),
+    resume_url: cleanField(resumeUrl),
+    date_of_birth: cleanField(dob),
+    marital_status: cleanField(maritalStatus),
+    smoker_or_vaper: cleanField(smokerVaper),
+    qualification_url: cleanField(qualificationUrl),
+    retail_industry_experience: cleanField(retailIndustryExperience),
+    why_interested: cleanField(whyInterested)
   };
 }
 
@@ -197,7 +299,7 @@ async function runSync(env: Env) {
   }
 
   if (!token) {
-    token = '';
+    throw new Error('NxLink plat_token is missing. Please configure NXLINK_PLAT_TOKEN.');
   }
 
   let conversations: any[] = [];
@@ -210,7 +312,9 @@ async function runSync(env: Env) {
       body: JSON.stringify({ phone: null, tags: [], page_number: pageNum, page_size: 100, timeZone: 'UTC+08:00' })
     });
 
-    if (!convResp.ok) break;
+    if (!convResp.ok) {
+      throw new Error(`NxLink API request failed (HTTP ${convResp.status})`);
+    }
 
     const rawText = await convResp.text();
     let convData: any = {};
@@ -218,6 +322,10 @@ async function runSync(env: Env) {
       convData = JSON.parse(rawText);
     } catch (e) {
       break;
+    }
+
+    if (convData.code === 401 || (convData.message && convData.message.includes('not logged in'))) {
+      throw new Error('NxLink authentication failed: plat_token expired or invalid');
     }
 
     const pageList = convData.list || convData.data?.list || convData.data || [];
@@ -228,7 +336,10 @@ async function runSync(env: Env) {
   }
 
   // Filter out [MY]PLANETGROUP records and fetch existing map in ONE query
-  const pgConvs = conversations.filter(c => (c.auto_flow_name || c.autoFlowName || '').toLowerCase().includes('planetgroup'));
+  const pgConvs = conversations.filter(c => {
+    const flowName = (c.auto_flow_name || c.autoFlowName || c.flow_name || '').toLowerCase();
+    return flowName.includes('planetgroup') || flowName.includes('planetgp') || c.auto_flow_id === 1821 || c.auto_flow_id === 1881;
+  });
   const convIds = pgConvs.map(c => c.id || c.conversationId || c.uuid).filter(Boolean);
 
   const existingMap = new Map<string, any>();
@@ -289,8 +400,9 @@ async function runSync(env: Env) {
   const maxSyncLimit = parseInt(env.MAX_SYNC_LIMIT || '10', 10);
 
   for (const conv of pgConvs) {
-    const flowName = conv.auto_flow_name || conv.autoFlowName || '';
-    if (!flowName.toLowerCase().includes('planetgroup')) continue;
+    const flowName = (conv.auto_flow_name || conv.autoFlowName || conv.flow_name || '').toLowerCase();
+    const isPlanetGroup = flowName.includes('planetgroup') || flowName.includes('planetgp') || conv.auto_flow_id === 1821 || conv.auto_flow_id === 1881;
+    if (!isPlanetGroup) continue;
 
     const convId = conv.id || conv.conversationId || conv.uuid;
     if (!convId) continue;
@@ -389,7 +501,25 @@ async function runSync(env: Env) {
         current_salary: meta.current_salary,
         expected_salary: meta.expected_salary,
         notice_period: meta.notice_period,
-        photo: meta.photo
+        photo: meta.photo,
+        opening_type: meta.opening_type,
+        height: meta.height,
+        weight: meta.weight,
+        retail_experience: meta.retail_experience,
+        spm_credits: meta.spm_credits,
+        photo_full_body_url: meta.photo_full_body_url,
+        transportation: meta.transportation,
+        languages: meta.languages,
+        medical_condition: meta.medical_condition,
+        consent: meta.consent,
+        postcode: meta.postcode,
+        resume_url: meta.resume_url,
+        date_of_birth: meta.date_of_birth,
+        marital_status: meta.marital_status,
+        smoker_or_vaper: meta.smoker_or_vaper,
+        qualification_url: meta.qualification_url,
+        retail_industry_experience: meta.retail_industry_experience,
+        why_interested: meta.why_interested
       }).eq('id', existingRow.id);
       wasIngestedOrUpdated = true;
     } else {
@@ -417,7 +547,25 @@ async function runSync(env: Env) {
         current_salary: meta.current_salary,
         expected_salary: meta.expected_salary,
         notice_period: meta.notice_period,
-        photo: meta.photo
+        photo: meta.photo,
+        opening_type: meta.opening_type,
+        height: meta.height,
+        weight: meta.weight,
+        retail_experience: meta.retail_experience,
+        spm_credits: meta.spm_credits,
+        photo_full_body_url: meta.photo_full_body_url,
+        transportation: meta.transportation,
+        languages: meta.languages,
+        medical_condition: meta.medical_condition,
+        consent: meta.consent,
+        postcode: meta.postcode,
+        resume_url: meta.resume_url,
+        date_of_birth: meta.date_of_birth,
+        marital_status: meta.marital_status,
+        smoker_or_vaper: meta.smoker_or_vaper,
+        qualification_url: meta.qualification_url,
+        retail_industry_experience: meta.retail_industry_experience,
+        why_interested: meta.why_interested
       }]);
 
       if (!error) {
@@ -431,9 +579,9 @@ async function runSync(env: Env) {
     const shouldPushToWebhook = (!alreadySyncedToWebhook || wasIncompleteSynced) && shouldSyncToWebhook(tagsList);
 
     if (wasIngestedOrUpdated && shouldPushToWebhook) {
-      const webhookUrl = env.NXLINK_WEBHOOK_URL || 'https://asia-southeast1-planet-group-d2436.cloudfunctions.net/jobApplication';
-      const clientId = env.NXLINK_WEBHOOK_CLIENT_ID || 'nxlink_70a248a4b37bae828e53035a';
-      const clientSecret = env.NXLINK_WEBHOOK_CLIENT_SECRET || 'f2c3fb34bdbbdc38a7ae08a5bee0748083bc587e916cefd976b189936702d50b';
+      const webhookUrl = env.NXLINK_WEBHOOK_URL || 'https://hype-hr-441002907541.asia-southeast1.run.app/intake/chatbot';
+      const clientId = env.NXLINK_WEBHOOK_CLIENT_ID || 'hype-chatbot';
+      const clientSecret = env.NXLINK_WEBHOOK_CLIENT_SECRET || 'b7074fc1902d8ae2cd096612539700078f485611445c54d1d6bb06d226649443';
 
       if (webhookUrl && clientId && clientSecret) {
         try {
@@ -464,7 +612,25 @@ async function runSync(env: Env) {
                 "Current Salary": meta.current_salary || null,
                 "Expected Salary": meta.expected_salary || null,
                 "Notice Period": meta.notice_period || null,
-                "Photo URL": meta.photo || null
+                "Photo URL": meta.photo || null,
+                "Opening Type": meta.opening_type || null,
+                "Height": meta.height || null,
+                "Weight": meta.weight || null,
+                "Retail Experience": meta.retail_experience || null,
+                "SPM Credits": meta.spm_credits || null,
+                "Photo Full Body URL": meta.photo_full_body_url || null,
+                "Transportation": meta.transportation || null,
+                "Languages": meta.languages || null,
+                "Medical Condition": meta.medical_condition || null,
+                "Consent": meta.consent || null,
+                "Postcode": meta.postcode || null,
+                "Resume URL": meta.resume_url || null,
+                "Date of Birth": meta.date_of_birth || null,
+                "Marital Status": meta.marital_status || null,
+                "Smoker or Vaper": meta.smoker_or_vaper || null,
+                "Qualification URL": meta.qualification_url || null,
+                "Retail Industry Experience": meta.retail_industry_experience || null,
+                "Why Interested": meta.why_interested || null
               }
             })
           });
@@ -486,7 +652,13 @@ async function runSync(env: Env) {
 
 export default {
   async scheduled(controller: any, env: Env, ctx: any) {
-    ctx.waitUntil(runSync(env));
+    try {
+      console.log('Cron trigger started');
+      const result = await runSync(env);
+      console.log('Cron trigger completed:', JSON.stringify(result));
+    } catch (err: any) {
+      console.error('Scheduled cron error:', err);
+    }
   },
   async fetch(request: Request, env: Env, ctx: any) {
     if (request.method === 'OPTIONS') {
